@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32630.194
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SADX-Klonoa-Gameplay", "SADX-Klonoa-Gameplay\SADX-Klonoa-Gameplay.vcxproj", "{F00A640E-3018-4CD5-A7A3-A43EEB563B74}"
+	ProjectSection(ProjectDependencies) = postProject
+		{90CF4AD9-6603-458F-8E3F-E99C0818E43D} = {90CF4AD9-6603-458F-8E3F-E99C0818E43D}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ModLoaderCommon", "sadx-mod-loader\mod-loader-common\ModLoaderCommon\ModLoaderCommon.vcxproj", "{EC0293F5-4BCF-46B2-8133-18CAEA141C5B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmodutils", "sadx-mod-loader\libmodutils\libmodutils.vcxproj", "{90CF4AD9-6603-458F-8E3F-E99C0818E43D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F00A640E-3018-4CD5-A7A3-A43EEB563B74}.Debug|x64.ActiveCfg = Debug|x64
+		{F00A640E-3018-4CD5-A7A3-A43EEB563B74}.Debug|x64.Build.0 = Debug|x64
+		{F00A640E-3018-4CD5-A7A3-A43EEB563B74}.Debug|x86.ActiveCfg = Debug|Win32
+		{F00A640E-3018-4CD5-A7A3-A43EEB563B74}.Debug|x86.Build.0 = Debug|Win32
+		{F00A640E-3018-4CD5-A7A3-A43EEB563B74}.Release|x64.ActiveCfg = Release|x64
+		{F00A640E-3018-4CD5-A7A3-A43EEB563B74}.Release|x64.Build.0 = Release|x64
+		{F00A640E-3018-4CD5-A7A3-A43EEB563B74}.Release|x86.ActiveCfg = Release|Win32
+		{F00A640E-3018-4CD5-A7A3-A43EEB563B74}.Release|x86.Build.0 = Release|Win32
+		{EC0293F5-4BCF-46B2-8133-18CAEA141C5B}.Debug|x64.ActiveCfg = Debug|Win32
+		{EC0293F5-4BCF-46B2-8133-18CAEA141C5B}.Debug|x86.ActiveCfg = Debug|Win32
+		{EC0293F5-4BCF-46B2-8133-18CAEA141C5B}.Debug|x86.Build.0 = Debug|Win32
+		{EC0293F5-4BCF-46B2-8133-18CAEA141C5B}.Release|x64.ActiveCfg = Release|Win32
+		{EC0293F5-4BCF-46B2-8133-18CAEA141C5B}.Release|x86.ActiveCfg = Release|Win32
+		{EC0293F5-4BCF-46B2-8133-18CAEA141C5B}.Release|x86.Build.0 = Release|Win32
+		{90CF4AD9-6603-458F-8E3F-E99C0818E43D}.Debug|x64.ActiveCfg = Debug|Win32
+		{90CF4AD9-6603-458F-8E3F-E99C0818E43D}.Debug|x86.ActiveCfg = Debug|Win32
+		{90CF4AD9-6603-458F-8E3F-E99C0818E43D}.Debug|x86.Build.0 = Debug|Win32
+		{90CF4AD9-6603-458F-8E3F-E99C0818E43D}.Release|x64.ActiveCfg = Release|Win32
+		{90CF4AD9-6603-458F-8E3F-E99C0818E43D}.Release|x86.ActiveCfg = Release|Win32
+		{90CF4AD9-6603-458F-8E3F-E99C0818E43D}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {464D87D3-DF3B-46E9-A9F6-13DA5769D2F6}
+	EndGlobalSection
+EndGlobal
