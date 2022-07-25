@@ -26,3 +26,9 @@ enum klonoaAnim
 	anm_idle,
 	anm_jump,
 };
+
+enum klonoaAction
+{
+	act_hover = 110,
+	act_super_jump
+};

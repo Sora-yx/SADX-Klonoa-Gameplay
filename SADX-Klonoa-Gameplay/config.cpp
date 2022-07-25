@@ -1,6 +1,7 @@
 #include "pch.h"
 
 bool allowSpinDash = false;
+bool allowHomingAttack = false;
 bool nerfPhysics = true;
 
 void ReadConfig(const char* path, const HelperFunctions& helperFunctions) {
