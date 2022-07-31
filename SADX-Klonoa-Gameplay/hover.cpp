@@ -1,6 +1,6 @@
 #include "pch.h"
 
-int hover_CheckInput(EntityData1* data, playerwk* co2)
+signed int hover_CheckInput(EntityData1* data, playerwk* co2)
 {
 	if ((JumpButtons & Controllers[data->CharIndex].PressedButtons) == 0)
 	{
@@ -11,6 +11,7 @@ int hover_CheckInput(EntityData1* data, playerwk* co2)
 	co2->mj.reqaction = 147;
 	co2->spd.y = 0.0f;
 	co2->free.sw[2] = 90;
+	return 1;
 }
 
 

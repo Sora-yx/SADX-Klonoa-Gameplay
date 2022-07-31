@@ -50,10 +50,30 @@ void FreeObjModels()
 	FreeMDL(KlonoaMDL);
 }
 
+void DrawKlonoa_Event(NJS_ACTION* anim, float frame, QueuedModelFlagsB flg)
+{
+
+	SetupWorldMatrix();
+	Direct3D_SetChunkModelRenderState();
+
+	NJS_ACTION act2 = *anim;
+
+	if (*(int*)0x3ABD9CC)
+	{
+		DrawQueueDepthBias = -5952.0;
+		njCnkAction_Queue(&act2, frame, QueuedModelFlagsB_EnableZWrite);
+		DrawQueueDepthBias = 0.0;
+	}
+	else
+	{
+		njCnkAction(&act2, frame);
+	}
+
+	Direct3D_UnsetChunkModelRenderState();
+}
 
 void DrawKlonoa(CharObj2* a2, int animNum, NJS_ACTION* action)
 {
-
 	SetupWorldMatrix();
 	Direct3D_SetChunkModelRenderState();
 
@@ -99,17 +119,66 @@ void Klonoa_Fall(taskwk* data, playerwk* co2)
 	co2->mj.reqaction = 18;
 }
 
-void __cdecl Klonoa_Display_r(ObjectMaster* obj)
+//used for cutscene and charSel
+void __cdecl Klonoa_late_ActionEx(NJS_ACTION* anim, float a2, QueuedModelFlagsB a3)
 {
-	EntityData1* data = obj->Data1;
-	auto tp = (task*)obj;
+	NJS_VECTOR scale = { 1.0f, 1.0f, 1.0f };
 
-	if (MissedFrames || !klonoa || (!IsVisible(&data->Position, 15.0)))
+	for (int i = 0; i < 4; i++) {
+
+		if (anim && anim->motion && SonicCharSelAnim[i] && SonicCharSelAnim[i]->motion)
+		{
+			if (anim->motion == SonicCharSelAnim[i]->motion) {
+				njSetTexture(&KlonoaTexList);
+				scale = { 0.9f, 0.9f, 0.9f };
+				njScaleV(0, &scale);
+				DrawKlonoa_Event(anim, a2, a3);
+				return;
+			}
+		}
+	}
+
+	njScaleV(0, &scale);
+	late_ActionEx(anim, a2, (LATE)a3);
+}
+
+//used for cutscene and charSel
+void __cdecl  Klonoa_linkEx(NJS_ACTION_LINK* action, float frame, int flag)
+{
+	NJS_VECTOR scale = { 1.0f, 1.0f, 1.0f };
+
+	if (!IsIngame()) {
+
+		for (int i = 0; i < 4; i++) {
+
+			if (action && action->motionlink->motion[0] && SonicCharSelAnim[i] && SonicCharSelAnim[i]->motion)
+			{
+				if (action->motionlink->motion[0] == SonicCharSelAnim[i]->motion) {
+					njSetTexture(&KlonoaTexList);
+					scale = { 0.9f, 0.9f, 0.9f };
+					njScaleV(0, &scale);
+					njCnkActionLink(action, frame, flag);
+					return;
+				}
+			}
+		}
+	}
+
+	njScaleV(0, &scale);
+	late_ActionLinkEx(action, frame, (LATE)flag);
+}
+
+void __cdecl Klonoa_Display_r(task* obj)
+{
+	taskwk* data = obj->twp;
+
+	if (MissedFrames || !klonoa || (!IsVisible(&data->pos, 15.0)))
 		return;
 
-	auto co2 = CharObj2Ptrs[klonoaPnum];
-	int curAnim = (unsigned __int16)co2->AnimationThing.Index;
-	auto data2_pp = (EntityData2*)obj->Data2;
+
+	auto co2 = playerpwp[klonoaPnum];
+	int curAnim = (unsigned __int16)co2->mj.reqaction;
+	auto data2_pp = (motionwk2*)obj->mwp;
 
 	Direct3D_SetZFunc(1u);
 	BackupConstantAttr();
@@ -122,44 +191,52 @@ void __cdecl Klonoa_Display_r(ObjectMaster* obj)
 
 	if (!MetalSonicFlag && SONIC_OBJECTS[6]->sibling != *(NJS_OBJECT**)0x3C55D40)
 	{
-		co2->AnimationThing.field_2 = 2;
-		ProcessVertexWelds(data, data2_pp, co2);
-		co2->AnimationThing.WeldInfo[0xB].ModelB = SONIC_OBJECTS[6]->sibling;
-		co2->AnimationThing.field_2 = 0;
-		ProcessVertexWelds(data, data2_pp, co2);
+		co2->mj.jvmode = 2;
+		PJoinVertexes(data, data2_pp, co2);
+		co2->mj.pljvptr[0xB].dstobj = SONIC_OBJECTS[6]->sibling;
+		co2->mj.jvmode = 0;
+		PJoinVertexes(data, data2_pp, co2);
 		*(NJS_OBJECT**)0x3C55D40 = SONIC_OBJECTS[6]->sibling;
 	}
 
 
-	if (co2->AnimationThing.State == 2)
-		curAnim = (unsigned __int16)co2->AnimationThing.LastIndex;
+	if (co2->mj.mtnmode == 2)
+		curAnim = (unsigned __int16)co2->mj.action;
 
-	if (!(data->InvulnerableTime & 2))
+	if (!(data->wtimer & 2))
 	{
 		njSetTexture(&KlonoaTexList);
 		NJS_VECTOR scale = { 0.2f, 0.2f, 0.2f };
 		njPushMatrix(nullptr);
-		NJS_VECTOR pos = data->CollisionInfo->CollisionArray->center;
-		pos.y -= 5.0f;
+		NJS_VECTOR pos = data->cwp->info->center;
+		pos.y -= 4.0f;
 		njTranslateV(0, &pos);
 		njScaleV(0, &scale);
 
-		njRotateZ_(data->Rotation.z);
-		njRotateX_(data->Rotation.x);
-		njRotateY_(0x8000 - data->Rotation.y);
+		njRotateZ_(data->ang.z);
+		njRotateX_(data->ang.x);
+		njRotateY_(0x8000 - data->ang.y);
 
 		SpinDash_RotateModel(curAnim, (taskwk*)data);
 
 		NJS_ACTION* action;
-		if (co2->AnimationThing.State == 2) {
-			action = co2->AnimationThing.action;
-		}
-		else
-		{
-			action = co2->AnimationThing.AnimData[curAnim].Animation;
-		}
 
-		DrawKlonoa(co2, curAnim, action);
+		if (data->ewp->action.list)
+		{
+			DrawEventAction(data);
+		}
+		else {
+
+			if (co2->mj.mtnmode == 2) {
+				action = co2->mj.actwkptr;
+			}
+			else
+			{
+				action = co2->mj.plactptr[curAnim].actptr;
+			}
+
+			DrawKlonoa((CharObj2*)co2, curAnim, action);
+		}
 
 		njPopMatrix(1u);
 	}
@@ -171,7 +248,7 @@ void __cdecl Klonoa_Display_r(ObjectMaster* obj)
 	Direct3D_ResetZFunc();
 
 	if (IsGamePaused())
-		DrawCharacterShadow(data, &co2->_struct_a3);
+		DrawCharacterShadow((EntityData1*)data, (struct_a3*)&co2->shadow);
 }
 
 void __cdecl Sonic_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
@@ -192,14 +269,22 @@ void __cdecl Sonic_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 			break;
 		}
 
-		hover_CheckInput(data1, co2);
+		if (co2->spd.y < 0.0f)
+		{
+			co2->mj.reqaction = 18;
+		}
+
+		if (hover_CheckInput(data1, co2))
+		{
+			break;
+		}
 		break;
 	case act_hover:
 		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2))
 		{
 			break;
 		}
-	
+
 		if ((JumpButtons & Controllers[data1->CharIndex].HeldButtons) == 0)
 		{
 			Klonoa_Fall(data, co2);
@@ -226,7 +311,6 @@ void __cdecl Sonic_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 
 
 	TARGET_DYNAMIC(Sonic_runsActions)(data, data2, co2);
-
 }
 
 void __cdecl Sonic_Main_r(task* obj)
@@ -294,6 +378,12 @@ void LoadKlonoa_Files()
 	KlonoaANM[6] = LoadObjectAnim("run");
 	KlonoaANM[7] = LoadObjectAnim("idle");
 	KlonoaANM[8] = LoadObjectAnim("jump");
+	KlonoaANM[9] = LoadObjectAnim("holdOneHand");
+	KlonoaANM[10] = LoadObjectAnim("holdObj");
+	KlonoaANM[11] = LoadObjectAnim("Victory");
+	KlonoaANM[12] = LoadObjectAnim("Victory2");
+	KlonoaANM[13] = LoadObjectAnim("standVictory");
+	KlonoaANM[14] = LoadObjectAnim("standBattle");
 
 	//Init new anim list, put falling animation as a placeholder / failsafe for animation that don't have a SADX counterpart
 	for (int i = 0; i < LengthOfArray(KlonoaAnimList); i++)
@@ -302,7 +392,7 @@ void LoadKlonoa_Files()
 		KlonoaAnimList[i].Animation->object = KlonoaMDL->getmodel();
 		KlonoaAnimList[i].Animation->motion = KlonoaANM[anm_fall]->getmotion();
 		KlonoaAnimList[i].Instance = KlonoaANM[anm_fall]->getmodelcount();
-		KlonoaAnimList[i].Property = 3;
+		KlonoaAnimList[i].Property = 4;
 		KlonoaAnimList[i].NextAnim = 18;
 		KlonoaAnimList[i].TransitionSpeed = 0.25f;
 		KlonoaAnimList[i].AnimationSpeed = 0.5f;
@@ -315,26 +405,39 @@ void LoadKlonoa_Files()
 	KlonoaAnimList[0].Property = 3;
 	KlonoaAnimList[0].TransitionSpeed = 0.0625f;
 
+	//surf stance
+	KlonoaAnimList[1].Animation->motion = KlonoaANM[anm_battleStd]->getmotion();
+	KlonoaAnimList[1].TransitionSpeed = 0.25f;
+	KlonoaAnimList[1].AnimationSpeed = 0.50f;
+	KlonoaAnimList[1].Property = 4;
+	KlonoaAnimList[1].NextAnim = 2;
+
+	KlonoaAnimList[2].Animation->motion = KlonoaANM[anm_battleStd]->getmotion();
+	KlonoaAnimList[2].TransitionSpeed = 0.25f;
+	KlonoaAnimList[2].AnimationSpeed = 0.50f;
+	KlonoaAnimList[2].Property = 4;
+	KlonoaAnimList[2].NextAnim = 2;
+
 	//walk
 	KlonoaAnimList[9].Animation->motion = KlonoaANM[anm_walk]->getmotion();
-	KlonoaAnimList[9].AnimationSpeed = 3.4f;
+	KlonoaAnimList[9].AnimationSpeed = 2.4f;
 	KlonoaAnimList[9].NextAnim = 9;
 	KlonoaAnimList[9].Property = 10;
-	KlonoaAnimList[9].TransitionSpeed = 0.25f;
+	KlonoaAnimList[9].TransitionSpeed = 0.15f;
 
 	//speed walk
 	KlonoaAnimList[10].Animation->motion = KlonoaANM[anm_walk]->getmotion();
 	KlonoaAnimList[10].AnimationSpeed = 1.4f;
 	KlonoaAnimList[10].NextAnim = 10;
 	KlonoaAnimList[10].Property = 10;
-	KlonoaAnimList[10].TransitionSpeed = 0.25f;
+	KlonoaAnimList[10].TransitionSpeed = 0.20f;
 
 	//jogging
 	KlonoaAnimList[11].Animation->motion = KlonoaANM[anm_run]->getmotion();
 	KlonoaAnimList[11].Property = 10;
 	KlonoaAnimList[11].NextAnim = 11;
 	KlonoaAnimList[11].TransitionSpeed = 0.25f;
-	KlonoaAnimList[11].AnimationSpeed = 0.60000001f;
+	KlonoaAnimList[11].AnimationSpeed = 0.3f;
 
 	//run
 	KlonoaAnimList[12].Animation->motion = KlonoaANM[anm_run]->getmotion();
@@ -348,7 +451,7 @@ void LoadKlonoa_Files()
 	KlonoaAnimList[13].Property = 9;
 	KlonoaAnimList[13].NextAnim = 13;
 	KlonoaAnimList[13].TransitionSpeed = 0.5f;
-	KlonoaAnimList[13].AnimationSpeed = 0.35555f;
+	KlonoaAnimList[13].AnimationSpeed = 0.3f;
 
 	//falling
 	KlonoaAnimList[18].Animation->motion = KlonoaANM[anm_fall]->getmotion();
@@ -377,12 +480,38 @@ void LoadKlonoa_Files()
 	KlonoaAnimList[6].AnimationSpeed = 1.0f;
 
 	//jump
-	KlonoaAnimList[32].Animation->motion = KlonoaANM[anm_jump]->getmotion();
-	KlonoaAnimList[32].Property = 3;
-	KlonoaAnimList[32].NextAnim = 32;
-	KlonoaAnimList[32].TransitionSpeed = 0.5f;
-	KlonoaAnimList[32].AnimationSpeed = 1.0f;
+	KlonoaAnimList[14].Animation->motion = KlonoaANM[anm_jump]->getmotion();
+	KlonoaAnimList[14].Property = 3;
+	KlonoaAnimList[14].NextAnim = 14;
+	KlonoaAnimList[14].TransitionSpeed = 0.5f;
+	KlonoaAnimList[14].AnimationSpeed = 1.0f;
 
+	//hang pulley / heli
+	KlonoaAnimList[47].Animation->motion = KlonoaANM[anm_holdOne]->getmotion();
+	KlonoaAnimList[47].Property = 3;
+	KlonoaAnimList[47].NextAnim = 47;
+	KlonoaAnimList[47].TransitionSpeed = 0.5f;
+	KlonoaAnimList[47].AnimationSpeed = 0.5f;
+
+	//idle hold tree
+	KlonoaAnimList[54].Animation->motion = KlonoaANM[anm_holdObj]->getmotion();
+	KlonoaAnimList[54].Property = 3;
+	KlonoaAnimList[54].NextAnim = 54;
+	KlonoaAnimList[54].TransitionSpeed = 0.5f;
+	KlonoaAnimList[54].AnimationSpeed = 0.5f;
+
+	//hold obj
+	KlonoaAnimList[62].Animation->motion = KlonoaANM[anm_holdObj]->getmotion();
+	KlonoaAnimList[62].Property = 4;
+	KlonoaAnimList[62].NextAnim = 18;
+	KlonoaAnimList[62].TransitionSpeed = 0.5;
+	KlonoaAnimList[62].AnimationSpeed = 1.0f;
+
+	//hold rocket
+	KlonoaAnimList[80].Animation->motion = KlonoaANM[anm_holdObj]->getmotion();
+	KlonoaAnimList[80].NextAnim = 80;
+	KlonoaAnimList[80].TransitionSpeed = 0.125;
+	KlonoaAnimList[80].AnimationSpeed = 1.0f;
 
 	//hover
 	KlonoaAnimList[147].Animation->motion = KlonoaANM[anm_hover]->getmotion();
@@ -391,6 +520,27 @@ void LoadKlonoa_Files()
 	KlonoaAnimList[147].TransitionSpeed = 0.25f;
 	KlonoaAnimList[147].AnimationSpeed = 1.0f;
 
+	//victory.
+	KlonoaAnimList[75].Animation->motion = KlonoaANM[anm_victory]->getmotion();
+	KlonoaAnimList[75].Property = 4;
+	KlonoaAnimList[75].NextAnim = 76;
+	KlonoaAnimList[75].TransitionSpeed = 0.5f;
+	KlonoaAnimList[75].AnimationSpeed = 1.0f;
+
+	//victory standing.
+	KlonoaAnimList[76].Animation->motion = KlonoaANM[anm_victoryStd]->getmotion();
+	KlonoaAnimList[76].NextAnim = 0;
+	KlonoaAnimList[76].Property = 3;
+	KlonoaAnimList[76].TransitionSpeed = 0.5f;
+	KlonoaAnimList[76].AnimationSpeed = 1.0f;
+}
+
+void InitKlonoaCharSelAnim()
+{
+	SonicCharSelAnim[0] = KlonoaAnimList[11].Animation;
+	SonicCharSelAnim[1] = KlonoaAnimList[75].Animation;
+	SonicCharSelAnim[2] = KlonoaAnimList[76].Animation;
+	SonicCharSelAnim[3] = 0;
 }
 
 void init_KlonoaModelsAnim()
@@ -407,7 +557,6 @@ void initKlonoa()
 	Sonic_runsActions_t = new Trampoline((int)Sonic_Act1, (int)Sonic_Act1 + 0x8, Sonic_runsActions_r);
 
 	WriteJump(Sonic_Display, Klonoa_Display_r);
-	//DrawSonicMotion_t = new Trampoline((intptr_t)0x494400, (intptr_t)0x494406, DrawSonicMotionASM);
 	WriteJump((void*)0x49AB47, SetAnimList);
 	WriteData((short*)0x49ACD8, (short)0x9090);
 	WriteData<2>((void*)0x4916A5, 0x90u); // disable metal's weird tilting thing
@@ -416,4 +565,7 @@ void initKlonoa()
 	WriteData<1>((int*)0x493500, 0xC3); //disable sonic morph
 	WriteData<1>((int*)0x4937B0, 0xC3); //disable morph head
 
+	WriteCall((void*)0x418214, Klonoa_late_ActionEx);
+	WriteCall((void*)0x41815E, Klonoa_linkEx);
+	WriteJump(InitSonicCharSelAnims, InitKlonoaCharSelAnim);
 }

@@ -186,3 +186,23 @@ void njRotateZ_(Angle z) {
 		njRotateZ(_nj_current_matrix_ptr_, z);
 	}
 }
+
+static const void* const actionLinkExPtr = (void*)0x406C40;
+static inline void late_ActionLinkEx_(NJS_ACTION_LINK* action, float frameNumber, QueuedModelFlagsB flags, float scale, void(__cdecl* callback)(NJS_MODEL_SADX*, int, int))
+{
+	__asm
+	{
+		push[callback]
+		push[scale]
+		push dword ptr[flags]
+		push[frameNumber]
+		mov eax, [action]
+		call actionLinkExPtr
+		add esp, 16
+	}
+}
+
+void njCnkActionLink(NJS_ACTION_LINK* action, float frame, int flag)
+{
+	late_ActionLinkEx_(action, frame, (QueuedModelFlagsB)flag, 0.0, (void(__cdecl*)(NJS_MODEL_SADX*, int, int))DrawChunkModel);
+}

@@ -25,6 +25,13 @@ enum klonoaAnim
 	anm_run,
 	anm_idle,
 	anm_jump,
+	anm_holdOne,
+	anm_holdObj,
+	anm_victory,
+	anm_victory2,
+	anm_victoryStd,
+	anm_battleStd,
+
 };
 
 enum klonoaAction

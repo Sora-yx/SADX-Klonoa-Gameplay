@@ -31,3 +31,5 @@ void njNullAction(NJS_ACTION* action, float frame);
 void njRotateX_(Angle x);
 void njRotateY_(Angle y);
 void njRotateZ_(Angle z);
+
+void njCnkActionLink(NJS_ACTION_LINK* action, float frame, int flag);
