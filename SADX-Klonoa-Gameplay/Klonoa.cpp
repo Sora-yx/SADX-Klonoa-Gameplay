@@ -8,16 +8,14 @@ ModelInfo* KlonoaMDL = nullptr;
 AnimationFile* KlonoaANM[20] = { 0 };
 #define AnimCount 148
 #define boneCount 48
-AnimData_t KlonoaAnimList[AnimCount];
-static Trampoline* LoadLevelObject_t = nullptr;
+AnimData_t KlonoaAnimList[AnimCount] = { 0 };
 
-NJS_TEXNAME KlonoaTex[2];
+NJS_TEXNAME KlonoaTex[2] = { 0 };
 NJS_TEXLIST KlonoaTexList = { arrayptrandlength(KlonoaTex) };
 
-static Trampoline* Sonic_Main_t = nullptr;
-static Trampoline* Sonic_Display_t = nullptr;
-static Trampoline* Sonic_runsActions_t = nullptr;
-static Trampoline* DrawSonicMotion_t = nullptr;
+static FunctionHook<void, task*> Sonic_Main_t((intptr_t)Sonic_Main);
+static FunctionHook<void, task*> Sonic_Display_t((intptr_t)Sonic_Display);
+static FunctionHook<void, taskwk*, motionwk2*, playerwk*> Sonic_RunsActions_t((intptr_t)Sonic_Act1);
 
 extern NJS_TEXLIST KlonoaTexList;
 
@@ -44,11 +42,6 @@ bool isKlonoa(char pnum)
 	return false;
 }
 
-
-void FreeObjModels()
-{
-	FreeMDL(KlonoaMDL);
-}
 
 void DrawKlonoa_Event(NJS_ACTION* anim, float frame, QueuedModelFlagsB flg)
 {
@@ -164,17 +157,17 @@ void __cdecl  Klonoa_linkEx(NJS_ACTION_LINK* action, float frame, int flag)
 		}
 	}
 
+
 	njScaleV(0, &scale);
 	late_ActionLinkEx(action, frame, (LATE)flag);
 }
 
 void __cdecl Klonoa_Display_r(task* obj)
 {
-	taskwk* data = obj->twp;
+	auto data = obj->twp;
 
 	if (MissedFrames || !klonoa || (!IsVisible(&data->pos, 15.0)))
 		return;
-
 
 	auto co2 = playerpwp[klonoaPnum];
 	int curAnim = (unsigned __int16)co2->mj.reqaction;
@@ -199,7 +192,6 @@ void __cdecl Klonoa_Display_r(task* obj)
 		*(NJS_OBJECT**)0x3C55D40 = SONIC_OBJECTS[6]->sibling;
 	}
 
-
 	if (co2->mj.mtnmode == 2)
 		curAnim = (unsigned __int16)co2->mj.action;
 
@@ -219,20 +211,16 @@ void __cdecl Klonoa_Display_r(task* obj)
 
 		SpinDash_RotateModel(curAnim, (taskwk*)data);
 
-		NJS_ACTION* action;
+		NJS_ACTION* action = co2->mj.plactptr[curAnim].actptr;
 
 		if (data->ewp->action.list)
 		{
 			DrawEventAction(data);
 		}
-		else {
-
+		else 
+		{
 			if (co2->mj.mtnmode == 2) {
 				action = co2->mj.actwkptr;
-			}
-			else
-			{
-				action = co2->mj.plactptr[curAnim].actptr;
 			}
 
 			DrawKlonoa((CharObj2*)co2, curAnim, action);
@@ -240,7 +228,6 @@ void __cdecl Klonoa_Display_r(task* obj)
 
 		njPopMatrix(1u);
 	}
-
 
 	Direct3D_PerformLighting(0);
 	ClampGlobalColorThing_Thing();
@@ -251,7 +238,7 @@ void __cdecl Klonoa_Display_r(task* obj)
 		DrawCharacterShadow((EntityData1*)data, (struct_a3*)&co2->shadow);
 }
 
-void __cdecl Sonic_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
+void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 {
 	if (!co2)
 	{
@@ -310,10 +297,10 @@ void __cdecl Sonic_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 	}
 
 
-	TARGET_DYNAMIC(Sonic_runsActions)(data, data2, co2);
+	Sonic_RunsActions_t.Original(data, data2, co2);
 }
 
-void __cdecl Sonic_Main_r(task* obj)
+void __cdecl Klonoa_Main_r(task* obj)
 {
 	auto tp = obj;
 	auto data = obj->twp;
@@ -328,7 +315,7 @@ void __cdecl Sonic_Main_r(task* obj)
 		LoadPVM("KlonoaTex", &KlonoaTexList);
 	}
 
-	TARGET_DYNAMIC(Sonic_Main)(obj);
+	Sonic_Main_t.Original(obj);
 
 	switch (data->mode)
 	{
@@ -400,7 +387,7 @@ void LoadKlonoa_Files()
 
 
 	KlonoaAnimList[0].Animation->motion = KlonoaANM[anm_stand]->getmotion();
-	KlonoaAnimList[0].AnimationSpeed = 1.0f;
+	KlonoaAnimList[0].AnimationSpeed = 0.5f;
 	KlonoaAnimList[0].NextAnim = 0;
 	KlonoaAnimList[0].Property = 3;
 	KlonoaAnimList[0].TransitionSpeed = 0.0625f;
@@ -420,7 +407,7 @@ void LoadKlonoa_Files()
 
 	//walk
 	KlonoaAnimList[9].Animation->motion = KlonoaANM[anm_walk]->getmotion();
-	KlonoaAnimList[9].AnimationSpeed = 2.4f;
+	KlonoaAnimList[9].AnimationSpeed = 1.0f;
 	KlonoaAnimList[9].NextAnim = 9;
 	KlonoaAnimList[9].Property = 10;
 	KlonoaAnimList[9].TransitionSpeed = 0.15f;
@@ -458,20 +445,20 @@ void LoadKlonoa_Files()
 	KlonoaAnimList[18].Property = 3;
 	KlonoaAnimList[18].NextAnim = 18;
 	KlonoaAnimList[18].TransitionSpeed = 0.25f;
-	KlonoaAnimList[18].AnimationSpeed = 1.0f;
+	KlonoaAnimList[18].AnimationSpeed = 0.5f;
 
 	//idle
 	KlonoaAnimList[4].Animation->motion = KlonoaANM[anm_idle]->getmotion();
 	KlonoaAnimList[4].Property = 4;
 	KlonoaAnimList[4].NextAnim = 5;
 	KlonoaAnimList[4].TransitionSpeed = 0.25f;
-	KlonoaAnimList[4].AnimationSpeed = 1.0f;
+	KlonoaAnimList[4].AnimationSpeed = 0.5f;
 
 	KlonoaAnimList[5].Animation->motion = KlonoaANM[anm_idle]->getmotion();
 	KlonoaAnimList[5].Property = 4;
 	KlonoaAnimList[5].NextAnim = 6;
 	KlonoaAnimList[5].TransitionSpeed = 0.25f;
-	KlonoaAnimList[5].AnimationSpeed = 1.0f;
+	KlonoaAnimList[5].AnimationSpeed = 0.5f;
 
 	KlonoaAnimList[6].Animation->motion = KlonoaANM[anm_idle]->getmotion();
 	KlonoaAnimList[6].Property = 4;
@@ -484,7 +471,7 @@ void LoadKlonoa_Files()
 	KlonoaAnimList[14].Property = 3;
 	KlonoaAnimList[14].NextAnim = 14;
 	KlonoaAnimList[14].TransitionSpeed = 0.5f;
-	KlonoaAnimList[14].AnimationSpeed = 1.0f;
+	KlonoaAnimList[14].AnimationSpeed = 0.5f;
 
 	//hang pulley / heli
 	KlonoaAnimList[47].Animation->motion = KlonoaANM[anm_holdOne]->getmotion();
@@ -518,21 +505,21 @@ void LoadKlonoa_Files()
 	KlonoaAnimList[147].Property = 3;
 	KlonoaAnimList[147].NextAnim = 147;
 	KlonoaAnimList[147].TransitionSpeed = 0.25f;
-	KlonoaAnimList[147].AnimationSpeed = 1.0f;
+	KlonoaAnimList[147].AnimationSpeed = 0.5f;
 
 	//victory.
 	KlonoaAnimList[75].Animation->motion = KlonoaANM[anm_victory]->getmotion();
 	KlonoaAnimList[75].Property = 4;
 	KlonoaAnimList[75].NextAnim = 76;
 	KlonoaAnimList[75].TransitionSpeed = 0.5f;
-	KlonoaAnimList[75].AnimationSpeed = 1.0f;
+	KlonoaAnimList[75].AnimationSpeed = 0.5f;
 
 	//victory standing.
 	KlonoaAnimList[76].Animation->motion = KlonoaANM[anm_victoryStd]->getmotion();
 	KlonoaAnimList[76].NextAnim = 0;
 	KlonoaAnimList[76].Property = 3;
 	KlonoaAnimList[76].TransitionSpeed = 0.5f;
-	KlonoaAnimList[76].AnimationSpeed = 1.0f;
+	KlonoaAnimList[76].AnimationSpeed = 0.5f;
 }
 
 void InitKlonoaCharSelAnim()
@@ -548,15 +535,14 @@ void init_KlonoaModelsAnim()
 	LoadKlonoa_Files();
 }
 
-
 void initKlonoa()
 {
 	init_KlonoaModelsAnim();
 
-	Sonic_Main_t = new Trampoline((int)Sonic_Main, (int)Sonic_Main + 0x7, Sonic_Main_r);
-	Sonic_runsActions_t = new Trampoline((int)Sonic_Act1, (int)Sonic_Act1 + 0x8, Sonic_runsActions_r);
+	Sonic_Main_t.Hook(Klonoa_Main_r);
+	Sonic_RunsActions_t.Hook(Klonoa_runsActions_r);
+	Sonic_Display_t.Hook(Klonoa_Display_r);
 
-	WriteJump(Sonic_Display, Klonoa_Display_r);
 	WriteJump((void*)0x49AB47, SetAnimList);
 	WriteData((short*)0x49ACD8, (short)0x9090);
 	WriteData<2>((void*)0x4916A5, 0x90u); // disable metal's weird tilting thing

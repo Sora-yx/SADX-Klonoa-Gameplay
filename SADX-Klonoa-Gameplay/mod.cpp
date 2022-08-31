@@ -6,6 +6,7 @@ time_t t = NULL;
 HelperFunctions HelperFunctionsGlobal;
 std::string modpath;
 
+
 extern "C" {
 	__declspec(dllexport) void __cdecl Init(const char* path, const HelperFunctions& helperFunctions)
 	{
@@ -26,6 +27,7 @@ extern "C" {
 		initKlonoa();
 		init_Audio();
 		srand((unsigned)time(&t));
+
 	}
 
 
@@ -34,10 +36,6 @@ extern "C" {
 
 	}
 
-	__declspec(dllexport) void __cdecl OnExit()
-	{
-		FreeObjModels();
-	}
 
 	__declspec(dllexport) ModInfo SADXModInfo = { ModLoaderVer };
 }
