@@ -1,7 +1,6 @@
 #include "pch.h"
 
-
-Trampoline* PlayVoice_t = nullptr;
+static FunctionHook<void, int> PlayVoice_t((intptr_t)PlayVoice);
 
 //we identify Sonic voice clip and replace them with some random Klonoa speech voice, all done in code to avoid duplicate voices files. :D
 
@@ -52,9 +51,7 @@ static const std::unordered_map<int16_t, int16_t> Sonicvoice_ids_map = {
 	{ 1526, 1528},
 	{ 1531, 1533},
 	{ 1682, 1686 },
-
 };
-
 
 void PlayRandomKlonoaVoice()
 {
@@ -81,12 +78,12 @@ static void __cdecl PlayVoice_r(int a1)
 		it++;
 	}
 
-	return TARGET_DYNAMIC(PlayVoice)(a1);
+	return PlayVoice_t.Original(a1);
 }
 
-void PlayIdleVoice_r(EntityData1* data)
+void PlayIdleVoice_r(taskwk* data)
 {
-	if (data && isKlonoa(data->CharIndex))
+	if (data && isKlonoa(data->charIndex))
 	{
 		return PlayRandomKlonoaVoice();
 	}
@@ -97,5 +94,5 @@ void PlayIdleVoice_r(EntityData1* data)
 void init_Audio()
 {
 	WriteCall((void*)0x491701, PlayIdleVoice_r);
-	PlayVoice_t = new Trampoline(0x425710, 0x425715, PlayVoice_r);
+	PlayVoice_t.Hook(PlayVoice_r);
 }

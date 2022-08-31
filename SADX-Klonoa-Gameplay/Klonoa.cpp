@@ -23,7 +23,7 @@ int getKlonoaPlayer()
 {
 	for (uint8_t i = 0; i < 8; i++)
 	{
-		if (klonoa && EntityData1Ptrs[i] && EntityData1Ptrs[i]->CharIndex == klonoaPnum)
+		if (klonoa && playertwp[i] && playertwp[i]->charIndex == klonoaPnum)
 		{
 			return i;
 		}
@@ -34,7 +34,7 @@ int getKlonoaPlayer()
 
 bool isKlonoa(char pnum)
 {
-	if (klonoa && EntityData1Ptrs[pnum] && EntityData1Ptrs[pnum]->CharIndex == klonoaPnum)
+	if (klonoa && playertwp[pnum] && playertwp[pnum]->charIndex == klonoaPnum)
 	{
 		return true;
 	}
@@ -45,7 +45,6 @@ bool isKlonoa(char pnum)
 
 void DrawKlonoa_Event(NJS_ACTION* anim, float frame, QueuedModelFlagsB flg)
 {
-
 	SetupWorldMatrix();
 	Direct3D_SetChunkModelRenderState();
 
@@ -65,7 +64,7 @@ void DrawKlonoa_Event(NJS_ACTION* anim, float frame, QueuedModelFlagsB flg)
 	Direct3D_UnsetChunkModelRenderState();
 }
 
-void DrawKlonoa(CharObj2* a2, int animNum, NJS_ACTION* action)
+void DrawKlonoa(playerwk* co2, int animNum, NJS_ACTION* action)
 {
 	SetupWorldMatrix();
 	Direct3D_SetChunkModelRenderState();
@@ -74,20 +73,18 @@ void DrawKlonoa(CharObj2* a2, int animNum, NJS_ACTION* action)
 
 	if (*(int*)0x3ABD9CC)
 	{
-		DrawQueueDepthBias = -5952.0;
-		njCnkAction_Queue(&act2, a2->AnimationThing.Frame, QueuedModelFlagsB_EnableZWrite);
+		DrawQueueDepthBias = -5952.0f;
+		njCnkAction_Queue(&act2, co2->mj.nframe, QueuedModelFlagsB_EnableZWrite);
 		DrawQueueDepthBias = 0.0;
 	}
 	else
 	{
-		njCnkAction(&act2, a2->AnimationThing.Frame);
+		njCnkAction(&act2, co2->mj.nframe);
 	}
-
 
 	Direct3D_UnsetChunkModelRenderState();
 	njPopMatrix(1);
 }
-
 
 void SpinDash_RotateModel(int curAnim, taskwk* data)
 {
@@ -142,7 +139,7 @@ void __cdecl  Klonoa_linkEx(NJS_ACTION_LINK* action, float frame, int flag)
 
 	if (!IsIngame()) {
 
-		for (int i = 0; i < 4; i++) {
+		for (uint8_t i = 0; i < 4; i++) {
 
 			if (action && action->motionlink->motion[0] && SonicCharSelAnim[i] && SonicCharSelAnim[i]->motion)
 			{
@@ -156,7 +153,6 @@ void __cdecl  Klonoa_linkEx(NJS_ACTION_LINK* action, float frame, int flag)
 			}
 		}
 	}
-
 
 	njScaleV(0, &scale);
 	late_ActionLinkEx(action, frame, (LATE)flag);
@@ -223,7 +219,7 @@ void __cdecl Klonoa_Display_r(task* obj)
 				action = co2->mj.actwkptr;
 			}
 
-			DrawKlonoa((CharObj2*)co2, curAnim, action);
+			DrawKlonoa(co2, curAnim, action);
 		}
 
 		njPopMatrix(1u);
@@ -272,7 +268,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 			break;
 		}
 
-		if ((JumpButtons & Controllers[data1->CharIndex].HeldButtons) == 0)
+		if ((JumpButtons & Controllers[data->charIndex].HeldButtons) == 0)
 		{
 			Klonoa_Fall(data, co2);
 			break;
@@ -295,7 +291,6 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 
 		break;
 	}
-
 
 	Sonic_RunsActions_t.Original(data, data2, co2);
 }
@@ -328,7 +323,6 @@ void __cdecl Klonoa_Main_r(task* obj)
 		break;
 	}
 
-
 	klonoa = true;
 	klonoaPnum = data->counter.b[0];
 }
@@ -351,7 +345,6 @@ __declspec(naked) void SetAnimList()
 			jmp loc_49AB51
 	}
 }
-
 
 void LoadKlonoa_Files()
 {
