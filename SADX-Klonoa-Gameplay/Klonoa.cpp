@@ -10,14 +10,12 @@ AnimationFile* KlonoaANM[20] = { 0 };
 #define boneCount 48
 AnimData_t KlonoaAnimList[AnimCount] = { 0 };
 
-NJS_TEXNAME KlonoaTex[2] = { 0 };
-NJS_TEXLIST KlonoaTexList = { arrayptrandlength(KlonoaTex) };
+static NJS_TEXNAME KlonoaTex[2] = { 0 };
+static NJS_TEXLIST KlonoaTexList = { arrayptrandlength(KlonoaTex) };
 
 static FunctionHook<void, task*> Sonic_Main_t((intptr_t)Sonic_Main);
 static FunctionHook<void, task*> Sonic_Display_t((intptr_t)Sonic_Display);
 static FunctionHook<void, taskwk*, motionwk2*, playerwk*> Sonic_RunsActions_t((intptr_t)Sonic_Act1);
-
-extern NJS_TEXLIST KlonoaTexList;
 
 int getKlonoaPlayer()
 {
@@ -162,10 +160,17 @@ void __cdecl Klonoa_Display_r(task* obj)
 {
 	auto data = obj->twp;
 
-	if (MissedFrames || !klonoa || (!IsVisible(&data->pos, 15.0)))
+	if (MissedFrames || (!IsVisible(&data->pos, 15.0)))
 		return;
 
-	auto co2 = playerpwp[klonoaPnum];
+	char pnum = data->charIndex;
+
+	if (!isKlonoa(pnum))
+	{
+		return Sonic_Display_t.Original(obj);
+	}
+
+	auto co2 = playerpwp[pnum];
 	int curAnim = (unsigned __int16)co2->mj.reqaction;
 	auto data2_pp = (motionwk2*)obj->mwp;
 
@@ -197,7 +202,7 @@ void __cdecl Klonoa_Display_r(task* obj)
 		NJS_VECTOR scale = { 0.2f, 0.2f, 0.2f };
 		njPushMatrix(nullptr);
 		NJS_VECTOR pos = data->cwp->info->center;
-		pos.y -= 4.0f;
+		pos.y -= 4.3f;
 		njTranslateV(0, &pos);
 		njScaleV(0, &scale);
 
@@ -406,8 +411,8 @@ void LoadKlonoa_Files()
 	KlonoaAnimList[9].TransitionSpeed = 0.15f;
 
 	//speed walk
-	KlonoaAnimList[10].Animation->motion = KlonoaANM[anm_walk]->getmotion();
-	KlonoaAnimList[10].AnimationSpeed = 1.4f;
+	KlonoaAnimList[10].Animation->motion = KlonoaANM[anm_run]->getmotion();
+	KlonoaAnimList[10].AnimationSpeed = 0.2f;
 	KlonoaAnimList[10].NextAnim = 10;
 	KlonoaAnimList[10].Property = 10;
 	KlonoaAnimList[10].TransitionSpeed = 0.20f;
@@ -417,21 +422,21 @@ void LoadKlonoa_Files()
 	KlonoaAnimList[11].Property = 10;
 	KlonoaAnimList[11].NextAnim = 11;
 	KlonoaAnimList[11].TransitionSpeed = 0.25f;
-	KlonoaAnimList[11].AnimationSpeed = 0.3f;
+	KlonoaAnimList[11].AnimationSpeed = 0.2f;
 
 	//run
 	KlonoaAnimList[12].Animation->motion = KlonoaANM[anm_run]->getmotion();
 	KlonoaAnimList[12].Property = 10;
 	KlonoaAnimList[12].NextAnim = 12;
 	KlonoaAnimList[12].TransitionSpeed = 0.25f;
-	KlonoaAnimList[12].AnimationSpeed = 0.3f;
+	KlonoaAnimList[12].AnimationSpeed = 0.2f;
 
 	//sprint
 	KlonoaAnimList[13].Animation->motion = KlonoaANM[anm_run]->getmotion();
 	KlonoaAnimList[13].Property = 9;
 	KlonoaAnimList[13].NextAnim = 13;
 	KlonoaAnimList[13].TransitionSpeed = 0.5f;
-	KlonoaAnimList[13].AnimationSpeed = 0.3f;
+	KlonoaAnimList[13].AnimationSpeed = 0.2f;
 
 	//falling
 	KlonoaAnimList[18].Animation->motion = KlonoaANM[anm_fall]->getmotion();
@@ -528,8 +533,9 @@ void init_KlonoaModelsAnim()
 	LoadKlonoa_Files();
 }
 
+
 void initKlonoa()
-{
+{	
 	init_KlonoaModelsAnim();
 
 	Sonic_Main_t.Hook(Klonoa_Main_r);
