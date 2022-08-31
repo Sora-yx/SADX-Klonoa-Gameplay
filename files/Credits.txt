@@ -1,0 +1,3 @@
+A big thanks to Triph (T4ils__) for extracting and uploading all Klonoa animations and models on ModelResource with his armature, this mod couldn't have been done otherwise.
+Special thanks to Kell for fixing an interpolation issue with animations in SADX that allowed Klonoa to work properly in-game.
+Special thanks to ItsEasyActually for fixing many issues on the Blender SA addon that made the rendering of Klonoa much better in-game.
