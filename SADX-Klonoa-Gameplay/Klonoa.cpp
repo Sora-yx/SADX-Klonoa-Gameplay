@@ -250,6 +250,14 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 
 	switch (data->mode)
 	{
+	case act_stnd:
+	case 2:
+		if ( (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2) || KlonoaWBullet_CheckInput(data, co2)))
+		{
+			break;
+		}
+
+		break;
 	case 8:
 	case 12:
 		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2))
@@ -262,7 +270,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 			co2->mj.reqaction = 18;
 		}
 
-		if (hover_CheckInput(data1, co2))
+		if ( (KlonoaWBullet_CheckInput(data, co2)) || hover_CheckInput(data, co2))
 		{
 			break;
 		}
@@ -288,12 +296,44 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 			Klonoa_Fall(data, co2);
 		}
 		break;
+	case act_windBullet:
+	case act_windBulletAir:
+
+		break;
 	case act_super_jump:
 		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2))
 		{
 			break;
 		}
 
+		if (data->flag & 3)
+		{
+			data->mode = act_stnd;
+			co2->mj.reqaction = 0;
+			return;
+		}
+		else if (KlonoaSJump2_CheckInput(data, co2))
+		{
+			return;
+		}
+
+		break;
+	case act_super_jump2:
+		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2))
+		{
+			break;
+		}
+
+		if (data->flag & 3)
+		{
+			data->mode = act_stnd;
+			co2->mj.reqaction = 0;
+			return;
+		}
+		else if (KlonoaSJump_CheckInput(data, co2))
+		{
+			return;
+		}
 
 		break;
 	}
@@ -303,7 +343,6 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 
 void __cdecl Klonoa_Main_r(task* obj)
 {
-	auto tp = obj;
 	auto data = obj->twp;
 	motionwk2* data2 = (motionwk2*)obj->mwp;
 	playerwk* co2 = (playerwk*)obj->mwp->work.l;
@@ -321,7 +360,6 @@ void __cdecl Klonoa_Main_r(task* obj)
 	switch (data->mode)
 	{
 	case act_hover:
-
 		hover_Physics(data, data2, co2);
 		break;
 	case act_super_jump:
@@ -330,7 +368,7 @@ void __cdecl Klonoa_Main_r(task* obj)
 	}
 
 	klonoa = true;
-	klonoaPnum = data->counter.b[0];
+	klonoaPnum = pnum;
 }
 
 AnimData_t MetalAnimList[AnimCount];

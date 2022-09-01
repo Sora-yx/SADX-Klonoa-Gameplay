@@ -38,7 +38,10 @@ enum klonoaAnim
 
 enum klonoaAction
 {
+	act_stnd = 1,
 	act_hover = 110,
+	act_windBullet,
+	act_windBulletAir,
 	act_super_jump,
 	act_super_jump2,
 };

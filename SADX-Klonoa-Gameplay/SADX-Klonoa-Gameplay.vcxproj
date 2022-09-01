@@ -190,6 +190,7 @@
     <ClCompile Include="super-jump.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="voices.cpp" />
+    <ClCompile Include="wind-bullet.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
