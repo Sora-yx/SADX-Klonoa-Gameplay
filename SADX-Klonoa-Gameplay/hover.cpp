@@ -2,7 +2,7 @@
 
 signed int hover_CheckInput(taskwk* data, playerwk* co2)
 {
-	if ((JumpButtons & Controllers[data->charIndex].PressedButtons) == 0)
+	if ((JumpButtons & Controllers[data->charIndex].PressedButtons) == 0 || allowHomingAttack)
 	{
 		return 0;
 	}

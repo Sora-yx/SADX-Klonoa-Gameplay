@@ -2,7 +2,7 @@
 
 signed int KlonoaWBullet_CheckInput(taskwk* data, playerwk* co2)
 {
-	if ((AttackButtons & Controllers[data->charIndex].PressedButtons) == 0)
+	if ((AttackButtons & Controllers[data->charIndex].PressedButtons) == 0 || allowSpinDash)
 	{
 		return 0;
 	}

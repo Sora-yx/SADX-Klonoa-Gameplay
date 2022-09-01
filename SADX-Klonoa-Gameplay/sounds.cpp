@@ -139,9 +139,8 @@ DWORD LoadSoundSteam_LoadFromFile(std::string path)
 
 DWORD LoadSoundStream(int ID) 
 {	
-	std::string filename = "sounds\\";
+	std::string filename = modpath + "\\sounds\\";
 	
-
 	std::string str = filename + std::to_string(ID) + ".wav";
 
 	DWORD channel = LoadSoundSteam_LoadFromFile(str);

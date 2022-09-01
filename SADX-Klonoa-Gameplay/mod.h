@@ -9,12 +9,16 @@ void initKlonoa();
 void init_KlonoaModelsAnim();
 void FreeObjModels();
 
-extern ModelInfo* KlonoaMDL;
+extern std::string modpath;
 
+extern ModelInfo* KlonoaMDL;
 
 #define TARGET_DYNAMIC(name) ((decltype(name##_r)*)name##_t->Target())
 #define charID counter.b[1]
 #define charIndex counter.b[0]
+
+extern bool allowHomingAttack;
+extern bool allowSpinDash;
 
 enum klonoaAnim
 {
