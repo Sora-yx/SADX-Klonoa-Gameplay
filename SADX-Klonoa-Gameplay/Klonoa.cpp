@@ -414,8 +414,8 @@ void LoadKlonoa_Files()
 	{
 		KlonoaAnimList[i].Animation = new NJS_ACTION;
 		KlonoaAnimList[i].Animation->object = KlonoaMDL->getmodel();
-		KlonoaAnimList[i].Animation->motion = KlonoaANM[anm_fall]->getmotion();
-		KlonoaAnimList[i].Instance = KlonoaANM[anm_fall]->getmodelcount();
+		KlonoaAnimList[i].Animation->motion = KlonoaANM[anmID_fall]->getmotion();
+		KlonoaAnimList[i].Instance = KlonoaANM[anmID_fall]->getmodelcount();
 		KlonoaAnimList[i].Property = 4;
 		KlonoaAnimList[i].NextAnim = 18;
 		KlonoaAnimList[i].TransitionSpeed = 0.25f;
@@ -423,116 +423,116 @@ void LoadKlonoa_Files()
 	}
 
 
-	KlonoaAnimList[0].Animation->motion = KlonoaANM[anm_stand]->getmotion();
+	KlonoaAnimList[0].Animation->motion = KlonoaANM[anmID_stand]->getmotion();
 	KlonoaAnimList[0].AnimationSpeed = 0.5f;
 	KlonoaAnimList[0].NextAnim = 0;
 	KlonoaAnimList[0].Property = 3;
 	KlonoaAnimList[0].TransitionSpeed = 0.0625f;
 
 	//surf stance
-	KlonoaAnimList[1].Animation->motion = KlonoaANM[anm_battleStd]->getmotion();
+	KlonoaAnimList[1].Animation->motion = KlonoaANM[anmID_battleStd]->getmotion();
 	KlonoaAnimList[1].TransitionSpeed = 0.25f;
 	KlonoaAnimList[1].AnimationSpeed = 0.50f;
 	KlonoaAnimList[1].Property = 4;
 	KlonoaAnimList[1].NextAnim = 2;
 
-	KlonoaAnimList[2].Animation->motion = KlonoaANM[anm_battleStd]->getmotion();
+	KlonoaAnimList[2].Animation->motion = KlonoaANM[anmID_battleStd]->getmotion();
 	KlonoaAnimList[2].TransitionSpeed = 0.25f;
 	KlonoaAnimList[2].AnimationSpeed = 0.50f;
 	KlonoaAnimList[2].Property = 4;
 	KlonoaAnimList[2].NextAnim = 2;
 
 	//walk
-	KlonoaAnimList[9].Animation->motion = KlonoaANM[anm_walk]->getmotion();
+	KlonoaAnimList[9].Animation->motion = KlonoaANM[anmID_walk]->getmotion();
 	KlonoaAnimList[9].AnimationSpeed = 1.0f;
 	KlonoaAnimList[9].NextAnim = 9;
 	KlonoaAnimList[9].Property = 10;
 	KlonoaAnimList[9].TransitionSpeed = 0.15f;
 
 	//speed walk
-	KlonoaAnimList[10].Animation->motion = KlonoaANM[anm_run]->getmotion();
+	KlonoaAnimList[10].Animation->motion = KlonoaANM[anmID_run]->getmotion();
 	KlonoaAnimList[10].AnimationSpeed = 0.2f;
 	KlonoaAnimList[10].NextAnim = 10;
 	KlonoaAnimList[10].Property = 10;
 	KlonoaAnimList[10].TransitionSpeed = 0.20f;
 
 	//jogging
-	KlonoaAnimList[11].Animation->motion = KlonoaANM[anm_run]->getmotion();
+	KlonoaAnimList[11].Animation->motion = KlonoaANM[anmID_run]->getmotion();
 	KlonoaAnimList[11].Property = 10;
 	KlonoaAnimList[11].NextAnim = 11;
 	KlonoaAnimList[11].TransitionSpeed = 0.25f;
 	KlonoaAnimList[11].AnimationSpeed = 0.2f;
 
 	//run
-	KlonoaAnimList[12].Animation->motion = KlonoaANM[anm_run]->getmotion();
+	KlonoaAnimList[12].Animation->motion = KlonoaANM[anmID_run]->getmotion();
 	KlonoaAnimList[12].Property = 10;
 	KlonoaAnimList[12].NextAnim = 12;
 	KlonoaAnimList[12].TransitionSpeed = 0.25f;
 	KlonoaAnimList[12].AnimationSpeed = 0.2f;
 
 	//sprint
-	KlonoaAnimList[13].Animation->motion = KlonoaANM[anm_run]->getmotion();
+	KlonoaAnimList[13].Animation->motion = KlonoaANM[anmID_run]->getmotion();
 	KlonoaAnimList[13].Property = 9;
 	KlonoaAnimList[13].NextAnim = 13;
 	KlonoaAnimList[13].TransitionSpeed = 0.5f;
 	KlonoaAnimList[13].AnimationSpeed = 0.2f;
 
 	//falling
-	KlonoaAnimList[18].Animation->motion = KlonoaANM[anm_fall]->getmotion();
+	KlonoaAnimList[18].Animation->motion = KlonoaANM[anmID_fall]->getmotion();
 	KlonoaAnimList[18].Property = 3;
 	KlonoaAnimList[18].NextAnim = 18;
 	KlonoaAnimList[18].TransitionSpeed = 0.25f;
 	KlonoaAnimList[18].AnimationSpeed = 0.5f;
 
 	//idle
-	KlonoaAnimList[4].Animation->motion = KlonoaANM[anm_idle]->getmotion();
+	KlonoaAnimList[4].Animation->motion = KlonoaANM[anmID_idle]->getmotion();
 	KlonoaAnimList[4].Property = 4;
 	KlonoaAnimList[4].NextAnim = 5;
 	KlonoaAnimList[4].TransitionSpeed = 0.25f;
 	KlonoaAnimList[4].AnimationSpeed = 0.5f;
 
-	KlonoaAnimList[5].Animation->motion = KlonoaANM[anm_idle]->getmotion();
+	KlonoaAnimList[5].Animation->motion = KlonoaANM[anmID_idle]->getmotion();
 	KlonoaAnimList[5].Property = 4;
 	KlonoaAnimList[5].NextAnim = 6;
 	KlonoaAnimList[5].TransitionSpeed = 0.25f;
 	KlonoaAnimList[5].AnimationSpeed = 0.5f;
 
-	KlonoaAnimList[6].Animation->motion = KlonoaANM[anm_idle]->getmotion();
+	KlonoaAnimList[6].Animation->motion = KlonoaANM[anmID_idle]->getmotion();
 	KlonoaAnimList[6].Property = 4;
 	KlonoaAnimList[6].NextAnim = 0;
 	KlonoaAnimList[6].TransitionSpeed = 0.25f;
 	KlonoaAnimList[6].AnimationSpeed = 1.0f;
 
 	//jump
-	KlonoaAnimList[14].Animation->motion = KlonoaANM[anm_jump]->getmotion();
+	KlonoaAnimList[14].Animation->motion = KlonoaANM[anmID_jump]->getmotion();
 	KlonoaAnimList[14].Property = 3;
 	KlonoaAnimList[14].NextAnim = 14;
 	KlonoaAnimList[14].TransitionSpeed = 0.5f;
 	KlonoaAnimList[14].AnimationSpeed = 0.5f;
 
 	//hang pulley / heli
-	KlonoaAnimList[47].Animation->motion = KlonoaANM[anm_holdOne]->getmotion();
+	KlonoaAnimList[47].Animation->motion = KlonoaANM[anmID_holdOne]->getmotion();
 	KlonoaAnimList[47].Property = 3;
 	KlonoaAnimList[47].NextAnim = 47;
 	KlonoaAnimList[47].TransitionSpeed = 0.5f;
 	KlonoaAnimList[47].AnimationSpeed = 0.5f;
 
 	//idle hold tree
-	KlonoaAnimList[54].Animation->motion = KlonoaANM[anm_holdObj]->getmotion();
+	KlonoaAnimList[54].Animation->motion = KlonoaANM[anmID_holdObj]->getmotion();
 	KlonoaAnimList[54].Property = 3;
 	KlonoaAnimList[54].NextAnim = 54;
 	KlonoaAnimList[54].TransitionSpeed = 0.5f;
 	KlonoaAnimList[54].AnimationSpeed = 0.5f;
 
 	//hold obj
-	KlonoaAnimList[62].Animation->motion = KlonoaANM[anm_holdObj]->getmotion();
+	KlonoaAnimList[62].Animation->motion = KlonoaANM[anmID_holdObj]->getmotion();
 	KlonoaAnimList[62].Property = 4;
 	KlonoaAnimList[62].NextAnim = 18;
 	KlonoaAnimList[62].TransitionSpeed = 0.5;
 	KlonoaAnimList[62].AnimationSpeed = 1.0f;
 
 	//hold rocket
-	KlonoaAnimList[80].Animation->motion = KlonoaANM[anm_holdObj]->getmotion();
+	KlonoaAnimList[80].Animation->motion = KlonoaANM[anmID_holdObj]->getmotion();
 	KlonoaAnimList[80].NextAnim = 80;
 	KlonoaAnimList[80].TransitionSpeed = 0.125;
 	KlonoaAnimList[80].AnimationSpeed = 1.0f;
@@ -545,14 +545,14 @@ void LoadKlonoa_Files()
 	KlonoaAnimList[147].AnimationSpeed = 0.5f;
 
 	//victory.
-	KlonoaAnimList[75].Animation->motion = KlonoaANM[anm_victory]->getmotion();
+	KlonoaAnimList[75].Animation->motion = KlonoaANM[anmID_victory]->getmotion();
 	KlonoaAnimList[75].Property = 4;
 	KlonoaAnimList[75].NextAnim = 76;
 	KlonoaAnimList[75].TransitionSpeed = 0.5f;
 	KlonoaAnimList[75].AnimationSpeed = 0.5f;
 
 	//victory standing.
-	KlonoaAnimList[76].Animation->motion = KlonoaANM[anm_victoryStd]->getmotion();
+	KlonoaAnimList[76].Animation->motion = KlonoaANM[anmID_victoryStd]->getmotion();
 	KlonoaAnimList[76].NextAnim = 0;
 	KlonoaAnimList[76].Property = 3;
 	KlonoaAnimList[76].TransitionSpeed = 0.5f;

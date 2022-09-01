@@ -20,24 +20,31 @@ extern ModelInfo* KlonoaMDL;
 extern bool allowHomingAttack;
 extern bool allowSpinDash;
 
-enum klonoaAnim
+enum klonoaAnimDLL //dll is for the array on init
 {
-	anm_stand,
-	anm_death,
-	anm_fall,
-	anm_walk,
-	anm_fly,
-	anm_hover,
-	anm_run,
-	anm_idle,
-	anm_jump,
-	anm_holdOne,
-	anm_holdObj,
-	anm_victory,
-	anm_victory2,
-	anm_victoryStd,
-	anm_battleStd,
+	anmID_stand,
+	anmID_death,
+	anmID_fall,
+	anmID_walk,
+	anmID_fly,
+	anmID_hover,
+	anmID_run,
+	anmID_idle,
+	anmID_jump,
+	anmID_holdOne,
+	anmID_holdObj,
+	anmID_victory,
+	anmID_victory2,
+	anmID_victoryStd,
+	anmID_battleStd,
 
+};
+
+enum klonoaAnim //regular ID used to play anim on the character
+{
+	anm_hover = 147,
+	anm_windBullet,
+	anm_windBulletAir
 };
 
 enum klonoaAction

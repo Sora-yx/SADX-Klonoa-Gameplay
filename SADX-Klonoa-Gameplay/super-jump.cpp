@@ -21,7 +21,7 @@ signed int KlonoaSJump_CheckInput(taskwk* data, playerwk* co2)
 	}
 
 	data->mode = act_super_jump;
-	co2->mj.reqaction = 147;
+	co2->mj.reqaction = anm_hover;
 	co2->spd.y += 7.0f;
 	co2->free.sw[2] = 90;
 	PlayCustomSound(kl_SuperJump0);
@@ -37,7 +37,7 @@ signed int KlonoaSJump2_CheckInput(taskwk* data, playerwk* co2)
 	}
 
 	data->mode = act_super_jump2;
-	co2->mj.reqaction = 147;
+	co2->mj.reqaction = anm_hover;
 	co2->spd.y += 8.0f;
 	co2->free.sw[2] = 90;
 	PlayCustomSound(kl_SuperJump1);
