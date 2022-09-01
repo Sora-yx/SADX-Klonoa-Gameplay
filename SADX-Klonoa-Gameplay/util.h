@@ -33,3 +33,8 @@ void njRotateY_(Angle y);
 void njRotateZ_(Angle z);
 
 void njCnkActionLink(NJS_ACTION_LINK* action, float frame, int flag);
+
+float GetSquare(NJS_VECTOR* orig, NJS_VECTOR* dest);
+float GetDistance(NJS_VECTOR* orig, NJS_VECTOR* dest);
+bool IsPointInsideSphere(NJS_VECTOR* center, NJS_VECTOR* pos, float radius);
+int IsPlayerInsideSphere_(NJS_VECTOR* center, float radius);

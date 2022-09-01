@@ -39,5 +39,6 @@ enum klonoaAnim
 enum klonoaAction
 {
 	act_hover = 110,
-	act_super_jump
+	act_super_jump,
+	act_super_jump2,
 };

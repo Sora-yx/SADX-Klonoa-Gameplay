@@ -1,16 +1,17 @@
 #include "pch.h"
 
-signed int hover_CheckInput(EntityData1* data, playerwk* co2)
+signed int hover_CheckInput(taskwk* data, playerwk* co2)
 {
-	if ((JumpButtons & Controllers[data->CharIndex].PressedButtons) == 0)
+	if ((JumpButtons & Controllers[data->charIndex].PressedButtons) == 0)
 	{
 		return 0;
 	}
 
-	data->Action = act_hover;
+	data->mode = act_hover;
 	co2->mj.reqaction = 147;
 	co2->spd.y = 0.0f;
 	co2->free.sw[2] = 90;
+	PlayCustomSound(hover);
 	return 1;
 }
 

@@ -95,4 +95,5 @@ void init_Audio()
 {
 	WriteCall((void*)0x491701, PlayIdleVoice_r);
 	PlayVoice_t.Hook(PlayVoice_r);
+	Sounds_Init();
 }

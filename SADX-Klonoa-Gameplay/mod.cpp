@@ -18,7 +18,6 @@ extern "C" {
 		}
 
 
-
 		HelperFunctionsGlobal = helperFunctions; // Save the helper pointer for external use
 		modpath = path;
 
@@ -30,10 +29,9 @@ extern "C" {
 
 	}
 
-
 	__declspec(dllexport) void __cdecl OnFrame()
 	{
-
+		RunCustomSounds();
 	}
 
 

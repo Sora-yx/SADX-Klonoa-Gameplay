@@ -206,3 +206,29 @@ void njCnkActionLink(NJS_ACTION_LINK* action, float frame, int flag)
 {
 	late_ActionLinkEx_(action, frame, (QueuedModelFlagsB)flag, 0.0, (void(__cdecl*)(NJS_MODEL_SADX*, int, int))DrawChunkModel);
 }
+
+
+float GetSquare(NJS_VECTOR* orig, NJS_VECTOR* dest) {
+	return powf(dest->x - orig->x, 2) + powf(dest->y - orig->y, 2) + powf(dest->z - orig->z, 2);
+}
+
+float GetDistance(NJS_VECTOR* orig, NJS_VECTOR* dest) {
+	return sqrtf(GetSquare(orig, dest));
+}
+
+
+bool IsPointInsideSphere(NJS_VECTOR* center, NJS_VECTOR* pos, float radius) {
+	return GetDistance(center, pos) <= radius;
+}
+
+int IsPlayerInsideSphere_(NJS_VECTOR* center, float radius) {
+	for (uint8_t player = 0; player < 8; ++player) {
+		if (!EntityData1Ptrs[player]) continue;
+
+		if (IsPointInsideSphere(center, &EntityData1Ptrs[player]->Position, radius)) {
+			return player + 1;
+		}
+	}
+
+	return 0;
+}
