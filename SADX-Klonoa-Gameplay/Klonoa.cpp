@@ -4,6 +4,8 @@
 bool klonoa = false;
 uint8_t klonoaPnum = 0;
 
+NJS_VECTOR KLScaleDiff = { 0.2f, 0.2f, 0.2f };
+
 ModelInfo* KlonoaMDL = nullptr;
 AnimationFile* KlonoaANM[20] = { 0 };
 #define AnimCount 160
@@ -167,6 +169,60 @@ void __cdecl  Klonoa_linkEx(NJS_ACTION_LINK* action, float frame, int flag)
 	njScaleV(0, &scale);
 	late_ActionLinkEx(action, frame, (LATE)flag);
 }
+short twistamount[8] = {};
+void(__cdecl** NodeCallbackFuncPtr)(NJS_OBJECT* obj) = (decltype(NodeCallbackFuncPtr))0x3AB9908;
+
+
+//Calc Klonoa hand and root Pos for objects position
+void NodeCallback2(NJS_OBJECT* obj)
+{
+	if (!playertwp[klonoaPnum])
+		return;
+
+	char pnum = klonoaPnum;
+	auto co2 = playerpwp[pnum];
+	auto kl = (klonoawk*)playertp[pnum]->awp;
+	auto klMDL = KlonoaMDL->getmodel();
+
+	float* v1 = _nj_current_matrix_ptr_;
+
+	if (obj == klMDL->child->child) //root 2
+	{
+		if (playertwp[klonoaPnum]->mode == 2)
+			njRotateX(v1, twistamount[pnum]);
+	}
+	else if (obj == klMDL->child->child->child->sibling->sibling->sibling->sibling->sibling->child->sibling->sibling->child->child->child)
+	{
+		NJS_VECTOR v = { 0.0f, -1.5f, 0.0f };
+
+		njCalcPoint(v1, &v, &co2->righthand_pos); //right hand pos
+		v.z = 1;
+		njCalcVector(v1, &v, &co2->righthand_vec);  //right hand vec
+		SetVectorDiff(&co2->righthand_pos);
+		SetVectorDiff(&co2->righthand_vec);
+
+		//CharObj2Ptrs[currentplayer]->SoManyVectors[0].y = CharObj2Ptrs[currentplayer]->SoManyVectors[0].y - 8;
+	}
+	else if (obj == klMDL->child->child->child->sibling->sibling->sibling->sibling->sibling->child->sibling->sibling->sibling->child->child->child)
+	{
+		NJS_VECTOR v = { 0, -1.5, 0 };
+		njCalcPoint(v1, &v, &co2->lefthand_pos); //left hand pos
+		v.z = 1;
+		njCalcVector(v1, &v, &co2->lefthand_vec); //left hand vec
+		SetVectorDiff(&co2->lefthand_pos);
+		SetVectorDiff(&co2->lefthand_vec);
+		//CharObj2Ptrs[currentplayer]->SoManyVectors[7].y = CharObj2Ptrs[currentplayer]->SoManyVectors[7].y - 8;
+	}
+	else if (obj == klMDL->child->child->child->sibling->sibling->sibling->sibling->sibling->child->sibling->sibling->child->child->child->child)
+	{
+		NJS_VECTOR v = { 0, 1.0f, 0 };
+		njCalcPoint(v1, &v, &kl->ringPos); //ring pos
+		v.z = 1;
+		njCalcVector(v1, &v, &kl->ringVec); // ring vec
+		SetVectorDiff(&kl->ringPos);
+		SetVectorDiff(&kl->ringVec);
+	}
+}
 
 void __cdecl Klonoa_Display_r(task* obj)
 {
@@ -211,12 +267,12 @@ void __cdecl Klonoa_Display_r(task* obj)
 	if (!(data->wtimer & 2))
 	{
 		njSetTexture(&KlonoaTexList);
-		NJS_VECTOR scale = { 0.2f, 0.2f, 0.2f };
-		njPushMatrix(nullptr);
+
+		njPushMatrix(0);
 		NJS_VECTOR pos = data->cwp->info->center;
 		pos.y -= 4.3f;
 		njTranslateV(0, &pos);
-		njScaleV(0, &scale);
+		njScaleV(0, &KLScaleDiff);
 
 		njRotateZ_(data->ang.z);
 		njRotateX_(data->ang.x);
@@ -237,6 +293,11 @@ void __cdecl Klonoa_Display_r(task* obj)
 			}
 
 			DrawKlonoa(co2, curAnim, action);
+			*NodeCallbackFuncPtr = NodeCallback2;
+			njPushMatrix(_nj_unit_matrix_);
+			njNullAction(action, co2->mj.nframe);
+			njPopMatrix(1);
+			*NodeCallbackFuncPtr = nullptr;
 		}
 
 		njPopMatrix(1u);
@@ -271,7 +332,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 	{
 	case act_stnd:
 	case 2:
-		if ((Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2) || KlonoaWBullet_CheckInput(data, co2)))
+		if ((Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2) || KlonoaWBullet_CheckInput(data, co2, klwk)))
 		{
 			break;
 		}
@@ -289,7 +350,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 			co2->mj.reqaction = 18;
 		}
 
-		if ((KlonoaWBullet_CheckInput(data, co2)) || hover_CheckInput(data, co2, klwk))
+		if ((KlonoaWBullet_CheckInput(data, co2, klwk)) || hover_CheckInput(data, co2, klwk))
 		{
 			break;
 		}
@@ -322,7 +383,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 			break;
 		}
 
-		KlonoaBulletEnd(data, co2);
+		KlonoaBulletEnd(data, co2, klwk);
 		break;
 	case act_super_jump:
 		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2))
@@ -358,6 +419,7 @@ void __cdecl Klonoa_Main_r(task* obj)
 	{
 		if (LoadKlonoa_Worker(obj)) {
 			LoadPVM("KlonoaTex", &KlonoaTexList);
+			LoadPVM("KNU_EFF", &KNU_EFF_TEXLIST);
 			klonoa = true;
 		}
 		else

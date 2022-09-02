@@ -6,6 +6,10 @@ time_t t = NULL;
 HelperFunctions HelperFunctionsGlobal;
 std::string modpath;
 
+#define DataArray_(type, name, address, length) \
+    static type *const name = (type *)address; static const int name##_Length = length
+
+DataArray_(playerwk*, playerpwp_, 0x3B3CDF0, 8);
 
 extern "C" {
 	__declspec(dllexport) void __cdecl Init(const char* path, const HelperFunctions& helperFunctions)
@@ -20,13 +24,11 @@ extern "C" {
 
 		HelperFunctionsGlobal = helperFunctions; // Save the helper pointer for external use
 		modpath = path;
-
 		ReadConfig(path, helperFunctions);
 
 		initKlonoa();
 		init_Audio();
 		srand((unsigned)time(&t));
-
 	}
 
 	__declspec(dllexport) void __cdecl OnFrame()

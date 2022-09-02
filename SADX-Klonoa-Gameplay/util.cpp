@@ -232,3 +232,11 @@ int IsPlayerInsideSphere_(NJS_VECTOR* center, float radius) {
 
 	return 0;
 }
+
+
+void SetVectorDiff(NJS_VECTOR* des)
+{
+	des->x *= 0.2f;
+	des->y *= 0.2f;
+	des->z *= 0.2f;
+}

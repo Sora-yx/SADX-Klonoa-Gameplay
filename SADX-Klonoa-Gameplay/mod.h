@@ -20,13 +20,17 @@ extern ModelInfo* KlonoaMDL;
 extern bool allowHomingAttack;
 extern bool allowSpinDash;
 
+extern NJS_VECTOR KLScaleDiff;
+
 struct klonoawk
 {
 	int generalTimer;
 	int hoverTimer;
-	char bulletTimer;
+	bool bulletShot;
 	char superJumpCount;
 	task* enemyGrabPtr;
+	NJS_VECTOR ringPos;
+	NJS_VECTOR ringVec;
 };
 
 enum klonoaAnimDLL //dll is for the array on init
