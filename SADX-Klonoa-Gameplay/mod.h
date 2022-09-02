@@ -20,6 +20,15 @@ extern ModelInfo* KlonoaMDL;
 extern bool allowHomingAttack;
 extern bool allowSpinDash;
 
+struct klonoawk
+{
+	int generalTimer;
+	int hoverTimer;
+	char bulletTimer;
+	char superJumpCount;
+	task* enemyGrabPtr;
+};
+
 enum klonoaAnimDLL //dll is for the array on init
 {
 	anmID_stand,
@@ -37,22 +46,27 @@ enum klonoaAnimDLL //dll is for the array on init
 	anmID_victory2,
 	anmID_victoryStd,
 	anmID_battleStd,
+	anmID_bulletStart,
+	animID_bulletMidAir,
+	animID_bulletEnd
 
 };
 
 enum klonoaAnim //regular ID used to play anim on the character
 {
+	anm_fall = 18,
 	anm_hover = 147,
 	anm_windBullet,
-	anm_windBulletAir
+	anm_windBulletAir,
+	anm_windBulletEnd
 };
 
 enum klonoaAction
 {
 	act_stnd = 1,
+	act_fall = 12,
 	act_hover = 110,
 	act_windBullet,
 	act_windBulletAir,
 	act_super_jump,
-	act_super_jump2,
 };

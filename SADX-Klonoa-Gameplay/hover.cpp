@@ -1,6 +1,8 @@
 #include "pch.h"
 
-signed int hover_CheckInput(taskwk* data, playerwk* co2)
+static const char hoverTimer = 70;
+
+signed int hover_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 {
 	if ((JumpButtons & Controllers[data->charIndex].PressedButtons) == 0 || allowHomingAttack)
 	{
@@ -10,7 +12,7 @@ signed int hover_CheckInput(taskwk* data, playerwk* co2)
 	data->mode = act_hover;
 	co2->mj.reqaction = anm_hover;
 	co2->spd.y = 0.0f;
-	co2->free.sw[2] = 90;
+	klwk->hoverTimer = hoverTimer;
 	PlayCustomSound(hover);
 	return 1;
 }

@@ -14,3 +14,12 @@ signed int KlonoaWBullet_CheckInput(taskwk* data, playerwk* co2)
 	PlayCustomSound(shot);
 	return 1;
 }
+
+void KlonoaBulletEnd(taskwk* data, playerwk* co2)
+{
+	if (co2->mj.reqaction < anm_windBullet || co2->mj.reqaction > anm_windBulletEnd)
+	{
+		bool isOnGround = (data->flag & 3);
+		data->mode = isOnGround ? act_stnd : act_fall;
+	}
+}

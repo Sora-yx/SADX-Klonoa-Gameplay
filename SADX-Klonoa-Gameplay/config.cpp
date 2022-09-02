@@ -10,7 +10,7 @@ BOOL Sonic_ChargeSpinDash_r(playerwk* co2, taskwk* data)
 {
 	if (isKlonoa(data->charIndex))
 	{
-		return 0;
+		return false;
 	}
 
 	return Sonic_ChargeSpinDash_t.Original(co2, data);

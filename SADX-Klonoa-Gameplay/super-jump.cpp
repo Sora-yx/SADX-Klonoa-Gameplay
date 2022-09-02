@@ -13,7 +13,7 @@ void SuperJump_Physics(taskwk* data, motionwk2* data2, playerwk* co2)
 	PGetAccelerationAir(data, data2, co2);
 }
 
-signed int KlonoaSJump_CheckInput(taskwk* data, playerwk* co2)
+signed int KlonoaSJump_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 {
 	if ((JumpButtons & Controllers[data->charIndex].PressedButtons) == 0)
 	{
@@ -22,25 +22,15 @@ signed int KlonoaSJump_CheckInput(taskwk* data, playerwk* co2)
 
 	data->mode = act_super_jump;
 	co2->mj.reqaction = anm_hover;
-	co2->spd.y += 7.0f;
-	co2->free.sw[2] = 90;
-	PlayCustomSound(kl_SuperJump0);
-	return 1;
-}
 
+	char count = klwk->superJumpCount;	
+	co2->spd.y += 7.0f + count;
 
-signed int KlonoaSJump2_CheckInput(taskwk* data, playerwk* co2)
-{
-	if ((JumpButtons & Controllers[data->charIndex].PressedButtons) == 0)
-	{
-		return 0;
-	}
+	if (!count)
+		PlayCustomSound(kl_SuperJump0);
+	else
+		PlayCustomSound(kl_SuperJump1);
 
-	data->mode = act_super_jump2;
-	co2->mj.reqaction = anm_hover;
-	co2->spd.y += 8.0f;
-	co2->free.sw[2] = 90;
-	PlayCustomSound(kl_SuperJump1);
 	return 1;
 }
 

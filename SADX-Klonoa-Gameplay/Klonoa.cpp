@@ -6,7 +6,7 @@ uint8_t klonoaPnum = 0;
 
 ModelInfo* KlonoaMDL = nullptr;
 AnimationFile* KlonoaANM[20] = { 0 };
-#define AnimCount 148
+#define AnimCount 160
 #define boneCount 48
 AnimData_t KlonoaAnimList[AnimCount] = { 0 };
 
@@ -16,6 +16,18 @@ static NJS_TEXLIST KlonoaTexList = { arrayptrandlength(KlonoaTex) };
 static FunctionHook<void, task*> Sonic_Main_t((intptr_t)Sonic_Main);
 static FunctionHook<void, task*> Sonic_Display_t((intptr_t)Sonic_Display);
 static FunctionHook<void, taskwk*, motionwk2*, playerwk*> Sonic_RunsActions_t((intptr_t)Sonic_Act1);
+
+bool LoadKlonoa_Worker(task* obj) {
+
+	if (obj->twp->mode == 0) {
+		void* mem = AllocateMemory(sizeof(klonoawk));
+		memset(mem, 0, sizeof(klonoawk));
+		obj->awp = (anywk*)mem;
+		return true;
+	}
+
+	return false;
+}
 
 int getKlonoaPlayer()
 {
@@ -246,13 +258,20 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		return;
 	}
 
+	if (!isKlonoa(data->charIndex))
+	{
+		return Sonic_RunsActions_t.Original(data, data2, co2);
+	}
+
 	auto data1 = (EntityData1*)data;
+	char pnum = data->charIndex;
+	auto klwk = (klonoawk*)playertp[pnum]->awp;
 
 	switch (data->mode)
 	{
 	case act_stnd:
 	case 2:
-		if ( (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2) || KlonoaWBullet_CheckInput(data, co2)))
+		if ((Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2) || KlonoaWBullet_CheckInput(data, co2)))
 		{
 			break;
 		}
@@ -270,7 +289,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 			co2->mj.reqaction = 18;
 		}
 
-		if ( (KlonoaWBullet_CheckInput(data, co2)) || hover_CheckInput(data, co2))
+		if ((KlonoaWBullet_CheckInput(data, co2)) || hover_CheckInput(data, co2, klwk))
 		{
 			break;
 		}
@@ -287,9 +306,9 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 			break;
 		}
 
-		if (co2->free.sw[2] > 0)
+		if (klwk->hoverTimer > 0)
 		{
-			co2->free.sw[2]--;
+			klwk->hoverTimer--;
 		}
 		else
 		{
@@ -298,40 +317,25 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		break;
 	case act_windBullet:
 	case act_windBulletAir:
+		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2))
+		{
+			break;
+		}
 
+		KlonoaBulletEnd(data, co2);
 		break;
 	case act_super_jump:
 		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2))
 		{
+			klwk->superJumpCount = 0;
 			break;
 		}
 
 		if (data->flag & 3)
 		{
 			data->mode = act_stnd;
+			klwk->superJumpCount = 0;
 			co2->mj.reqaction = 0;
-			return;
-		}
-		else if (KlonoaSJump2_CheckInput(data, co2))
-		{
-			return;
-		}
-
-		break;
-	case act_super_jump2:
-		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2))
-		{
-			break;
-		}
-
-		if (data->flag & 3)
-		{
-			data->mode = act_stnd;
-			co2->mj.reqaction = 0;
-			return;
-		}
-		else if (KlonoaSJump_CheckInput(data, co2))
-		{
 			return;
 		}
 
@@ -352,10 +356,20 @@ void __cdecl Klonoa_Main_r(task* obj)
 
 	if (!data->mode)
 	{
-		LoadPVM("KlonoaTex", &KlonoaTexList);
+		if (LoadKlonoa_Worker(obj)) {
+			LoadPVM("KlonoaTex", &KlonoaTexList);
+			klonoa = true;
+		}
+		else
+		{
+			PrintDebug("Klonoa Mod: Failed to load Klonoa worker mod won't work...\n");
+		}
 	}
 
 	Sonic_Main_t.Original(obj);
+
+	if (!klonoa)
+		return;
 
 	switch (data->mode)
 	{
@@ -367,7 +381,6 @@ void __cdecl Klonoa_Main_r(task* obj)
 		break;
 	}
 
-	klonoa = true;
 	klonoaPnum = pnum;
 }
 
@@ -408,6 +421,10 @@ void LoadKlonoa_Files()
 	KlonoaANM[12] = LoadObjectAnim("Victory2");
 	KlonoaANM[13] = LoadObjectAnim("standVictory");
 	KlonoaANM[14] = LoadObjectAnim("standBattle");
+	KlonoaANM[15] = LoadObjectAnim("bulletStart");
+	KlonoaANM[16] = LoadObjectAnim("bulletMidAir");
+	KlonoaANM[17] = LoadObjectAnim("bulletEnd");
+
 
 	//Init new anim list, put falling animation as a placeholder / failsafe for animation that don't have a SADX counterpart
 	for (int i = 0; i < LengthOfArray(KlonoaAnimList); i++)
@@ -538,11 +555,32 @@ void LoadKlonoa_Files()
 	KlonoaAnimList[80].AnimationSpeed = 1.0f;
 
 	//hover
-	KlonoaAnimList[147].Animation->motion = KlonoaANM[anm_hover]->getmotion();
-	KlonoaAnimList[147].Property = 3;
-	KlonoaAnimList[147].NextAnim = 147;
-	KlonoaAnimList[147].TransitionSpeed = 0.25f;
-	KlonoaAnimList[147].AnimationSpeed = 0.5f;
+	KlonoaAnimList[anm_hover].Animation->motion = KlonoaANM[anmID_hover]->getmotion();
+	KlonoaAnimList[anm_hover].Property = 3;
+	KlonoaAnimList[anm_hover].NextAnim = anm_hover;
+	KlonoaAnimList[anm_hover].TransitionSpeed = 0.25f;
+	KlonoaAnimList[anm_hover].AnimationSpeed = 0.5f;
+
+	//bullet start
+	KlonoaAnimList[anm_windBullet].Animation->motion = KlonoaANM[anmID_bulletStart]->getmotion();
+	KlonoaAnimList[anm_windBullet].Property = 4;
+	KlonoaAnimList[anm_windBullet].NextAnim = anm_windBulletEnd;
+	KlonoaAnimList[anm_windBullet].TransitionSpeed = 0.25f;
+	KlonoaAnimList[anm_windBullet].AnimationSpeed = 0.5f;
+
+	//bullet mid air
+	KlonoaAnimList[anm_windBulletAir].Animation->motion = KlonoaANM[animID_bulletMidAir]->getmotion();
+	KlonoaAnimList[anm_windBulletAir].Property = 4;
+	KlonoaAnimList[anm_windBulletAir].NextAnim = anm_fall;
+	KlonoaAnimList[anm_windBulletAir].TransitionSpeed = 0.25f;
+	KlonoaAnimList[anm_windBulletAir].AnimationSpeed = 0.5f;
+
+	//bullet end
+	KlonoaAnimList[anm_windBulletEnd].Animation->motion = KlonoaANM[animID_bulletEnd]->getmotion();
+	KlonoaAnimList[anm_windBulletEnd].Property = 4;
+	KlonoaAnimList[anm_windBulletEnd].NextAnim = 0;
+	KlonoaAnimList[anm_windBulletEnd].TransitionSpeed = 0.25f;
+	KlonoaAnimList[anm_windBulletEnd].AnimationSpeed = 0.5f;
 
 	//victory.
 	KlonoaAnimList[75].Animation->motion = KlonoaANM[anmID_victory]->getmotion();
