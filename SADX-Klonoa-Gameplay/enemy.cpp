@@ -15,14 +15,54 @@ static FunctionHook<void, task*> UnidusC_t((intptr_t)UnidusC_Main);
 static FunctionHook<void, task*> EGacha_t((intptr_t)0x5B03B0);
 static FunctionHook<void, task*> ERobo_t((intptr_t)ERobo_0);
 
+static float throwSpd = 4.0f;
+
 void ResetKlonoaGrab(klonoawk* klwk)
 {
 	auto task = klwk->enemyGrabPtr;
+
 	if (task)
 	{
-		FreeTask(task);
-		klwk->enemyGrabPtr = nullptr;
+		if (task->twp && (task->twp->mode == dead))
+		{
+			if (FrameCounterUnpaused % 20 == 0)
+			{
+				FreeTask(task);
+				klwk->enemyGrabPtr = nullptr;
+			}
+		}
 	}
+}
+
+void DropEnemy(klonoawk* klwk)
+{
+	if (klwk && klwk->enemyGrabPtr && klwk->enemyGrabPtr->twp)
+	{
+		klwk->enemyGrabPtr->twp->wtimer = 30;
+		klwk->enemyGrabPtr->twp->mode = drop;
+	}
+}
+
+void ThrowEnemy(klonoawk* klwk)
+{
+	if (klwk && klwk->enemyGrabPtr && klwk->enemyGrabPtr->twp)
+	{
+		klwk->enemyGrabPtr->twp->wtimer = 30;
+		klwk->enemyGrabPtr->twp->mode = threw;
+	}
+}
+
+signed int ThrowEnemy_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
+{
+	if ((AttackButtons & Controllers[data->charIndex].PressedButtons) == 0 || !klwk->enemyGrabPtr)
+	{
+		return 0;
+	}
+
+	bool isOnGround = (data->flag & 3);
+	data->mode = isOnGround ? act_throwStd : act_throwAir;
+	co2->mj.reqaction = anm_throwStd; //todo find throw in the air
+	return 1;
 }
 
 static bool TimingEnemyHurt(taskwk* data, klonoawk* klwk)
@@ -31,7 +71,6 @@ static bool TimingEnemyHurt(taskwk* data, klonoawk* klwk)
 	{
 		data->flag |= Status_Hurt;
 		data->mode = dead;
-		ResetKlonoaGrab(klwk);
 		return true;
 	}
 
@@ -69,13 +108,13 @@ static bool EnemyCapturedHandle(task* obj)
 			case drop:
 				if (!TimingEnemyHurt(data, klwk))
 				{
-					data->pos.y-= 0.5f;
+					data->pos.y -= throwSpd;
 				}
 				break;
 			case threw:
 				if (!TimingEnemyHurt(data, klwk))
 				{
-					data->pos.x+=0.5f;
+					data->pos.x += throwSpd;
 				}
 				break;
 			}

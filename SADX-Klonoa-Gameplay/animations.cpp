@@ -1,6 +1,6 @@
 #include "pch.h"
 
-AnimationFile* KlonoaANM[22] = { 0 };
+AnimationFile* KlonoaANM[30] = { 0 };
 #define AnimCount 160
 #define boneCount 48
 AnimData_t KlonoaAnimList[AnimCount] = { 0 };
@@ -209,6 +209,20 @@ void SetKlonoaAnims()
 	KlonoaAnimList[anm_holdJump].NextAnim = anm_holdJump;
 	KlonoaAnimList[anm_holdJump].Property = 10;
 
+	//hold enemy fall
+	KlonoaAnimList[anm_holdFall].Animation->motion = KlonoaANM[anmID_holdFall]->getmotion();
+	KlonoaAnimList[anm_holdFall].NextAnim = anm_holdFall;
+	KlonoaAnimList[anm_holdFall].AnimationSpeed = 0.1f;
+	KlonoaAnimList[anm_holdFall].NextAnim = anm_holdFall;
+	KlonoaAnimList[anm_holdFall].Property = 3;
+
+	//throw enemy
+	KlonoaAnimList[anm_throwStd].Animation->motion = KlonoaANM[anmID_throw]->getmotion();
+	KlonoaAnimList[anm_throwStd].NextAnim = anm_throwStd;
+	KlonoaAnimList[anm_throwStd].AnimationSpeed = 0.7f;
+	KlonoaAnimList[anm_throwStd].NextAnim = anm_std;
+	KlonoaAnimList[anm_throwStd].Property = 4;
+
 	//victory.
 	KlonoaAnimList[75].Animation->motion = KlonoaANM[anmID_victory]->getmotion();
 	KlonoaAnimList[75].Property = 4;
@@ -248,6 +262,8 @@ void LoadKlonoa_AnimFiles()
 	KlonoaANM[19] = LoadObjectAnim("holdWalk");
 	KlonoaANM[20] = LoadObjectAnim("holdRun");
 	KlonoaANM[21] = LoadObjectAnim("holdJump");
+	KlonoaANM[22] = LoadObjectAnim("holdFall");
+	KlonoaANM[23] = LoadObjectAnim("throw");
 }
 
 void InitKlonoaCharSelAnim()

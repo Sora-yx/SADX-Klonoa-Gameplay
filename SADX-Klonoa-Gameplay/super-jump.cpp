@@ -1,5 +1,6 @@
 #include "pch.h"
 
+
 signed int KlonoaSJump_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 {
 	if ((JumpButtons & Controllers[data->charIndex].PressedButtons) == 0 || klwk->enemyGrabPtr == nullptr)
@@ -18,11 +19,6 @@ signed int KlonoaSJump_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 	else
 		PlayCustomSound(kl_SuperJump1);
 
-    if (klwk->enemyGrabPtr->twp)
-    {
-        klwk->enemyGrabPtr->twp->wtimer = 80;
-        klwk->enemyGrabPtr->twp->mode = drop;
-    }
 
 	return 1;
 }

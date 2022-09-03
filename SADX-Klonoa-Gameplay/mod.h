@@ -52,7 +52,9 @@ enum klonoaAnimDLL //dll is for the array on init
 	animID_holdStd,
 	anmID_holdWalk,
 	anmID_holdRun,
-	anmID_holdJump
+	anmID_holdJump,
+	anmID_holdFall,
+	anmID_throw
 };
 
 enum klonoaAnim //regular ID used to play anim on the character
@@ -68,6 +70,7 @@ enum klonoaAnim //regular ID used to play anim on the character
 	anm_holdWalk,
 	anm_holdRun,
 	anm_holdJump,
+	anm_holdFall,
 	anm_throwStd,
 	anm_throwAir,
 };

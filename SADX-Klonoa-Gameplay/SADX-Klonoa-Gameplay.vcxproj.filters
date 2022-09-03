@@ -74,10 +74,10 @@
     <ClCompile Include="wind-bullet.cpp">
       <Filter>Source Files\Abilities</Filter>
     </ClCompile>
-    <ClCompile Include="enemy.cpp">
+    <ClCompile Include="animations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="animations.cpp">
+    <ClCompile Include="enemy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
