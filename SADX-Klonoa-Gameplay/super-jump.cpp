@@ -2,7 +2,7 @@
 
 signed int KlonoaSJump_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 {
-	if ((JumpButtons & Controllers[data->charIndex].PressedButtons) == 0)
+	if ((JumpButtons & Controllers[data->charIndex].PressedButtons) == 0 || klwk->enemyGrabPtr == nullptr)
 	{
 		return 0;
 	}
@@ -11,12 +11,18 @@ signed int KlonoaSJump_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 	co2->mj.reqaction = anm_jump;
 
 	char count = klwk->superJumpCount;	
-	co2->spd.y = 8.0f + count;
+	co2->spd.y = 6.0f + count;
 
 	if (!count)
 		PlayCustomSound(kl_SuperJump0);
 	else
 		PlayCustomSound(kl_SuperJump1);
+
+    if (klwk->enemyGrabPtr->twp)
+    {
+        klwk->enemyGrabPtr->twp->wtimer = 80;
+        klwk->enemyGrabPtr->twp->mode = drop;
+    }
 
 	return 1;
 }

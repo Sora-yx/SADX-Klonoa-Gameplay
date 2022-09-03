@@ -333,6 +333,8 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 	char pnum = data->charIndex;
 	auto klwk = (klonoawk*)playertp[pnum]->awp;
 
+	co2->mj.reqaction = co2->mj.reqaction;
+
 	switch (data->mode)
 	{
 	case act_stnd:
@@ -357,7 +359,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 
 		if ((KlonoaWBullet_CheckInput(data, co2, klwk)) || hover_CheckInput(data, co2, klwk))
 		{
-			break;
+			return;
 		}
 		break;
 	case act_hover:
@@ -389,7 +391,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		}
 
 		KlonoaBulletEnd(data, co2, klwk);
-		break;
+		return;
 	case act_super_jump:
 		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2))
 		{
@@ -421,12 +423,11 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 				}
 				data->flag &= 0xFAu;
 			}
-			break;
 
+			break;
 		}
 		else
 		{
-
 			if (DoJumpThing((EntityData1*)data1, (CharObj2*)co2))
 			{
 				co2->spd.y = co2->p.jmp_addit * 0.80000001f + co2->spd.y;
@@ -446,7 +447,13 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 
 		break;
 	case act_holdStd:
-		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2) || KlonoaHoldEnemy_CheckJump(data, co2))
+		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2))
+		{
+			ResetKlonoaGrab(klwk);
+			return;
+		}
+
+		if (KlonoaHoldEnemy_CheckJump(data, co2))
 		{
 			return;
 		}
@@ -460,7 +467,13 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 
 		break;
 	case act_holdRun:
-		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2) || KlonoaHoldEnemy_CheckJump(data, co2))
+		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2))
+		{
+			ResetKlonoaGrab(klwk);
+			return;
+		}
+
+		if (KlonoaHoldEnemy_CheckJump(data, co2))
 		{
 			return;
 		}
@@ -492,14 +505,18 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		{
 			data->ang.x = data2->ang_aim.x;
 			data->ang.z = data2->ang_aim.z;
-			if (co2->spd.x > 0.0f) {
+
+			if (co2->spd.x > 0.0f) 
+			{
 				data->mode = act_holdRun;
 				co2->mj.reqaction = anm_holdRun;
 			}
-			else {
+			else 
+			{
 				data->mode = act_holdStd;
 				co2->mj.reqaction = anm_holdStd;
 			}
+
 			data->flag &= 0xFAu;
 
 			return;

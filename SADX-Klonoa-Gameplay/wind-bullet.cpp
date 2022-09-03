@@ -43,7 +43,7 @@ HomingAttackTarget GetEnemies(NJS_VECTOR* pos) {
 	return target;
 }
 
-signed int WindBullet_CheckHitEnemy(taskwk* data)
+signed int WindBullet_CheckHitEnemy(taskwk* data, klonoawk* klwk)
 {
 	if (!data || !data->cwp)
 		return 0;
@@ -62,6 +62,7 @@ signed int WindBullet_CheckHitEnemy(taskwk* data)
 				if (cwk->cwp->id == 3) //if it's an enemy
 				{
 					cwk->mode = captured; //set the enemy to a new custom state, see "enemy.cpp"
+					klwk->enemyGrabPtr = cwk->cwp->mytask;
 					return 1;
 				}
 			}
@@ -77,7 +78,7 @@ void KlonoaBulletAction(taskwk* data, playerwk* co2, klonoawk* klwk)
 	if (klwk->currentBulletPtr) {
 
 		//if bullet hit an enemy
-		if (WindBullet_CheckHitEnemy(klwk->currentBulletPtr->twp))
+		if (WindBullet_CheckHitEnemy(klwk->currentBulletPtr->twp, klwk))
 		{
 			data->mode = act_holdStd;
 			PlayCustomSound(pickEnemy);

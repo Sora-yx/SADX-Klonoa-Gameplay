@@ -8,3 +8,4 @@ signed int KlonoaSJump_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk);
 signed int KlonoaWBullet_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk);
 void KlonoaBulletEnd(taskwk* data, playerwk* co2, klonoawk* klwk);
 signed int KlonoaHoldEnemy_CheckJump(taskwk* data, playerwk* co2);
+void ResetKlonoaGrab(klonoawk* klwk);

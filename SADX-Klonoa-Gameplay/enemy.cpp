@@ -15,28 +15,78 @@ static FunctionHook<void, task*> UnidusC_t((intptr_t)UnidusC_Main);
 static FunctionHook<void, task*> EGacha_t((intptr_t)0x5B03B0);
 static FunctionHook<void, task*> ERobo_t((intptr_t)ERobo_0);
 
+void ResetKlonoaGrab(klonoawk* klwk)
+{
+	auto task = klwk->enemyGrabPtr;
+	if (task)
+	{
+		FreeTask(task);
+		klwk->enemyGrabPtr = nullptr;
+	}
+}
+
+static bool TimingEnemyHurt(taskwk* data, klonoawk* klwk)
+{
+	if (data && --data->wtimer <= 0)
+	{
+		data->flag |= Status_Hurt;
+		data->mode = dead;
+		ResetKlonoaGrab(klwk);
+		return true;
+	}
+
+	return false;
+}
+
 static bool EnemyCapturedHandle(task* obj)
 {
 	auto data = obj->twp;
 
-	if (data && data->mode == captured)
+	if (data)
 	{
-		auto pnum = getKlonoaPlayer();
-		auto player = playertwp[pnum];
-		data->ang.y += 1024;
+		bool Enabled = data->mode == captured || data->mode == drop || data->mode == threw;
 
-		if (player && isKlonoa(pnum))
+		if (Enabled)
 		{
-			data->pos = player->pos;
-			data->pos.y += 15.0f;
-		}
+			auto pnum = getKlonoaPlayer();
+			auto player = playertwp[pnum];
+			auto klwk = (klonoawk*)playertp[pnum]->awp;
 
-		if (obj->disp)
-		{
-			obj->disp(obj);
-		}
+			if (!player || !klwk)
+				return false;
 
-		return true;
+			data->ang.y += 1024;
+
+			switch (data->mode)
+			{
+			case captured:
+				if (player && isKlonoa(pnum))
+				{
+					data->pos = player->pos;
+					data->pos.y += 16.0f;
+				}
+				break;
+			case drop:
+				if (!TimingEnemyHurt(data, klwk))
+				{
+					data->pos.y-= 0.5f;
+				}
+				break;
+			case threw:
+				if (!TimingEnemyHurt(data, klwk))
+				{
+					data->pos.x+=0.5f;
+				}
+				break;
+			}
+
+			if (obj->disp)
+			{
+				obj->disp(obj);
+			}
+
+			return true;
+		}
 	}
 
 	return false;

@@ -15,7 +15,7 @@ extern bool allowSpinDash;
 
 extern NJS_VECTOR KLScaleDiff;
 
-const char captured = 15;
+
 
 struct klonoawk
 {
@@ -58,7 +58,7 @@ enum klonoaAnimDLL //dll is for the array on init
 enum klonoaAnim //regular ID used to play anim on the character
 {
 	anm_std,
-	anm_jump = 8,
+	anm_jump = 14,
 	anm_fall = 18,
 	anm_hover = 147,
 	anm_windBullet,
@@ -89,6 +89,15 @@ enum klonoaAction
 	act_holdFall,
 	act_throwStd,
 	act_throwAir,
+};
+
+enum enemyState
+{
+	captured = 15,
+	drop,
+	threw,
+	dead
+
 };
 
 
