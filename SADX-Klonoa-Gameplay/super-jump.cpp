@@ -11,7 +11,7 @@ signed int KlonoaSJump_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 	co2->mj.reqaction = anm_jump;
 
 	char count = klwk->superJumpCount;	
-	co2->spd.y = 6.0f + count;
+	co2->spd.y = 5.0f + count;
 
 	if (!count)
 		PlayCustomSound(kl_SuperJump0);

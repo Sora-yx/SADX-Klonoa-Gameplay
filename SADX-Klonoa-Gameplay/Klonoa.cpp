@@ -8,7 +8,6 @@ NJS_VECTOR KLScaleDiff = { 0.2f, 0.2f, 0.2f };
 
 ModelInfo* KlonoaMDL = nullptr;
 
-
 static NJS_TEXNAME KlonoaTex[2] = { 0 };
 static NJS_TEXLIST KlonoaTexList = { arrayptrandlength(KlonoaTex) };
 
@@ -461,7 +460,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		if (GetAnalog((EntityData1*)data1, 0, 0) || co2->spd.x != 0.0f)
 		{
 			data->mode++;
-			co2->mj.reqaction = anm_holdRun;
+			co2->mj.reqaction = anm_holdWalk;
 			return;
 		}
 
@@ -477,6 +476,16 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		{
 			return;
 		}
+
+		if (co2->spd.x <= co2->p.run_speed)
+		{
+			co2->mj.reqaction = anm_holdWalk;
+		}
+		else
+		{
+			co2->mj.reqaction = anm_holdRun;
+		}
+
 
 		if (PCheckBreak(data) && co2->spd.x >= (double)co2->p.jog_speed)
 		{
