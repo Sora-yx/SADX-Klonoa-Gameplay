@@ -1,13 +1,6 @@
 #pragma once
 
-void ReadConfig(const char* path, const HelperFunctions& helperFunctions);
-
 extern HelperFunctions HelperFunctionsGlobal;
-
-void init_Audio();
-void initKlonoa();
-void init_KlonoaModelsAnim();
-void FreeObjModels();
 
 extern std::string modpath;
 
@@ -21,6 +14,8 @@ extern bool allowHomingAttack;
 extern bool allowSpinDash;
 
 extern NJS_VECTOR KLScaleDiff;
+
+const char captured = 15;
 
 struct klonoawk
 {
@@ -74,4 +69,17 @@ enum klonoaAction
 	act_windBullet,
 	act_windBulletAir,
 	act_super_jump,
+	act_holdStd,
+	act_holdRun,
+	act_holdJump,
+	act_throwStd,
+	act_throwAir,
 };
+
+
+void ReadConfig(const char* path, const HelperFunctions& helperFunctions);
+void init_Audio();
+void initKlonoa();
+void init_KlonoaModelsAnim();
+void FreeObjModels();
+void init_EnemiesHack();

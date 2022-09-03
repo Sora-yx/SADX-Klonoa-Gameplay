@@ -54,6 +54,14 @@ bool isKlonoa(char pnum)
 	return false;
 }
 
+bool isKlonoaHold(char pnum)
+{
+	if (!playertwp[pnum])
+		return false;
+
+	return playertwp[pnum]->mode >= act_holdStd && playertwp[pnum]->mode <= act_holdJump;
+}
+
 
 void DrawKlonoa_Event(NJS_ACTION* anim, float frame, QueuedModelFlagsB flg)
 {

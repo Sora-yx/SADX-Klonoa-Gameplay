@@ -43,23 +43,25 @@ HomingAttackTarget GetEnemies(NJS_VECTOR* pos) {
 	return target;
 }
 
-signed int EnemyGrab(taskwk* data)
+signed int WindBullet_CheckHitEnemy(taskwk* data)
 {
 	if (!data || !data->cwp)
 		return 0;
 
 	auto cwp = data->cwp;
 
+	//loop the collision array of the bullet...
 	for (int i = 0; i < 16; i++)
 	{
 		auto cwk = cwp->hit_info[i].hit_twp;
 
-		if (cwk != nullptr)
+		if (cwk != nullptr) //if the collision hit something browse it...
 		{
-			if (cwk->cwp->mytask && cwk->cwp->mytask->twp)
+			if (cwk->cwp->mytask && cwk->cwp->mytask->twp) // if the target has a main and data
 			{
-				if (cwk->cwp->id == 3)
+				if (cwk->cwp->id == 3) //if it's an enemy
 				{
+					cwk->mode = captured; //set the enemy to a new custom state, see "enemy.cpp"
 					return 1;
 				}
 			}
@@ -71,9 +73,15 @@ signed int EnemyGrab(taskwk* data)
 
 void KlonoaBulletAction(taskwk* data, playerwk* co2, klonoawk* klwk)
 {
-
+	//if bullet exist, look for an enemy
 	if (klwk->currentBulletPtr) {
-		EnemyGrab(klwk->currentBulletPtr->twp);
+
+		//if bullet hit an enemy
+		if (WindBullet_CheckHitEnemy(klwk->currentBulletPtr->twp))
+		{
+
+			return;
+		}
 	}
 
 	if (co2->mj.reqaction != anm_windBullet && co2->mj.reqaction != anm_windBulletAir || klwk->bulletShot)
@@ -108,7 +116,6 @@ void KlonoaBulletAction(taskwk* data, playerwk* co2, klonoawk* klwk)
 	}
 
 }
-
 
 
 void KlonoaBulletEnd(taskwk* data, playerwk* co2, klonoawk* klwk)
