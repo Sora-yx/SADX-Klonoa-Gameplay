@@ -28,6 +28,7 @@ struct klonoawk
 	int hoverTimer;
 	bool bulletShot;
 	char superJumpCount;
+	task* currentBulletPtr;
 	task* enemyGrabPtr;
 	NJS_VECTOR ringPos;
 	NJS_VECTOR ringVec;
