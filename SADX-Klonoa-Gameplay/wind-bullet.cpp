@@ -79,11 +79,13 @@ void KlonoaBulletAction(taskwk* data, playerwk* co2, klonoawk* klwk)
 		//if bullet hit an enemy
 		if (WindBullet_CheckHitEnemy(klwk->currentBulletPtr->twp))
 		{
-
+			data->mode = act_holdStd;
+			PlayCustomSound(pickEnemy);
 			return;
 		}
 	}
 
+	//create and move bullet
 	if (co2->mj.reqaction != anm_windBullet && co2->mj.reqaction != anm_windBulletAir || klwk->bulletShot)
 		return;
 
@@ -99,7 +101,6 @@ void KlonoaBulletAction(taskwk* data, playerwk* co2, klonoawk* klwk)
 	njCalcVector(_nj_current_matrix_ptr_, &KLRingPosNew, &a3);
 	njPopMatrix(1u);
 	njAddVector(&a3, &data->cwp->info->center);
-
 
 	if (klwk->bulletShot == false) {
 

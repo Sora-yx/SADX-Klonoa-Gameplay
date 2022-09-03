@@ -1,18 +1,5 @@
 #include "pch.h"
 
-void SuperJump_Physics(taskwk* data, motionwk2* data2, playerwk* co2)
-{
-	PResetAngle(data, data2, co2);
-	if (PResetAccelerationAir(data, data2, co2))
-	{
-		PGetSpeed(data, data2, co2);
-		PSetPosition(data, data2, co2);
-		PResetPosition(data, data2, co2);
-	}
-
-	PGetAccelerationAir(data, data2, co2);
-}
-
 signed int KlonoaSJump_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 {
 	if ((JumpButtons & Controllers[data->charIndex].PressedButtons) == 0)
@@ -21,10 +8,10 @@ signed int KlonoaSJump_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 	}
 
 	data->mode = act_super_jump;
-	co2->mj.reqaction = anm_hover;
+	co2->mj.reqaction = anm_jump;
 
 	char count = klwk->superJumpCount;	
-	co2->spd.y += 7.0f + count;
+	co2->spd.y = 8.0f + count;
 
 	if (!count)
 		PlayCustomSound(kl_SuperJump0);
@@ -34,3 +21,30 @@ signed int KlonoaSJump_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 	return 1;
 }
 
+
+signed int KlonoaHoldEnemy_CheckJump(taskwk* data, playerwk* co2)
+{
+    if (JumpAllowed((EntityData1*)data) == 2)
+    {
+        StartPanelJump(data);
+        data->mode = 40;
+        Sonic_JumpPadAni((CharObj2*)co2);
+        data->flag &= ~2u;
+        co2->jumptimer = 0;
+        PlaySound(17, 0, 0, 0);
+        return 1;
+    }
+
+    if (!JumpAllowed((EntityData1*)data))
+    {
+        return 0;
+    }
+
+    data->mode = act_holdJump;
+    co2->spd.y = co2->p.jmp_y_spd;
+    co2->mj.reqaction = anm_holdJump;
+    data->flag &= 0xFD;
+    co2->jumptimer = 0;
+    PlaySound(17, 0, 0, 0); 
+    return 1;
+}

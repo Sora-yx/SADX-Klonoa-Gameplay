@@ -240,3 +240,10 @@ void SetVectorDiff(NJS_VECTOR* des)
 	des->y *= 0.2f;
 	des->z *= 0.2f;
 }
+
+void RegularPhysicsFunctions(taskwk* data, motionwk2* data2, playerwk* co2)
+{
+	PGetSpeed(data, data2, co2);
+	PSetPosition(data, data2, co2);
+	PResetPosition(data, data2, co2);
+}

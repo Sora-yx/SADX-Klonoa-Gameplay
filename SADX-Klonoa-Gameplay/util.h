@@ -40,3 +40,4 @@ bool IsPointInsideSphere(NJS_VECTOR* center, NJS_VECTOR* pos, float radius);
 int IsPlayerInsideSphere_(NJS_VECTOR* center, float radius);
 void SetVectorDiff(NJS_VECTOR* des);
 bool isKlonoaHold(char pnum);
+void RegularPhysicsFunctions(taskwk* data, motionwk2* data2, playerwk* co2);

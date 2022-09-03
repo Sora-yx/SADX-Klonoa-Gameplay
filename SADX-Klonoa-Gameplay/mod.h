@@ -48,23 +48,37 @@ enum klonoaAnimDLL //dll is for the array on init
 	anmID_battleStd,
 	anmID_bulletStart,
 	animID_bulletMidAir,
-	animID_bulletEnd
-
+	animID_bulletEnd,
+	animID_holdStd,
+	anmID_holdWalk,
+	anmID_holdRun,
+	anmID_holdJump
 };
 
 enum klonoaAnim //regular ID used to play anim on the character
 {
+	anm_std,
+	anm_jump = 8,
 	anm_fall = 18,
 	anm_hover = 147,
 	anm_windBullet,
 	anm_windBulletAir,
-	anm_windBulletEnd
+	anm_windBulletEnd,
+	anm_holdStd,
+	anm_holdWalk,
+	anm_holdRun,
+	anm_holdJump,
+	anm_throwStd,
+	anm_throwAir,
 };
 
 enum klonoaAction
 {
 	act_stnd = 1,
+	act_walk,
+	act_jump = 8,
 	act_fall = 12,
+	act_brake,
 	act_hover = 110,
 	act_windBullet,
 	act_windBulletAir,
@@ -72,6 +86,7 @@ enum klonoaAction
 	act_holdStd,
 	act_holdRun,
 	act_holdJump,
+	act_holdFall,
 	act_throwStd,
 	act_throwAir,
 };
@@ -80,6 +95,5 @@ enum klonoaAction
 void ReadConfig(const char* path, const HelperFunctions& helperFunctions);
 void init_Audio();
 void initKlonoa();
-void init_KlonoaModelsAnim();
-void FreeObjModels();
 void init_EnemiesHack();
+void Init_KlonoaAnim();
