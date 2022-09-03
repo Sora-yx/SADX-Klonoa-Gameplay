@@ -15,6 +15,17 @@ static FunctionHook<void, task*> Sonic_Main_t((intptr_t)Sonic_Main);
 static FunctionHook<void, task*> Sonic_Display_t((intptr_t)Sonic_Display);
 static FunctionHook<void, taskwk*, motionwk2*, playerwk*> Sonic_RunsActions_t((intptr_t)Sonic_Act1);
 
+bool isKlonoa(char pnum)
+{
+	if (klonoa && playertwp[pnum] && playertwp[pnum]->charIndex == klonoaPnum)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+
 bool LoadKlonoa_Worker(task* obj) {
 
 	if (obj->twp->mode == 0) {
@@ -40,16 +51,6 @@ int getKlonoaPlayer()
 	return -1;
 }
 
-bool isKlonoa(char pnum)
-{
-	if (klonoa && playertwp[pnum] && playertwp[pnum]->charIndex == klonoaPnum)
-	{
-		return true;
-	}
-
-	return false;
-}
-
 bool isKlonoaHold(char pnum)
 {
 	if (!playertwp[pnum])
@@ -58,7 +59,7 @@ bool isKlonoaHold(char pnum)
 	return playertwp[pnum]->mode >= act_holdStd && playertwp[pnum]->mode <= act_holdFall;
 }
 
-
+//used for cutscene and character select
 void DrawKlonoa_Event(NJS_ACTION* anim, float frame, QueuedModelFlagsB flg)
 {
 	SetupWorldMatrix();
@@ -80,6 +81,7 @@ void DrawKlonoa_Event(NJS_ACTION* anim, float frame, QueuedModelFlagsB flg)
 	Direct3D_UnsetChunkModelRenderState();
 }
 
+//regular draw during gameplay
 void DrawKlonoa(playerwk* co2, int animNum, NJS_ACTION* action)
 {
 	SetupWorldMatrix();
@@ -101,6 +103,7 @@ void DrawKlonoa(playerwk* co2, int animNum, NJS_ACTION* action)
 	Direct3D_UnsetChunkModelRenderState();
 	njPopMatrix(1);
 }
+
 
 void SpinDash_RotateModel(int curAnim, taskwk* data)
 {
@@ -173,9 +176,9 @@ void __cdecl  Klonoa_linkEx(NJS_ACTION_LINK* action, float frame, int flag)
 	njScaleV(0, &scale);
 	late_ActionLinkEx(action, frame, (LATE)flag);
 }
+
 short twistamount[8] = {};
 void(__cdecl** NodeCallbackFuncPtr)(NJS_OBJECT* obj) = (decltype(NodeCallbackFuncPtr))0x3AB9908;
-
 
 //Calc Klonoa hand and root Pos for objects position
 void NodeCallback2(NJS_OBJECT* obj)
@@ -204,8 +207,6 @@ void NodeCallback2(NJS_OBJECT* obj)
 		njCalcVector(v1, &v, &co2->righthand_vec);  //right hand vec
 		SetVectorDiff(&co2->righthand_pos);
 		SetVectorDiff(&co2->righthand_vec);
-
-		//CharObj2Ptrs[currentplayer]->SoManyVectors[0].y = CharObj2Ptrs[currentplayer]->SoManyVectors[0].y - 8;
 	}
 	else if (obj == klMDL->child->child->child->sibling->sibling->sibling->sibling->sibling->child->sibling->sibling->sibling->child->child->child)
 	{
@@ -215,7 +216,6 @@ void NodeCallback2(NJS_OBJECT* obj)
 		njCalcVector(v1, &v, &co2->lefthand_vec); //left hand vec
 		SetVectorDiff(&co2->lefthand_pos);
 		SetVectorDiff(&co2->lefthand_vec);
-		//CharObj2Ptrs[currentplayer]->SoManyVectors[7].y = CharObj2Ptrs[currentplayer]->SoManyVectors[7].y - 8;
 	}
 	else if (obj == klMDL->child->child->child->sibling->sibling->sibling->sibling->sibling->child->sibling->sibling->child->child->child->child)
 	{
