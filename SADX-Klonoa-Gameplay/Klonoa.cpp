@@ -593,7 +593,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 			break;
 		}
 
-		KlonoaBulletEnd(data, co2, klwk);
+		Klonoa_ManageBullet(data, co2, klwk);
 		return;
 	case act_super_jump:
 		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2))
@@ -656,14 +656,8 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 			return;
 		}
 
-		if (KlonoaHoldEnemy_CheckJump(data, co2) || KlonoaCheckBeInTheAir(co2, data, klwk))
+		if (HoldEnemy_CheckJump(data, co2) || ThrowEnemy_CheckInput(data, co2, klwk) || KlonoaCheckBeInTheAir(co2, data, klwk))
 		{
-			return;
-		}
-
-		if (ThrowEnemy_CheckInput(data, co2, klwk))
-		{
-			ThrowEnemy(klwk);
 			return;
 		}
 
@@ -682,15 +676,8 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 			return;
 		}
 
-		if (KlonoaHoldEnemy_CheckJump(data, co2) || KlonoaCheckBeInTheAir(co2, data, klwk))
+		if (HoldEnemy_CheckJump(data, co2) || ThrowEnemy_CheckInput(data, co2, klwk) || KlonoaCheckBeInTheAir(co2, data, klwk))
 		{
-			return;
-		}
-
-
-		if (ThrowEnemy_CheckInput(data, co2, klwk))
-		{
-			ThrowEnemy(klwk);
 			return;
 		}
 
@@ -730,7 +717,6 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 
 		if (ThrowEnemy_CheckInput(data, co2, klwk))
 		{
-			ThrowEnemy(klwk);
 			return;
 		}
 

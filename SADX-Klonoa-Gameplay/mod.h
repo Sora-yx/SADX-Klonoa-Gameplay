@@ -99,6 +99,7 @@ enum enemyState
 {
 	captured = 15,
 	drop,
+	throwSetup,
 	threw,
 	dead
 

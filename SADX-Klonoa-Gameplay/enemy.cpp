@@ -1,4 +1,8 @@
 #include "pch.h"
+#include "abilities.h"
+
+ObjectFuncPtr enemyList[14] = { Kiki_Main, RhinoTank_Main, Sweep_Main, SpinnerA_Main, SpinnerB_Main, SpinnerC_Main, EPolice_Main, EBuyon,
+ESman, UnidusA_Main, UnidusB_Main, UnidusC_Main, (ObjectFuncPtr)0x5B03B0, ERobo_0 };
 
 static FunctionHook<void, task*> Kiki_Main_t((intptr_t)Kiki_Main);
 static FunctionHook<void, task*> RhinoTank_t((intptr_t)RhinoTank_Main);
@@ -17,55 +21,6 @@ static FunctionHook<void, task*> ERobo_t((intptr_t)ERobo_0);
 
 static float throwSpd = 5.0f;
 
-void ResetKlonoaGrab(klonoawk* klwk)
-{
-	auto task = klwk->enemyGrabPtr;
-
-	if (task)
-	{
-		if (task->twp)
-		{
-			if (FrameCounterUnpaused % 30 == 0)
-			{
-				FreeTask(task);
-				klwk->enemyGrabPtr = nullptr;
-				return;
-			}
-		}
-	}
-}
-
-void DropEnemy(klonoawk* klwk)
-{
-	if (klwk && klwk->enemyGrabPtr && klwk->enemyGrabPtr->twp)
-	{
-		klwk->enemyGrabPtr->twp->wtimer = 30;
-		klwk->enemyGrabPtr->twp->mode = drop;
-	}
-}
-
-void ThrowEnemy(klonoawk* klwk)
-{
-	if (klwk && klwk->enemyGrabPtr && klwk->enemyGrabPtr->twp)
-	{
-		klwk->enemyGrabPtr->twp->wtimer = 30;
-		klwk->enemyGrabPtr->twp->mode = threw;
-	}
-}
-
-signed int ThrowEnemy_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
-{
-	if ((AttackButtons & Controllers[data->charIndex].PressedButtons) == 0 || !klwk->enemyGrabPtr)
-	{
-		return 0;
-	}
-
-	bool isOnGround = (data->flag & 3);
-	data->mode = isOnGround ? act_throwStd : act_throwAir;
-	co2->mj.reqaction = anm_throwStd; //todo find throw in the air
-	return 1;
-}
-
 static bool TimingEnemyHurt(taskwk* data, klonoawk* klwk)
 {
 	if (data && --data->wtimer <= 0)
@@ -78,13 +33,46 @@ static bool TimingEnemyHurt(taskwk* data, klonoawk* klwk)
 	return false;
 }
 
+void DestroyEnemy(taskwk* a1)
+{
+	auto a2 = a1->pos.y + 5.0f;
+	CreateFlash2(a1->pos.x, a2, a1->pos.z, 1.4);
+	CreateExpSpring(a1, 8u);
+	auto a3 = a1->pos.y + 15.0f;
+	CreateAnimal(rand() % 15, a1->pos.x, a3, a1->pos.z);
+}
+
+void ThrowEnemy_Action(task* tp)
+{
+	float timer = 0.0f;
+	auto data = tp->twp;
+	auto wk = (enemywk*)tp->mwp;
+	auto des = wk->home;
+	timer = (data->counter.f - 0.083333336f);
+	data->counter.f = data->counter.f - 0.083333336f;
+
+	if (timer <= 0.0f)
+	{
+		data->mode = dead;
+		return;
+	}
+
+	data->cwp->info->a = 12.0f;
+	data->pos.x += des.x;
+	data->pos.y += des.y;
+	data->pos.z += des.z;
+	data->ang.x += 2048;
+	EntryColliList(data);
+}
+
+
 static bool EnemyCapturedHandle(task* obj)
 {
 	auto data = obj->twp;
 
 	if (data)
 	{
-		bool Enabled = data->mode == captured || data->mode == drop || data->mode == threw || data->mode == dead;
+		bool Enabled = data->mode >= captured;
 
 		if (Enabled)
 		{
@@ -112,14 +100,18 @@ static bool EnemyCapturedHandle(task* obj)
 					data->pos.y -= throwSpd;
 				}
 				break;
+			case throwSetup:
+				data->counter.f = 4.0f; //timer
+				CCL_Init(obj, (CCL_INFO*)0x981D10, 1, 4u);
+				data->mode++;
+				break;
 			case threw:
-				if (!TimingEnemyHurt(data, klwk))
-				{
-					data->pos.x += throwSpd;
-				}
+				ThrowEnemy_Action(obj);
 				break;
 			case dead:
 				ResetKlonoaGrab(klwk);
+				DestroyEnemy(data);
+				UpdateSetDataAndDelete(obj);
 				break;
 			}
 

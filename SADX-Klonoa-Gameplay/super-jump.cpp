@@ -24,7 +24,7 @@ signed int KlonoaSJump_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 }
 
 
-signed int KlonoaHoldEnemy_CheckJump(taskwk* data, playerwk* co2)
+signed int HoldEnemy_CheckJump(taskwk* data, playerwk* co2)
 {
     if (JumpAllowed((EntityData1*)data) == 2)
     {

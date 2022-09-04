@@ -13,6 +13,7 @@ FunctionPointer(void, DrawEventAction, (taskwk* data), 0x4187D0);
 TaskFunc(dispEffectKnuxHadoken, 0x4C0B60);
 
 FunctionPointer(void, StartPanelJump, (taskwk* data), 0x4B8470);
+TaskFunc(UpdateSetDataAndDelete, 0x46C150);
 
 // BOOL __usercall@<eax>(CharObj2 *Data2@<eax>, EntityData1 *Data1@<edi>)
 static const void* const SonicCheckStopPtr = (void*)0x494FF0;
