@@ -681,7 +681,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 			return;
 		}
 
-		if (co2->spd.x <= co2->p.run_speed)
+		if (co2->spd.x <= co2->p.run_speed - 0.5f)
 		{
 			co2->mj.reqaction = anm_holdWalk;
 		}

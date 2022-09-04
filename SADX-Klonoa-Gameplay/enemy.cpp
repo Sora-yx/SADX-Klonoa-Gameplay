@@ -19,6 +19,21 @@ static FunctionHook<void, task*> UnidusC_t((intptr_t)UnidusC_Main);
 static FunctionHook<void, task*> EGacha_t((intptr_t)0x5B03B0);
 static FunctionHook<void, task*> ERobo_t((intptr_t)ERobo_0);
 
+static FunctionHook<void, int> IncrasementAct_t((intptr_t)IncrementAct);
+
+//reset grab pointer when changing act
+void IncrementAct_r(int amount)
+{
+	auto pnum = getKlonoaPlayer();
+	if (pnum > -1) {
+		auto player = playertwp[pnum];
+		auto klwk = (klonoawk*)playertp[pnum]->awp;
+		ResetKlonoaGrab(klwk);
+	}
+
+	return IncrasementAct_t.Original(amount);
+}
+
 static float throwSpd = 5.0f;
 
 static bool TimingEnemyHurt(taskwk* data, klonoawk* klwk)
@@ -77,6 +92,10 @@ static bool EnemyCapturedHandle(task* obj)
 		if (Enabled)
 		{
 			auto pnum = getKlonoaPlayer();
+
+			if (pnum < 0)
+				return false;
+
 			auto player = playertwp[pnum];
 			auto klwk = (klonoawk*)playertp[pnum]->awp;
 
@@ -255,4 +274,6 @@ void init_EnemiesHack()
 	UnidusC_t.Hook(UnidusC_r);
 	EGacha_t.Hook(EGacha_r);
 	ERobo_t.Hook(ERobo_r);
+
+	IncrasementAct_t.Hook(IncrementAct_r);
 }

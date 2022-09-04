@@ -8,12 +8,10 @@ void ResetKlonoaGrab(klonoawk* klwk)
 	{
 		if (task->twp)
 		{
-			if (FrameCounterUnpaused % 30 == 0)
-			{
-				FreeTask(task);
-				klwk->enemyGrabPtr = nullptr;
-				return;
-			}
+			FreeTask(task);
+			klwk->enemyGrabPtr = nullptr;
+			return;
+
 		}
 	}
 }
@@ -70,11 +68,15 @@ signed int ThrowEnemy_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 
 	auto enemyData = klwk->enemyGrabPtr->twp;
 
-	FreeColliWork(enemyData);
-	enemyData->mode = throwSetup;
-	bool isOnGround = (data->flag & 3);
-	data->mode = isOnGround ? act_throwStd : act_throwAir;
-	co2->mj.reqaction = anm_throwStd; //todo find throw in the air
-	ThrowEnemyCalcDirection(data, klwk);
-	return 1;
+	if (enemyData) {
+		FreeColliWork(enemyData);
+		enemyData->mode = throwSetup;
+		bool isOnGround = (data->flag & 3);
+		data->mode = isOnGround ? act_throwStd : act_throwAir;
+		co2->mj.reqaction = anm_throwStd; //todo find throw in the air
+		ThrowEnemyCalcDirection(data, klwk);
+		return 1;
+	}
+
+	return 0;
 }

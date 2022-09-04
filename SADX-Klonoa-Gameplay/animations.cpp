@@ -214,9 +214,9 @@ void SetKlonoaAnims()
 	//hold enemy wlk
 	KlonoaAnimList[anm_holdWalk].Animation->motion = KlonoaANM[anmID_holdWalk]->getmotion();
 	KlonoaAnimList[anm_holdWalk].NextAnim = anm_holdWalk;
-	KlonoaAnimList[anm_holdWalk].AnimationSpeed = 0.3f;
-	KlonoaAnimList[anm_holdWalk].NextAnim = anm_holdWalk;
+	KlonoaAnimList[anm_holdWalk].AnimationSpeed = 0.2f;
 	KlonoaAnimList[anm_holdWalk].Property = 10;
+	KlonoaAnimList[anm_holdWalk].TransitionSpeed = 0.15f;
 
 	//hold enemy run
 	KlonoaAnimList[anm_holdRun].Animation->motion = KlonoaANM[anmID_holdRun]->getmotion();
