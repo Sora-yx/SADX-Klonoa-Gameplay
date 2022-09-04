@@ -15,9 +15,9 @@ signed int KlonoaSJump_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 	co2->spd.y = 5.0f + count;
 
 	if (!count)
-		PlayCustomSound(kl_SuperJump0);
+		PlayCustomSoundVolume(kl_SuperJump0, 0.7f);
 	else
-		PlayCustomSound(kl_SuperJump1);
+		PlayCustomSoundVolume(kl_SuperJump1, 0.7f);
 
 
 	return 1;

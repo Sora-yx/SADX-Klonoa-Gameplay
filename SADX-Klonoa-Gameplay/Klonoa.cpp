@@ -124,8 +124,77 @@ void SpinDash_RotateModel(int curAnim, taskwk* data)
 
 void Klonoa_Fall(taskwk* data, playerwk* co2)
 {
-	data->mode = 12;
-	co2->mj.reqaction = 18;
+	data->mode = act_fall;
+	co2->mj.reqaction = anm_fall;
+}
+
+signed int KlonoaCheckDamage(taskwk* data, playerwk* mwp)
+{
+
+	if (data->id == 2 || (data->flag & 4) == 0 && (!mwp || (mwp->attr & 0x10000) == 0))
+		return 0;
+
+	char charid = data->counter.b[0];
+	data->wtimer = 120;
+	VibConvergence(charid, 7, 59, 6);
+
+	auto curAction = data->mode;
+
+	if (curAction >= 46 && curAction <= 50)
+	{
+		dsPlay_oneshot(1222, 0, 0, 0);
+		data->mode = 50;
+		mwp->mj.reqaction = 46;
+		PSetCrashEffect(data);
+
+		if (GetNumRing() > 0)
+		{
+			data->pos.x += (float)(mwp->cstsp->tnorm.x * 5.0f);
+			data->pos.y += (float)(mwp->cstsp->tnorm.y * 5.0f);
+			data->pos.z += (float)(mwp->cstsp->tnorm.z * 5.0f);
+			mwp->spd.x = mwp->spd.x * (float)0.2;
+			mwp->spd.y = mwp->p.jmp_y_spd;
+			data->ang.x = 0;
+			data->ang.z = 49152;
+		}
+
+		return 1;
+	}
+
+	if (curAction >= 62 && curAction <= 68)
+	{
+		dsPlay_oneshot(1233, 0, 0, 0);
+		data->mode = 68;
+		mwp->mj.reqaction = 110;
+		data->flag &= 0xFFFBu;
+		return 0;
+	}
+	if ((mwp->equipment & 0x8000) != 0)
+	{
+		mwp->spd.x = mwp->spd.x * 0.5f;
+		return 0;
+	}
+
+	if (curAction == 45)
+		return 0;
+
+	if (curAction == 44 && (ssStageNumber < 15 || ssStageNumber > 25))
+		CameraReleaseEventCamera();
+
+	dsPlay_oneshot(1233, 0, 0, 0);
+
+	data->mode = act_hurt;
+	mwp->mj.reqaction = 23;
+	data->flag &= 0xFFFBu;
+	mwp->spd.x = -mwp->p.run_speed;
+	mwp->spd.y = mwp->p.jmp_y_spd;
+	data->flag &= 0xFAFFu;
+	char rng = rand() % 2;
+
+	if (Rings > 0)
+		PlayCustomSoundVolume(rng ? kl_pain : kl_pain2, 1);
+
+	return 1;
 }
 
 signed int KlonoaCheckBeInTheAir(playerwk* co2, taskwk* data, klonoawk* klwk)
@@ -137,14 +206,12 @@ signed int KlonoaCheckBeInTheAir(playerwk* co2, taskwk* data, klonoawk* klwk)
 		return 0;
 	}
 
-
 	if (klwk->enemyGrabPtr)
 	{
 		data->mode = act_holdFall;
 		co2->mj.reqaction = anm_holdFall;
 		return 1;
 	}
-
 
 	if ((flag & Status_Ball) != 0)
 	{
@@ -163,7 +230,6 @@ signed int KlonoaCheckBeInTheAir(playerwk* co2, taskwk* data, klonoawk* klwk)
 
 		Character_Grab((EntityData1*)data, (CharObj2*)co2);
 	}
-
 
 	data->mode = 12;
 	co2->mj.reqaction = anm_fall;
@@ -374,8 +440,49 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 	char pnum = data->charIndex;
 	auto klwk = (klonoawk*)playertp[pnum]->awp;
 
-	co2->mj.reqaction = co2->mj.reqaction;
+	if (co2->item < 0)
+	{
+		data->flag |= 0x8000u;
+		data->wtimer = 0;
+	}
+	else
+	{
+		int timer = data->wtimer;
 
+		if (timer)
+		{
+			if (timer != 32752)
+			{
+				data->flag &= 0xFBu;
+				data->wtimer = timer - 1;
+			}
+		}
+		else if (KlonoaCheckDamage(data, co2))
+		{
+
+			data->flag |= 0x8000;
+
+			if ((data->flag & Status_HoldObject) != 0)
+			{
+				Character_Grab((EntityData1*)data1, (CharObj2*)co2);
+			}
+
+			data->flag &= 0xC6FFu;
+
+			if ((co2->item & (Powerups_MagneticBarrier | Powerups_Barrier)) != 0)
+			{
+				co2->item = co2->item & 0xFFFC;
+			}
+			else
+			{
+				HurtCharacter(pnum);
+			}
+		}
+		else
+		{
+			data->flag &= 0x7FFFu;
+		}
+	}
 
 	switch (data->mode)
 	{
@@ -394,16 +501,69 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 			break;
 		}
 
-		if (co2->spd.y < 0.0f)
+		if (data->flag & 3)
 		{
-			co2->mj.reqaction = anm_fall;
+			break;
 		}
+		else 
+		{
 
-		if ((KlonoaWBullet_CheckInput(data, co2, klwk)) || hover_CheckInput(data, co2, klwk))
+			if (co2->spd.y < 0.0f)
+			{
+				co2->mj.reqaction = anm_fall;
+			}
+
+			if (hover_CheckInput(data, co2, klwk))
+			{
+				data->flag &= ~Status_Attack;
+				data->flag &= ~Status_Ball;
+				return;
+			}
+		}
+		break;
+	case act_hurt:
+
+		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2) || data->wtimer == 120)
 		{
 			return;
 		}
-		break;
+
+		if ((data->flag & 3) != 0)
+		{
+			data->ang.x = data2->ang_aim.x;
+			data->ang.z = data2->ang_aim.z;
+
+			if (SonicCheckStop(co2, data))
+			{
+				if (klwk->enemyGrabPtr)
+				{
+					data->mode = act_holdStd;
+					co2->mj.reqaction = anm_holdStd;
+				}
+				else
+				{
+					data->mode = 1;
+					co2->mj.reqaction = 2;
+				}
+
+			}
+			else
+			{
+				if (klwk->enemyGrabPtr)
+				{
+					data->mode = act_holdRun;
+					co2->mj.reqaction = anm_holdRun;
+				}
+				else
+				{
+					data->mode = 2;
+					co2->mj.reqaction = 2;
+				}
+			}
+		}
+
+		data->flag &= 0xFAu;
+		return;
 	case act_hover:
 		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2))
 		{
@@ -423,8 +583,9 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		else
 		{
 			Klonoa_Fall(data, co2);
+			break;
 		}
-		break;
+		return;
 	case act_windBullet:
 	case act_windBulletAir:
 		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2))

@@ -82,6 +82,7 @@ enum klonoaAction
 	act_jump = 8,
 	act_fall = 12,
 	act_brake,
+	act_hurt = 16,
 	act_hover = 110,
 	act_windBullet,
 	act_windBulletAir,
