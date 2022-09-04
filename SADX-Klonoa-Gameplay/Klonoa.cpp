@@ -513,7 +513,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 				co2->mj.reqaction = anm_fall;
 			}
 
-			if (hover_CheckInput(data, co2, klwk))
+			if (hover_CheckInput(data, co2, klwk) || KlonoaWBullet_CheckInput(data, co2, klwk))
 			{
 				data->flag &= ~Status_Attack;
 				data->flag &= ~Status_Ball;

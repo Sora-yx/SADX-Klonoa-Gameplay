@@ -147,11 +147,34 @@ void SetKlonoaAnims()
 	KlonoaAnimList[62].TransitionSpeed = 0.5;
 	KlonoaAnimList[62].AnimationSpeed = 0.5f;
 
+
+	//victory.
+	KlonoaAnimList[75].Animation->motion = KlonoaANM[anmID_victory]->getmotion();
+	KlonoaAnimList[75].Property = 5;
+	KlonoaAnimList[75].NextAnim = 75;
+	KlonoaAnimList[75].TransitionSpeed = 0.5f;
+	KlonoaAnimList[75].AnimationSpeed = 0.5f;
+
+	//victory standing.
+	KlonoaAnimList[76].Animation->motion = KlonoaANM[anmID_victoryStd]->getmotion();
+	KlonoaAnimList[76].NextAnim = 0;
+	KlonoaAnimList[76].Property = 3;
+	KlonoaAnimList[76].TransitionSpeed = 0.5f;
+	KlonoaAnimList[76].AnimationSpeed = 0.5f;
+
 	//hold rocket
 	KlonoaAnimList[80].Animation->motion = KlonoaANM[anmID_holdObj]->getmotion();
 	KlonoaAnimList[80].NextAnim = 80;
 	KlonoaAnimList[80].TransitionSpeed = 0.125;
 	KlonoaAnimList[80].AnimationSpeed = 1.0f;
+
+	//death
+	KlonoaAnimList[87].Animation->motion = KlonoaANM[anmID_death]->getmotion();
+	KlonoaAnimList[87].NextAnim = 87;
+	KlonoaAnimList[87].TransitionSpeed = 0.125;
+	KlonoaAnimList[87].AnimationSpeed = 1.0f;
+	KlonoaAnimList[87].Property = 5;
+
 
 	//hover
 	KlonoaAnimList[anm_hover].Animation->motion = KlonoaANM[anmID_hover]->getmotion();
@@ -223,19 +246,6 @@ void SetKlonoaAnims()
 	KlonoaAnimList[anm_throwStd].NextAnim = anm_std;
 	KlonoaAnimList[anm_throwStd].Property = 4;
 
-	//victory.
-	KlonoaAnimList[75].Animation->motion = KlonoaANM[anmID_victory]->getmotion();
-	KlonoaAnimList[75].Property = 4;
-	KlonoaAnimList[75].NextAnim = 76;
-	KlonoaAnimList[75].TransitionSpeed = 0.5f;
-	KlonoaAnimList[75].AnimationSpeed = 0.5f;
-
-	//victory standing.
-	KlonoaAnimList[76].Animation->motion = KlonoaANM[anmID_victoryStd]->getmotion();
-	KlonoaAnimList[76].NextAnim = 0;
-	KlonoaAnimList[76].Property = 3;
-	KlonoaAnimList[76].TransitionSpeed = 0.5f;
-	KlonoaAnimList[76].AnimationSpeed = 0.5f;
 }
 
 void LoadKlonoa_AnimFiles()
