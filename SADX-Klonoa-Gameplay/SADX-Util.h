@@ -10,7 +10,7 @@ FunctionPointer(void, PResetPosition, (taskwk* a1, motionwk2* a2, playerwk* a3),
 DataArray(NJS_ACTION*, SonicCharSelAnim, 0x3C5FF94, 4);
 FunctionPointer(void, DrawEventAction, (taskwk* data), 0x4187D0);
 
-TaskFunc(EffectKnuxHadoken, 0x4C19D0);
+TaskFunc(dispEffectKnuxHadoken, 0x4C0B60);
 
 FunctionPointer(void, StartPanelJump, (taskwk* data), 0x4B8470);
 

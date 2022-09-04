@@ -1,5 +1,7 @@
 #include "pch.h"
 
+CCL_INFO bullet_col = { 0, 0, 0x70, 0x40, 0x400, { 0 }, 12.0f, 0.0, 0.0, 0.0, 0, 0, 0 };
+
 signed int KlonoaWBullet_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 {
 	if ((AttackButtons & Controllers[data->charIndex].PressedButtons) == 0 || allowSpinDash)
@@ -21,7 +23,7 @@ signed int KlonoaWBullet_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 	return 1;
 }
 
-HomingAttackTarget GetEnemies(NJS_VECTOR* pos) {
+bool isTargetAnEnemy(taskwk* enemy) {
 
 	HomingAttackTarget target = { 0, 1000000.0f };
 
@@ -29,18 +31,13 @@ HomingAttackTarget GetEnemies(NJS_VECTOR* pos) {
 
 		HomingAttackTarget* target_ = &HomingAttackTarget_Sonic[i];
 
-		float dist = GetDistance(pos, &target_->entity->Position);
-
-		if (dist < target.distance && target_->entity &&
-			target_->entity->CollisionInfo->id == 3 &&
-			target_->entity->CollisionInfo->Object->Data2 != nullptr) {
-			target.distance = dist;
-			target.entity = target_->entity;
-			break;
+		if (target_->entity &&
+			target_->entity->CollisionInfo->Object->Data2 != nullptr && target_->entity == (EntityData1*)enemy) {
+			return true;
 		}
 	}
 
-	return target;
+	return false;
 }
 
 signed int WindBullet_CheckHitEnemy(taskwk* data, klonoawk* klwk)
@@ -50,26 +47,72 @@ signed int WindBullet_CheckHitEnemy(taskwk* data, klonoawk* klwk)
 
 	auto cwp = data->cwp;
 
-	//loop the collision array of the bullet...
+	//Loop the collision array of the bullet...
 	for (int i = 0; i < 16; i++)
 	{
 		auto cwk = cwp->hit_info[i].hit_twp;
 
-		if (cwk != nullptr) //if the collision hit something browse it...
+		if (cwk != nullptr) //if the collision hit something, start looking for more data.
 		{
-			if (cwk->cwp->mytask && cwk->cwp->mytask->twp) // if the target has a main and data
+			if (cwk->cwp->mytask && cwk->cwp->mytask->twp) // if the target has an exec and twp data
 			{
-				if (cwk->cwp->id == 3) //if it's an enemy
+				if (cwk->cwp->id == 3) //if it's potentially an enemy
 				{
-					cwk->mode = captured; //set the enemy to a new custom state, see "enemy.cpp"
-					klwk->enemyGrabPtr = cwk->cwp->mytask;
-					return 1;
+					if (isTargetAnEnemy(cwk->cwp->mytask->twp)) //actually check if it's an enemy because you know...
+					{
+						cwk->mode = captured; //set the enemy to a new custom state, see "enemy.cpp"
+						klwk->enemyGrabPtr = cwk->cwp->mytask; //we copy the task of the enemy for external use with Klonoa.
+						return 1;
+					}
+
 				}
 			}
 		}
 	}
 
 	return 0;
+}
+
+void BulletTask(task* tp)
+{
+	float v3 = 0.0f;
+	colliwk* col = nullptr;
+	float v5 = 0.0f;
+	float v6 = 0.0f;
+
+	auto data = tp->twp;
+	if (data->mode)
+	{
+		if (data->mode == 1)
+		{
+			v3 = (data->counter.f - 0.083333336f);
+			data->counter.f = data->counter.f - 0.083333336f;
+			if (v3 <= 0.0f)
+			{
+				FreeTask(tp);
+				return;
+			}
+
+			col = data->cwp;
+			v5 = (float)(data->scl.y + data->pos.y);
+			v6 = (float)(data->scl.z + data->pos.z);
+			data->pos.x = data->scl.x + data->pos.x;
+			data->pos.y = v5;
+			data->pos.z = v6;
+			//			col->info->a = v3 * 10.0f;
+			EntryColliList(data);
+		}
+	}
+	else
+	{
+		data->counter.f = 1.0f;
+		CCL_Init(tp, &bullet_col, 1, 4u);
+		data->mode = 1;
+		tp->disp = dispEffectKnuxHadoken;
+	}
+
+	tp->disp(tp);
+	CheckRangeOut(tp);
 }
 
 void KlonoaBulletAction(taskwk* data, playerwk* co2, klonoawk* klwk)
@@ -81,7 +124,7 @@ void KlonoaBulletAction(taskwk* data, playerwk* co2, klonoawk* klwk)
 		if (WindBullet_CheckHitEnemy(klwk->currentBulletPtr->twp, klwk))
 		{
 			data->mode = act_holdStd;
-			PlayCustomSound(pickEnemy);
+			PlayCustomSoundVolume(pickEnemy, 1);
 			return;
 		}
 	}
@@ -105,7 +148,7 @@ void KlonoaBulletAction(taskwk* data, playerwk* co2, klonoawk* klwk)
 
 	if (klwk->bulletShot == false) {
 
-		klwk->currentBulletPtr = CreateElementalTask(LoadObj_Data1, 6, EffectKnuxHadoken);
+		klwk->currentBulletPtr = CreateElementalTask(LoadObj_Data1, 6, BulletTask);
 
 		if (klwk->currentBulletPtr)
 		{

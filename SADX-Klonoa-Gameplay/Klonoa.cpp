@@ -376,7 +376,6 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 
 	co2->mj.reqaction = co2->mj.reqaction;
 
-	ResetKlonoaGrab(klwk);
 
 	switch (data->mode)
 	{

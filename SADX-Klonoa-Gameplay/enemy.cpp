@@ -15,7 +15,7 @@ static FunctionHook<void, task*> UnidusC_t((intptr_t)UnidusC_Main);
 static FunctionHook<void, task*> EGacha_t((intptr_t)0x5B03B0);
 static FunctionHook<void, task*> ERobo_t((intptr_t)ERobo_0);
 
-static float throwSpd = 4.0f;
+static float throwSpd = 5.0f;
 
 void ResetKlonoaGrab(klonoawk* klwk)
 {
@@ -23,12 +23,13 @@ void ResetKlonoaGrab(klonoawk* klwk)
 
 	if (task)
 	{
-		if (task->twp && (task->twp->mode == dead))
+		if (task->twp)
 		{
-			if (FrameCounterUnpaused % 20 == 0)
+			if (FrameCounterUnpaused % 30 == 0)
 			{
 				FreeTask(task);
 				klwk->enemyGrabPtr = nullptr;
+				return;
 			}
 		}
 	}
@@ -83,7 +84,7 @@ static bool EnemyCapturedHandle(task* obj)
 
 	if (data)
 	{
-		bool Enabled = data->mode == captured || data->mode == drop || data->mode == threw;
+		bool Enabled = data->mode == captured || data->mode == drop || data->mode == threw || data->mode == dead;
 
 		if (Enabled)
 		{
@@ -116,6 +117,9 @@ static bool EnemyCapturedHandle(task* obj)
 				{
 					data->pos.x += throwSpd;
 				}
+				break;
+			case dead:
+				ResetKlonoaGrab(klwk);
 				break;
 			}
 
