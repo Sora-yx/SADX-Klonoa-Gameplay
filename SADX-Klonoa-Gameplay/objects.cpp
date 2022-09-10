@@ -134,8 +134,8 @@ void AlarmClock_Display(task* tsk)
 
 	NJS_VECTOR scl = { 0.5f, 0.5f, 0.5f };
 
-	njPushMatrix(0);
-	njTranslateV(0, &data->pos);
+	njPushMatrixEx();
+	njTranslateEx(&data->pos);
 
 	njRotateZ_(data->ang.z);
 	njRotateX_(data->ang.x);
@@ -143,25 +143,14 @@ void AlarmClock_Display(task* tsk)
 	njScaleV(0, &scl);
 	njSetTexture(&KObjComTexlist);
 
-	if (data->mode == 2)
+	if (data->mode < 3)
 	{
-
-	}
-	else
-	{
-		njCnkDrawObject(alarmClockMDL->getmodel());
+		dsDrawObject(alarmClockMDL->getmodel());
 	}
 
-	njPopMatrix(1);
+	njPopMatrixEx();
 }
 
-void* AllocateCPData(task* obj)
-{
-	void* mem = AllocateMemory(56);
-	memset(mem, 0, 0x38u);
-	obj->awp = (anywk*)mem;
-	return mem;
-}
 
 void AlarmClock_Main(task* tsk)
 {
@@ -185,7 +174,7 @@ void AlarmClock_Main(task* tsk)
 	case 0:
 		data->pos.y += 15.0f;
 		data->mode++;
-		AllocateCPData(tsk);
+		tsk->awp = (anywk*)AllocateCPData();
 		savepoint_data = (OBJECT_SAVEPOINT_DATA*)tsk->awp;
 		tsk->dest = (TaskFuncPtr)LevelItem_Delete;
 		tsk->disp = AlarmClock_Display;
@@ -249,7 +238,7 @@ void init_Objects()
 		return;
 
 	dreamStoneMDL = LoadChunkModel("DreamStone");
-	alarmClockMDL = LoadChunkModel("Alarm");
+	alarmClockMDL = LoadBasicModel("Alarm");
 	Ring_Display_t.Hook(DreamStone_Display);
 	CheckPoint_t.Hook(AlarmClock_Main);
 	LoadLevelObjTextures_t.Hook(LoadLevelObjTextures_r);
