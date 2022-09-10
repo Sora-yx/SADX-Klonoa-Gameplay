@@ -16,6 +16,7 @@ FunctionPointer(void, StartPanelJump, (taskwk* data), 0x4B8470);
 TaskFunc(UpdateSetDataAndDelete, 0x46C150);
 
 FunctionPointer(void, sub_49ED70, (taskwk* a1, float a2), 0x49ED70);
+TaskFunc(SetFlagNoRespawn, 0x46C100);
 
 
 // BOOL __usercall@<eax>(CharObj2 *Data2@<eax>, EntityData1 *Data1@<edi>)
@@ -31,4 +32,16 @@ static inline signed int SonicCheckStop(playerwk* a1, taskwk* a2)
 		mov result, eax
 	}
 	return result;
+}
+
+// void __usercall initCollidata(taskwk *data@<esi>)
+static const void* const initCPDataPtr = (void*)0x44F070;
+static inline void initCollidata(taskwk* a1)
+{
+	__asm
+	{
+		mov esi, a1
+		call initCPDataPtr
+
+	}
 }

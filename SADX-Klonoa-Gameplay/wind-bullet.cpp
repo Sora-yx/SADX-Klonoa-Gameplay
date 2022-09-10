@@ -5,7 +5,7 @@ extern ObjectFuncPtr enemyList[14];
 
 signed int KlonoaWBullet_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 {
-	if ((AttackButtons & Controllers[data->charIndex].PressedButtons) == 0 || allowSpinDash)
+	if ((AttackButtons & Controllers[data->charIndex].PressedButtons) == 0 || allowSpinDash || klwk->currentBulletPtr)
 	{
 		return 0;
 	}
@@ -15,12 +15,7 @@ signed int KlonoaWBullet_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 	data->mode = isOnGround ? act_windBullet : act_windBulletAir;
 	co2->mj.reqaction = isOnGround ? anm_windBullet : anm_windBulletAir;
 	co2->spd.y = 0.0f;
-	auto task = klwk->currentBulletPtr;
 
-	if (task)
-		FreeTask(task);
-
-	klwk->currentBulletPtr = nullptr;
 	PlayCustomSound(shot);
 	return 1;
 }
@@ -64,6 +59,21 @@ signed int WindBullet_CheckHitEnemy(taskwk* bulletData, klonoawk* klwk)
 	}
 
 	return 0;
+}
+
+void deleteBullet(task* tp)
+{
+	auto player = playertp[tp->twp->counter.b[0]];
+
+	if (player) {
+		auto klwk = (klonoawk*)player->awp;
+		auto task = klwk->currentBulletPtr;
+		if (task) {
+			FreeTask(task);
+		}
+
+		klwk->currentBulletPtr = nullptr;
+	}
 }
 
 void bulletTask(task* tp)
@@ -149,6 +159,8 @@ void BulletAction(taskwk* data, playerwk* co2, klonoawk* klwk)
 
 	if (klwk->currentBulletPtr)
 	{
+		klwk->currentBulletPtr->twp->counter.b[0] = data->counter.b[0];
+		klwk->currentBulletPtr->dest = deleteBullet;
 		dest = { 3.0f, 0.0f, 0.0f };
 		PConvertVector_P2G(data, &dest);
 		klwk->currentBulletPtr->twp->pos = startPos;

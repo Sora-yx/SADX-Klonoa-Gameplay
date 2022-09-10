@@ -23,6 +23,7 @@ enum klonoaVoice
 	kl_pain2,
 	kl_deathFall,
 	kl_cannonshot,
+	kl_drown
 };
 
 enum soundEffect
@@ -30,7 +31,11 @@ enum soundEffect
 	jump = 100,
 	hover,
 	shot,
-	pickEnemy
+	pickEnemy,
+	alarmClock,
+	dreamStn,
+	bubbleHit,
+	death,
 };
 
 void Sounds_Init();

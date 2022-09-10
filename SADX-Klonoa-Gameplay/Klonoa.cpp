@@ -193,7 +193,9 @@ signed int KlonoaCheckDamage(taskwk* data, playerwk* mwp)
 	char rng = rand() % 2;
 
 	if (Rings > 0)
-		PlayCustomSoundVolume(rng ? kl_pain : kl_pain2, 1);
+		PlayCustomSoundVolume(rng ? kl_pain : kl_pain2, 1.0f);
+	else
+		PlayCustomSoundVolume(death, 1.0f);
 
 	return 1;
 }
