@@ -23,7 +23,10 @@ enum klonoaVoice
 	kl_pain2,
 	kl_deathFall,
 	kl_cannonshot,
-	kl_drown
+	kl_drown,
+	kl_bounce01,
+	kl_bounce02,
+	kl_bounce03,
 };
 
 enum soundEffect

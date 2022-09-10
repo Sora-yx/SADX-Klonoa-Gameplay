@@ -91,9 +91,47 @@ void PlayIdleVoice_r(taskwk* data)
 	PlayIdleVoice(data);
 }
 
+int PlayDrownVoice(int ID, void* a2, int a3, void* a4)
+{
+	if (ID == 1506)
+	{
+		PlayCustomSound(kl_drown);
+		return 1;
+	}
+
+	return PlaySound(ID, a2, a3, a4);
+}
+
+int PlayInvincibilityVoice(int ID, void* a2, int a3, void* a4)
+{
+	int player = getKlonoaPlayer();
+
+	if (player >= 0)
+	{
+		PlayCustomSoundVolume(kl_bounce02, 1.0f);
+	}
+
+	return PlaySound(ID, a2, a3, a4);
+}
+
+int PlaySpeedShoesVoice(int ID, void* a2, int a3, void* a4)
+{
+	int player = getKlonoaPlayer();
+
+	if (player >= 0)
+	{
+		PlayCustomSoundVolume(kl_bounce01, 1.0f);
+	}
+
+	return PlaySound(ID, a2, a3, a4);
+}
+
 void init_Audio()
 {
 	WriteCall((void*)0x491701, PlayIdleVoice_r);
+	WriteCall((void*)0x446BDA, PlayDrownVoice);
+	WriteCall((void*)0x4D6DAF, PlayInvincibilityVoice);	
+	WriteCall((void*)0x4D6C39, PlaySpeedShoesVoice);
 	PlayVoice_t.Hook(PlayVoice_r);
 	Sounds_Init();
 }

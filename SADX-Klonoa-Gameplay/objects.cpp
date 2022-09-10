@@ -22,7 +22,6 @@ bool isKlonoaAndObj(ModelInfo* obj)
 	return true;
 }
 
-
 void __cdecl DreamStone_Display(task* obj)
 {
 
