@@ -74,7 +74,7 @@ int PlayDreamStoneSound(int ID, void* a2, int a3, void* a4)
 		return PlaySound(ID, a2, a3, a4);
 	}
 
-	PlayCustomSoundVolume(dreamStn, 0.5f);
+	PlayCustomSoundVolume(dreamStn, 0.2f);
 	return 1;
 }
 
@@ -108,7 +108,7 @@ void savepointCollision_r(task* tsk, taskwk* data)
 			SetRestartData(&playertwp[pNum]->pos, (Rotation3*)&playertwp[pNum]->ang);
 		}
 		SetBroken(tsk);
-		PlayCustomSoundVolume(alarmClock, 1.0f);
+		PlayCustomSoundVolume(alarmClock, 0.7f);
 	}
 
 	if (GetCollidingEntityA((EntityData1*)data))
@@ -124,6 +124,31 @@ void savepointCollision_r(task* tsk, taskwk* data)
 
 	AddToCollisionList((EntityData1*)data);
 }
+
+
+void Bubble_ChildMain(task* obj)
+{
+	auto data = obj->twp;
+
+	if (!data->mode)
+	{
+		data->scl = { 10.0, 1.0, 4.0 };
+		data->pos.y += 1.5f;
+		obj->disp = Bubble_Child;
+		data->mode++;
+	}
+	else
+	{
+		if (obj->ptp->twp->mode == 2)
+		{
+			FreeTask(obj);
+			return;
+		}
+	}
+
+	obj->disp(obj);
+}
+
 
 void AlarmClock_Display(task* tsk)
 {
@@ -143,7 +168,7 @@ void AlarmClock_Display(task* tsk)
 	njScaleV(0, &scl);
 	njSetTexture(&KObjComTexlist);
 
-	if (data->mode < 3)
+	if (data->mode < 2)
 	{
 		dsDrawObject(alarmClockMDL->getmodel());
 	}
@@ -166,13 +191,13 @@ void AlarmClock_Main(task* tsk)
 
 	savepoint_data = (OBJECT_SAVEPOINT_DATA*)tsk->awp;
 	auto data = tsk->twp;
-	auto v3 = savepoint_data;
 	data->ang.y += 400;
 
 	switch (data->mode)
 	{
 	case 0:
 		data->pos.y += 15.0f;
+
 		data->mode++;
 		tsk->awp = (anywk*)AllocateCPData();
 		savepoint_data = (OBJECT_SAVEPOINT_DATA*)tsk->awp;
@@ -180,15 +205,15 @@ void AlarmClock_Main(task* tsk)
 		tsk->disp = AlarmClock_Display;
 		CCL_Init(tsk, (CCL_INFO*)&CSphere_Collision, 1, 4u);
 
-
 		savepoint_data->tp[0] = CreateChildTask(
 			LoadObj_Data1, (TaskFuncPtr)nullsub, tsk);
 		savepoint_data->tp[1] = CreateChildTask(
 			LoadObj_Data1, (TaskFuncPtr)nullsub, tsk);
-		savepoint_data = savepoint_data;
+
+
 		initCollidata(data);
-		v3 = savepoint_data;
-		v3->ang.y = 0xFFFFC000;
+
+		savepoint_data->ang.y = 0xFFFFC000;
 		if (tsk->ocp)
 		{
 			SetFlagNoRespawn(tsk);
@@ -197,6 +222,10 @@ void AlarmClock_Main(task* tsk)
 		{
 			savepoint_data->ang.x = 0;
 			data->mode = 3;
+		}
+		else
+		{ 
+			CreateChildTask((LoadObj)(LoadObj_Data1), Bubble_ChildMain, tsk);
 		}
 		break;
 	case 1:
@@ -217,6 +246,8 @@ void AlarmClock_Main(task* tsk)
 
 	if (tsk->disp && data->mode < 3)
 		tsk->disp(tsk);
+
+	LoopTaskC(tsk);
 }
 
 
