@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "abilities.h"
+#include "objects.h"
 
 bool klonoa = false;
 uint8_t klonoaPnum = 0;
@@ -11,8 +12,8 @@ ModelInfo* KlonoaMDL = nullptr;
 static NJS_TEXNAME KlonoaTex[2] = { 0 };
 static NJS_TEXLIST KlonoaTexList = { arrayptrandlength(KlonoaTex) };
 
-static FunctionHook<void, task*> Sonic_Main_t((intptr_t)Sonic_Main);
-static FunctionHook<void, task*> Sonic_Display_t((intptr_t)Sonic_Display);
+TaskHook Sonic_Main_t((intptr_t)Sonic_Main);
+TaskHook Sonic_Display_t((intptr_t)Sonic_Display);
 static FunctionHook<void, taskwk*, motionwk2*, playerwk*> Sonic_RunsActions_t((intptr_t)Sonic_Act1);
 
 bool isKlonoa(char pnum)
@@ -854,11 +855,12 @@ void initKlonoa()
 	Sonic_RunsActions_t.Hook(Klonoa_runsActions_r);
 	Sonic_Display_t.Hook(Klonoa_Display_r);
 
-
 	WriteData<1>((int*)0x493500, 0xC3); //disable sonic morph
 	WriteData<1>((int*)0x4937B0, 0xC3); //disable morph head
 
 	WriteCall((void*)0x418214, Klonoa_late_ActionEx);
 	WriteCall((void*)0x41815E, Klonoa_linkEx);
+
+	init_Objects();
 
 }

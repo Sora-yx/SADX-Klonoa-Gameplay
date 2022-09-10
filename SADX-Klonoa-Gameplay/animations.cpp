@@ -126,6 +126,13 @@ void SetKlonoaAnims()
 	KlonoaAnimList[14].TransitionSpeed = 0.25f;
 	KlonoaAnimList[14].AnimationSpeed = 0.07f;
 
+	//spring
+	KlonoaAnimList[16].Animation->motion = KlonoaANM[anmID_jump]->getmotion();
+	KlonoaAnimList[16].Property = 3;
+	KlonoaAnimList[16].NextAnim = 16;;
+	KlonoaAnimList[16].TransitionSpeed = 0.25f;
+	KlonoaAnimList[16].AnimationSpeed = 0.5f;
+
 	//hang pulley / heli
 	KlonoaAnimList[47].Animation->motion = KlonoaANM[anmID_holdOne]->getmotion();
 	KlonoaAnimList[47].Property = 3;
@@ -241,10 +248,11 @@ void SetKlonoaAnims()
 
 	//throw enemy
 	KlonoaAnimList[anm_throwStd].Animation->motion = KlonoaANM[anmID_throw]->getmotion();
-	KlonoaAnimList[anm_throwStd].NextAnim = anm_throwStd;
-	KlonoaAnimList[anm_throwStd].AnimationSpeed = 0.7f;
 	KlonoaAnimList[anm_throwStd].NextAnim = anm_std;
+	KlonoaAnimList[anm_throwStd].AnimationSpeed = 0.7f;
 	KlonoaAnimList[anm_throwStd].Property = 4;
+
+
 
 }
 

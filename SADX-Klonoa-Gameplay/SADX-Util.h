@@ -15,6 +15,9 @@ TaskFunc(dispEffectKnuxHadoken, 0x4C0B60);
 FunctionPointer(void, StartPanelJump, (taskwk* data), 0x4B8470);
 TaskFunc(UpdateSetDataAndDelete, 0x46C150);
 
+FunctionPointer(void, sub_49ED70, (taskwk* a1, float a2), 0x49ED70);
+
+
 // BOOL __usercall@<eax>(CharObj2 *Data2@<eax>, EntityData1 *Data1@<edi>)
 static const void* const SonicCheckStopPtr = (void*)0x494FF0;
 static inline signed int SonicCheckStop(playerwk* a1, taskwk* a2)

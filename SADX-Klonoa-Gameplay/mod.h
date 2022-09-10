@@ -9,12 +9,14 @@ extern ModelInfo* KlonoaMDL;
 #define TARGET_DYNAMIC(name) ((decltype(name##_r)*)name##_t->Target())
 #define charID counter.b[1]
 #define charIndex counter.b[0]
+#define TaskHook static FunctionHook<void, task*>
 
 extern bool allowHomingAttack;
 extern bool allowSpinDash;
+extern bool hud;
+extern bool obj;
 
 extern NJS_VECTOR KLScaleDiff;
-
 
 
 struct klonoawk
@@ -54,7 +56,8 @@ enum klonoaAnimDLL //dll is for the array on init
 	anmID_holdRun,
 	anmID_holdJump,
 	anmID_holdFall,
-	anmID_throw
+	anmID_throw,
+	anmID_throwAir,
 };
 
 enum klonoaAnim //regular ID used to play anim on the character

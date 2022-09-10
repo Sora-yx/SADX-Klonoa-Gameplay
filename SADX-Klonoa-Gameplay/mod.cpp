@@ -13,6 +13,7 @@ DataArray_(playerwk*, playerpwp_, 0x3B3CDF0, 8);
 
 extern "C" {
 	__declspec(dllexport) void __cdecl Init(const char* path, const HelperFunctions& helperFunctions)
+
 	{
 		if (helperFunctions.Version < 11)
 		{

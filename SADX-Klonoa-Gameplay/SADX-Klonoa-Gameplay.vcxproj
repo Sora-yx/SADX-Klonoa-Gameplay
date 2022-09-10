@@ -170,6 +170,7 @@
     <ClInclude Include="audio.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="mod.h" />
+    <ClInclude Include="objects.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="SADX-Util.h" />
     <ClInclude Include="util.h" />
@@ -183,6 +184,7 @@
     <ClCompile Include="grab.cpp" />
     <ClCompile Include="Klonoa.cpp" />
     <ClCompile Include="mod.cpp" />
+    <ClCompile Include="objects.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

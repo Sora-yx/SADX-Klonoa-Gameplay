@@ -39,6 +39,9 @@
     <ClInclude Include="abilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="objects.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -82,6 +85,9 @@
     </ClCompile>
     <ClCompile Include="grab.cpp">
       <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="objects.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

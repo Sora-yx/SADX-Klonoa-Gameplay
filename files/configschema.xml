@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <ConfigSchema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonicretro.org">
 	<Groups>
-	<Group name="move" display="1. Move Settings">
-	      <Property name="allowHomingATtack" display="Allow Homing Attack" type="bool" defaultvalue="False">
+	<Group name="gameplay" display="1. Gameplay">
+	      <Property name="allowHomingAttack" display="Allow Homing Attack" type="bool" defaultvalue="False">
         <HelpText>Disable Klonoa Hover and restore Homing Attack.</HelpText>
       </Property>
       <Property name="allowSpinDash" display="Allow Spin Dash" type="bool" defaultvalue="False">
@@ -12,6 +12,18 @@
 	  	        <Property name="nerfPhysics" display="Custom Physics" type="bool" defaultvalue="True">
         <HelpText>Enable custom physics to fit Klonoa speed more.</HelpText>
       </Property>
+
+		
+		</Group>
+		
+			<Group name="visual" display="2. Visuals">
+	      <Property name="hud" display="Klonoa Hud" type="bool" defaultvalue="True">
+        <HelpText>Display Klonoa hud (only apply when playing Klonoa).</HelpText>
+      </Property>
+      <Property name="obj" display="Klonoa Objects" type="bool" defaultvalue="True">
+        <HelpText>Replace some objects with their Klonoa counterpart (only apply when playing Klonoa)</HelpText>
+      </Property>
+	  
 
 		
 		</Group>

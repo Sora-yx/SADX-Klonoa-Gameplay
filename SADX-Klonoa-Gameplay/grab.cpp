@@ -75,6 +75,7 @@ signed int ThrowEnemy_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 		data->mode = isOnGround ? act_throwStd : act_throwAir;
 		co2->mj.reqaction = anm_throwStd; //todo find throw in the air
 		ThrowEnemyCalcDirection(data, klwk);
+		PlayCustomSoundVolume(kl_throw, 1);
 		return 1;
 	}
 
