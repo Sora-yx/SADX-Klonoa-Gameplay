@@ -7,7 +7,17 @@ enum VoicesE
 	kl_speech3,
 	kl_speech4,
 	kl_speech5,
-
+	kl_EvVoice01 = 4010,
+	kl_EvVoice02,
+	kl_EvVoice03,
+	kl_EvVoice04,
+	kl_EvVoice05,
+	kl_EvVoice06,
+	kl_EvVoice07,
+	kl_EvVoice08,
+	kl_EvVoice09,
+	kl_EvVoice10,
+	kl_EvVoice11,
 };
 
 enum klonoaVoice

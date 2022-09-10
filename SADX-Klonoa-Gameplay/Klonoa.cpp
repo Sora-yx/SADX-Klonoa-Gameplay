@@ -5,7 +5,8 @@
 bool klonoa = false;
 uint8_t klonoaPnum = 0;
 
-NJS_VECTOR KLScaleDiff = { 0.2f, 0.2f, 0.2f };
+const NJS_VECTOR KLScaleDiff = { 0.2f, 0.2f, 0.2f };
+const NJS_VECTOR orgScale = { 1.0f, 1.0f, 1.0f };
 
 ModelInfo* KlonoaMDL = nullptr;
 
@@ -242,7 +243,7 @@ signed int KlonoaCheckBeInTheAir(playerwk* co2, taskwk* data, klonoawk* klwk)
 //used for cutscene and charSel
 void __cdecl Klonoa_late_ActionEx(NJS_ACTION* anim, float a2, QueuedModelFlagsB a3)
 {
-	NJS_VECTOR scale = { 1.0f, 1.0f, 1.0f };
+	NJS_VECTOR scale = { 0.9f, 0.9f, 0.9f };
 
 	for (int i = 0; i < 4; i++) {
 
@@ -250,7 +251,6 @@ void __cdecl Klonoa_late_ActionEx(NJS_ACTION* anim, float a2, QueuedModelFlagsB 
 		{
 			if (anim->motion == SonicCharSelAnim[i]->motion) {
 				njSetTexture(&KlonoaTexList);
-				scale = { 0.9f, 0.9f, 0.9f };
 				njScaleV(0, &scale);
 				DrawKlonoa_Event(anim, a2, a3);
 				return;
@@ -258,14 +258,13 @@ void __cdecl Klonoa_late_ActionEx(NJS_ACTION* anim, float a2, QueuedModelFlagsB 
 		}
 	}
 
-	njScaleV(0, &scale);
 	late_ActionEx(anim, a2, (LATE)a3);
 }
 
 //used for cutscene and charSel
 void __cdecl  Klonoa_linkEx(NJS_ACTION_LINK* action, float frame, int flag)
 {
-	NJS_VECTOR scale = { 1.0f, 1.0f, 1.0f };
+	NJS_VECTOR scale = { 0.9f, 0.9f, 0.9f };
 
 	if (!IsIngame()) {
 
@@ -284,7 +283,6 @@ void __cdecl  Klonoa_linkEx(NJS_ACTION_LINK* action, float frame, int flag)
 		}
 	}
 
-	njScaleV(0, &scale);
 	late_ActionLinkEx(action, frame, (LATE)flag);
 }
 
@@ -399,6 +397,7 @@ void __cdecl Klonoa_Display_r(task* obj)
 
 		if (data->ewp->action.list)
 		{
+			njScaleV(0, &orgScale);
 			DrawEventAction(data);
 		}
 		else
@@ -434,7 +433,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		return;
 	}
 
-	if (!isKlonoa(data->charIndex))
+	if (!isKlonoa(data->charIndex) || EV_MainThread_ptr)
 	{
 		return Sonic_RunsActions_t.Original(data, data2, co2);
 	}

@@ -10,7 +10,7 @@ static UsercallFunc(signed int, Sonic_ChargeSpinDash_t, (playerwk* a1, taskwk* a
 
 BOOL Sonic_ChargeSpinDash_r(playerwk* co2, taskwk* data)
 {
-	if (isKlonoa(data->charIndex))
+	if (isKlonoa(data->charIndex) && !EV_MainThread_ptr)
 	{
 		return false;
 	}

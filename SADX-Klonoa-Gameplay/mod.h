@@ -16,7 +16,7 @@ extern bool allowSpinDash;
 extern bool hud;
 extern bool obj;
 
-extern NJS_VECTOR KLScaleDiff;
+extern const NJS_VECTOR KLScaleDiff;
 
 
 struct klonoawk

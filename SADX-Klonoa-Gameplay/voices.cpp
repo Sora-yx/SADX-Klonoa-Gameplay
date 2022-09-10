@@ -13,6 +13,7 @@ static const std::unordered_map<int16_t, int16_t> Sonicvoice_ids_map = {
 	{ 167, 168},
 	{ 205, 215},
 	{ 400, 403 },
+	{ 410, 411},
 	{ 414, 420},
 	{ 446, 447 },
 	{ 460, 462 },
@@ -55,14 +56,25 @@ static const std::unordered_map<int16_t, int16_t> Sonicvoice_ids_map = {
 	{ 1682, 1686 },
 };
 
+int SonicVoiceIDs2[] = { 396, 422, 425,432, 435, 440, 442, 444, 457, 464, 466, 476, 484, 499, 502, 505, 518, 529, 531,
+534, 549, 556, 565, 573, 600, 608, 610, 613, 615, 629, 632, 642, 654, 664, 694, 696, 707, 717, 766, 789, 791, 827, 830,
+832, 861, 864, 866, 871, 948, 950, 1074, 1082, 1093, 1148, 1150, 1282, 1288, 1290, 1385, 1409, 1416, 1419, 1452, 1457, 1464,
+1469, 1492, 1494, 1513, 1515, 1520, 1540, 1546, 1548 };
+
 void PlayRandomKlonoaVoice()
 {
-	return PlayCustomSoundVolume(kl_speech1 + rand() % 5, 0.8f);
+	int rng = kl_speech1 + rand() % 5;
+
+	if (EV_MainThread_ptr)
+	{
+		rng = kl_EvVoice01 + rand() % 11;
+	}
+
+	return PlayCustomSoundVolume(rng, 0.8f);
 }
 
 static void __cdecl PlayVoice_r(int a1)
-{
-	
+{	
 	std::unordered_map<int16_t, int16_t>::const_iterator it = Sonicvoice_ids_map.begin();
 
 	while (it != Sonicvoice_ids_map.end())
@@ -78,6 +90,14 @@ static void __cdecl PlayVoice_r(int a1)
 		}
 		// Increment the Iterator to point to next entry
 		it++;
+	}
+
+	for (int i = 0; i < LengthOfArray(SonicVoiceIDs2); i++)
+	{
+		if (a1 == SonicVoiceIDs2[i])
+		{
+			return PlayRandomKlonoaVoice();
+		}
 	}
 
 	return PlayVoice_t.Original(a1);
