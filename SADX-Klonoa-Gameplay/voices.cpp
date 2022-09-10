@@ -1,6 +1,7 @@
 #include "pch.h"
 
 static FunctionHook<void, int> PlayVoice_t((intptr_t)PlayVoice);
+static FunctionHook<void, unsigned __int8, float, NJS_VECTOR*> DoExplosionRockThing_t((intptr_t)0x446D90);
 
 //we identify Sonic voice clip and replace them with some random Klonoa speech voice, all done in code to avoid duplicate voices files. :D
 
@@ -102,36 +103,50 @@ int PlayDrownVoice(int ID, void* a2, int a3, void* a4)
 	return PlaySound(ID, a2, a3, a4);
 }
 
-int PlayInvincibilityVoice(int ID, void* a2, int a3, void* a4)
+int PlayInvncibMagneticVoice(int ID, void* a2, int a3, void* a4)
 {
 	int player = getKlonoaPlayer();
 
 	if (player >= 0)
 	{
-		PlayCustomSoundVolume(kl_bounce02, 1.0f);
+		PlayCustomSoundVolume(kl_bounce02, 0.7f);
 	}
 
 	return PlaySound(ID, a2, a3, a4);
 }
 
-int PlaySpeedShoesVoice(int ID, void* a2, int a3, void* a4)
+int PlaySpeedBarrierVoice(int ID, void* a2, int a3, void* a4)
 {
 	int player = getKlonoaPlayer();
 
 	if (player >= 0)
 	{
-		PlayCustomSoundVolume(kl_bounce01, 1.0f);
+		PlayCustomSoundVolume(kl_bounce01, 0.7f);
 	}
 
 	return PlaySound(ID, a2, a3, a4);
+}
+
+void PlayBlowPlayerVoice(unsigned __int8 playerID, float spd, NJS_VECTOR* a3)
+{
+	if (isKlonoa(playerID))
+	{
+		PlayCustomSoundVolume(kl_cannonshot, 0.7f);
+	}
+
+	DoExplosionRockThing_t.Original(playerID, spd, a3);
 }
 
 void init_Audio()
 {
 	WriteCall((void*)0x491701, PlayIdleVoice_r);
 	WriteCall((void*)0x446BDA, PlayDrownVoice);
-	WriteCall((void*)0x4D6DAF, PlayInvincibilityVoice);	
-	WriteCall((void*)0x4D6C39, PlaySpeedShoesVoice);
+	WriteCall((void*)0x4D6DAF, PlayInvncibMagneticVoice);		
+	WriteCall((void*)0x4D6E6F, PlayInvncibMagneticVoice);
+	WriteCall((void*)0x4D6C39, PlaySpeedBarrierVoice);	
+	WriteCall((void*)0x4D6DEF, PlaySpeedBarrierVoice);
 	PlayVoice_t.Hook(PlayVoice_r);
+	DoExplosionRockThing_t.Hook(PlayBlowPlayerVoice);
 	Sounds_Init();
+
 }
