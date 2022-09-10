@@ -64,6 +64,54 @@ void __cdecl DreamStone_Display(task* obj)
 	}
 }
 
+void __cdecl DrawDreamStone(NJS_MODEL_SADX* a1)
+{
+	if (!isKlonoaAndObj(dreamStoneMDL))
+	{
+		return DrawModel(a1);
+	}
+
+	NJS_VECTOR scl = { 0.5f, 0.5f, 0.5f };
+	njSetTexture(&KObjComTexlist);
+	njScaleV(0, &scl);
+	njCnkDrawObject(dreamStoneMDL->getmodel());
+}
+
+
+void __cdecl DrawDreamStoneClip(NJS_MODEL_SADX* model, float scale)
+{
+	if (!isKlonoaAndObj(dreamStoneMDL))
+	{
+		return ds_DrawModelClip(model, scale);
+	}
+
+	float radius = 0.0f;
+	NJS_VECTOR scl = { 0.5f, 0.5f, 0.5f };
+	njSetTexture(&KObjComTexlist);
+	njScaleV(0, &scl);
+
+	if ((fogemulation & 2) != 0 && (fogemulation & 1) != 0 && !FogEnabled)
+	{
+		fogemulation &= ~2u;
+		DrawQueueDepthBias = -47952.0f;
+
+		njCnkDrawObject(dreamStoneMDL->getmodel());
+		fogemulation |= 2u;
+	}
+
+	if (!MissedFrames && !VerifyTexList(CurrentTexList))
+	{
+		if (model)
+		{
+			if (scale == 0.0f || model->r == 0.0f || (radius = scale * model->r, IsVisible(&model->center, radius)))
+			{
+				njCnkDrawObject(dreamStoneMDL->getmodel());
+			}
+		}
+	}
+
+
+}
 
 int PlayDreamStoneSound(int ID, void* a2, int a3, void* a4)
 {
@@ -267,12 +315,22 @@ void init_Objects()
 	if (!obj)
 		return;
 
+	//load models
 	dreamStoneMDL = LoadChunkModel("DreamStone");
 	alarmClockMDL = LoadBasicModel("Alarm");
+
+	//obj display hack
 	Ring_Display_t.Hook(DreamStone_Display);
 	CheckPoint_t.Hook(AlarmClock_Main);
 	LoadLevelObjTextures_t.Hook(LoadLevelObjTextures_r);
+	WriteCall((void*)0x44FA79, DrawDreamStone);	
+	WriteCall((void*)0x614D61, DrawDreamStone);	
+	WriteCall((void*)0x61F302, DrawDreamStoneClip);
+
+	//obj sound hack
 	WriteCall((void*)0x4504DA, PlayDreamStoneSound);
 	WriteCall((void*)0x450557, PlayDreamStoneSound);
-	WriteCall((void*)0x45051F, PlayDreamStoneSound);
+	WriteCall((void*)0x45051F, PlayDreamStoneSound);	
+	WriteCall((void*)0x614DE1, PlayDreamStoneSound);	
+	WriteCall((void*)0x61F598, PlayDreamStoneSound);
 }
