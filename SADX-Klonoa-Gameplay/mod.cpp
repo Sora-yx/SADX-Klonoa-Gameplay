@@ -35,7 +35,8 @@ extern "C" {
 
 	__declspec(dllexport) void __cdecl OnFrame()
 	{
-		RunCustomSounds();
+		if (GameState >= 15)
+			RunCustomSounds();
 	}
 
 

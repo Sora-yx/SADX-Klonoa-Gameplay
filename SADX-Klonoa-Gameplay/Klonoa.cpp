@@ -796,7 +796,7 @@ void __cdecl Klonoa_Main_r(task* obj)
 		}
 		else
 		{
-			PrintDebug("Klonoa Mod: Failed to load Klonoa worker mod won't work...\n");
+			PrintDebug("Klonoa Mod: Failed to load Klonoa worker; mod won't work...\n");
 		}
 	}
 

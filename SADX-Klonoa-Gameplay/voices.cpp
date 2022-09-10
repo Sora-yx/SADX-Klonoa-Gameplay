@@ -1,5 +1,6 @@
 #include "pch.h"
 
+#define AddVoices(A, B) HelperFunctionsGlobal.ReplaceFile("system\\sounddata\\voice_jp\\wma\\" A ".wav", "system\\sounddata\\voice_us\\wma\\" B ".wav")
 static FunctionHook<void, int> PlayVoice_t((intptr_t)PlayVoice);
 static FunctionHook<void, unsigned __int8, float, NJS_VECTOR*> DoExplosionRockThing_t((intptr_t)0x446D90);
 
@@ -56,7 +57,7 @@ static const std::unordered_map<int16_t, int16_t> Sonicvoice_ids_map = {
 
 void PlayRandomKlonoaVoice()
 {
-	return PlayVoice(kl_speech1 + rand() % 5);
+	return PlayCustomSoundVolume(kl_speech1 + rand() % 5, 0.8f);
 }
 
 static void __cdecl PlayVoice_r(int a1)
@@ -147,6 +148,20 @@ void init_Audio()
 	WriteCall((void*)0x4D6DEF, PlaySpeedBarrierVoice);
 	PlayVoice_t.Hook(PlayVoice_r);
 	DoExplosionRockThing_t.Hook(PlayBlowPlayerVoice);
+
+	AddVoices("1837");
+	AddVoices("1838");
+	AddVoices("1839");
+	AddVoices("1840");
+	AddVoices("1842");
+	AddVoices("1843");
+	AddVoices("1844");
+	AddVoices("1847");
+	AddVoices("1848");
+	AddVoices("4000");
+	AddVoices("4000");
+
+
 	Sounds_Init();
 
 }

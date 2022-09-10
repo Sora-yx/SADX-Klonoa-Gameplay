@@ -268,8 +268,6 @@ void PlayDelayedCustomSound(int ID, int time, float volumeoverride) {
 }
 
 void RunCustomSounds() {
-	if (GameState < 15 || GameState > 16)
-		return;
 
 	for (auto& entry : SoundListEntries)
 	{
