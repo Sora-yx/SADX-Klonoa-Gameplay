@@ -81,3 +81,4 @@ signed int ThrowEnemy_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 
 	return 0;
 }
+
