@@ -3,6 +3,8 @@
 #define AddVoices(A, B) HelperFunctionsGlobal.ReplaceFile("system\\sounddata\\voice_jp\\wma\\" A ".wav", "system\\sounddata\\voice_us\\wma\\" B ".wav")
 static FunctionHook<void, int> PlayVoice_t((intptr_t)PlayVoice);
 static FunctionHook<void, unsigned __int8, float, NJS_VECTOR*> DoExplosionRockThing_t((intptr_t)0x446D90);
+static FunctionHook<void, int> KillPlayer_t(KillHimP);
+static FunctionHook<void, int> KillP1ByFallingDown_t(KillHimByFallingDownP); //gotta love symbol name
 
 //we identify Sonic voice clip and replace them with some random Klonoa speech voice, all done in code to avoid duplicate voices files. :D
 
@@ -158,6 +160,26 @@ void PlayBlowPlayerVoice(unsigned __int8 playerID, float spd, NJS_VECTOR* a3)
 	DoExplosionRockThing_t.Original(playerID, spd, a3);
 }
 
+void KillPlayer_r(int pno)
+{
+	if (isKlonoa(pno))
+	{
+		PlayCustomSoundVolume(death, 1.0f);
+	}
+
+	KillPlayer_t.Original(pno);
+}
+
+void KillPlayerFall_r(int pno)
+{
+	if (isKlonoa(pno))
+	{
+		PlayCustomSoundVolume(death, 1.0f);
+	}
+
+	KillP1ByFallingDown_t.Original(pno);
+}
+
 void init_Audio()
 {
 	WriteCall((void*)0x491701, PlayIdleVoice_r);
@@ -168,6 +190,8 @@ void init_Audio()
 	WriteCall((void*)0x4D6DEF, PlaySpeedBarrierVoice);
 	PlayVoice_t.Hook(PlayVoice_r);
 	DoExplosionRockThing_t.Hook(PlayBlowPlayerVoice);
+	KillPlayer_t.Hook(KillPlayer_r);
+	KillP1ByFallingDown_t.Hook(KillPlayerFall_r);
 
 	AddVoices("1837");
 	AddVoices("1838");

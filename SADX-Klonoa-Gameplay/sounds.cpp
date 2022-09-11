@@ -190,6 +190,9 @@ void PlayCustomSound(int ID) {
 
 	if (entry != nullptr)
 	{
+		if (entry->volumeA == 0.0 && entry->volumeB == 0.0)
+			entry->volumeA = 0.400000006f;
+	
 		PlaySoundChannelQueue(ID, entry, 0);
 	}
 }
