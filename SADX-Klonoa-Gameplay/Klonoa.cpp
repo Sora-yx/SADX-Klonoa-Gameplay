@@ -494,10 +494,13 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 	{
 	case act_stnd:
 	case 2:
-		if ((Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2) || KlonoaWBullet_CheckInput(data, co2, klwk)))
+		if ((Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2) || Sonic_CheckPickUpObject((CharObj2*)co2, data1)))
 		{
 			break;
 		}
+
+		if (KlonoaWBullet_CheckInput(data, co2, klwk))
+			return;
 
 		break;
 	case act_jump:
