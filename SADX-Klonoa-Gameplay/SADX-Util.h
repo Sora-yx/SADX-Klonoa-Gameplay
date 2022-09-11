@@ -19,6 +19,7 @@ FunctionPointer(void, sub_49ED70, (taskwk* a1, float a2), 0x49ED70);
 TaskFunc(SetFlagNoRespawn, 0x46C100);
 FunctionPointer(void*, AllocateCPData, (), 0x44EFC0);
 TaskFunc(Bubble_Child, 0x7A8260);
+DataArray(player_parameter, PhysicsArray_, 0x9154E8, 8);
 
 
 // BOOL __usercall@<eax>(CharObj2 *Data2@<eax>, EntityData1 *Data1@<edi>)

@@ -383,8 +383,9 @@ void __cdecl Klonoa_Display_r(task* obj)
 
 		njPushMatrix(0);
 		NJS_VECTOR pos = data->cwp->info->center;
-		pos.y -= 4.3f;
+		pos.y -= 5.2f;
 		njTranslateV(0, &pos);
+
 		njScaleV(0, &KLScaleDiff);
 
 		njRotateZ_(data->ang.z);
@@ -395,9 +396,14 @@ void __cdecl Klonoa_Display_r(task* obj)
 
 		NJS_ACTION* action = co2->mj.plactptr[curAnim].actptr;
 
-		if (data->ewp->action.list)
+		if (data->ewp->action.list && !IsIngame())
 		{
-			njScaleV(0, &orgScale);
+			//TO DO: Replace some Event Sonic Anim and make those play
+
+			/**Direct3D_PerformLighting(0);
+			ClampGlobalColorThing_Thing();
+			njPopMatrix(1u);
+			return Sonic_Display_t.Original(obj);*/
 			DrawEventAction(data);
 		}
 		else
@@ -507,7 +513,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		{
 			break;
 		}
-		else 
+		else
 		{
 
 			if (co2->spd.y < 0.0f)
@@ -855,9 +861,6 @@ void initKlonoa()
 	Sonic_Main_t.Hook(Klonoa_Main_r);
 	Sonic_RunsActions_t.Hook(Klonoa_runsActions_r);
 	Sonic_Display_t.Hook(Klonoa_Display_r);
-
-	WriteData<1>((int*)0x493500, 0xC3); //disable sonic morph
-	WriteData<1>((int*)0x4937B0, 0xC3); //disable morph head
 
 	WriteCall((void*)0x418214, Klonoa_late_ActionEx);
 	WriteCall((void*)0x41815E, Klonoa_linkEx);

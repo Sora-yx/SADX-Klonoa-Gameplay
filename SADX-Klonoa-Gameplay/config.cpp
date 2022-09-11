@@ -28,17 +28,19 @@ void ReadConfig(const char* path, const HelperFunctions& helperFunctions) {
 	hud = config->getBool("visual", "hud", true);
 	obj = config->getBool("visual", "obj", true);
 
-
 	delete config;
 
 	if (nerfPhysics)
 	{
-		PhysicsArray[Characters_Sonic] = PhysicsArray[Characters_Tails];
+		PhysicsArray_[Characters_Sonic] = PhysicsArray_[Characters_Tails];
+		PhysicsArray_[Characters_Sonic].pos_error = 2.0f;
+		PhysicsArray_[Characters_Sonic].height = 10.0f;
+		PhysicsArray_[Characters_Sonic].eyes_height = 7.0f;
+		PhysicsArray_[Characters_Sonic].center_height = 5.4f;
 	}
 
 	if (!allowSpinDash)
 	{
 		Sonic_ChargeSpinDash_t.Hook(Sonic_ChargeSpinDash_r);
 	}
-
 }
