@@ -805,10 +805,6 @@ void __cdecl Klonoa_Main_r(task* obj)
 		}
 	}
 
-	Sonic_Main_t.Original(obj);
-
-	if (!klonoa)
-		return;
 
 	switch (data->mode)
 	{
@@ -848,6 +844,8 @@ void __cdecl Klonoa_Main_r(task* obj)
 		}
 		break;
 	}
+
+	Sonic_Main_t.Original(obj);
 
 	klonoaPnum = pnum;
 }
