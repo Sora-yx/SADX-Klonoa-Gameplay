@@ -30,7 +30,7 @@ bool isKlonoa(char pnum)
 
 bool LoadKlonoa_Worker(task* obj) {
 
-	if (obj->twp->mode == 0) {
+	if (obj->twp->mode == 0 && !obj->awp) {
 		void* mem = AllocateMemory(sizeof(klonoawk));
 		memset(mem, 0, sizeof(klonoawk));
 		obj->awp = (anywk*)mem;
@@ -58,7 +58,7 @@ bool isKlonoaHold(char pnum)
 	if (!playertwp[pnum])
 		return false;
 
-	return playertwp[pnum]->mode >= act_holdStd && playertwp[pnum]->mode <= act_holdFall;
+	return playertwp[pnum]->mode >= act_super_jump && playertwp[pnum]->mode <= act_throwAir;
 }
 
 //used for cutscene and character select
@@ -490,6 +490,8 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		}
 	}
 
+	CheckKlonoaEnemyPtr(klwk, data);
+
 	switch (data->mode)
 	{
 	case act_stnd:
@@ -789,7 +791,6 @@ void __cdecl Klonoa_Main_r(task* obj)
 	auto data = obj->twp;
 	motionwk2* data2 = (motionwk2*)obj->mwp;
 	playerwk* co2 = (playerwk*)obj->mwp->work.l;
-	chaoswk* cwk = (chaoswk*)obj->awp;
 
 	char pnum = data->counter.b[0];
 

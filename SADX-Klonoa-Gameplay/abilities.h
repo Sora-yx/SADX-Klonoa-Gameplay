@@ -12,3 +12,4 @@ void ResetKlonoaGrab(klonoawk* klwk);
 
 void DropEnemy(klonoawk* klwk);
 signed int ThrowEnemy_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk);
+void CheckKlonoaEnemyPtr(klonoawk* klwk, taskwk* data);

@@ -336,9 +336,6 @@ void SetKlonoaAnims()
 	KlonoaAnimList[anm_throwStd].NextAnim = anm_std;
 	KlonoaAnimList[anm_throwStd].AnimationSpeed = 0.7f;
 	KlonoaAnimList[anm_throwStd].Property = 4;
-
-
-
 }
 
 void LoadKlonoa_AnimFiles()

@@ -18,7 +18,6 @@ extern bool obj;
 
 extern const NJS_VECTOR KLScaleDiff;
 
-
 struct klonoawk
 {
 	int generalTimer;
@@ -107,7 +106,6 @@ enum enemyState
 	dead
 
 };
-
 
 void ReadConfig(const char* path, const HelperFunctions& helperFunctions);
 void init_Audio();

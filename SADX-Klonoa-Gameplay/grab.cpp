@@ -6,12 +6,19 @@ void ResetKlonoaGrab(klonoawk* klwk)
 
 	if (task)
 	{
-		if (task->twp)
-		{
-			FreeTask(task);
-			klwk->enemyGrabPtr = nullptr;
-			return;
+		FreeTask(task);
+		klwk->enemyGrabPtr = nullptr;
+		return;
+	}
+}
 
+void CheckKlonoaEnemyPtr(klonoawk* klwk, taskwk* data)
+{
+	if (data && klwk && klwk->enemyGrabPtr)
+	{
+		if (!isKlonoaHold(data->counter.b[0]) && data->mode > act_fall)
+		{
+			ResetKlonoaGrab(klwk);
 		}
 	}
 }
