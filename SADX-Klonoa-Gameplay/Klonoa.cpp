@@ -437,7 +437,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		return;
 	}
 
-	if (!isKlonoa(data->charIndex) || EV_MainThread_ptr)
+	if (!isKlonoa(data->charIndex) || EV_MainThread_ptr || !IsIngame())
 	{
 		return Sonic_RunsActions_t.Original(data, data2, co2);
 	}

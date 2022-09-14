@@ -1,8 +1,11 @@
 ﻿#include "pch.h"
 #include "abilities.h"
 
-ObjectFuncPtr enemyList[14] = { Kiki_Main, RhinoTank_Main, Sweep_Main, SpinnerA_Main, SpinnerB_Main, SpinnerC_Main, EPolice_Main, EBuyon,
-ESman, UnidusA_Main, UnidusB_Main, UnidusC_Main, (ObjectFuncPtr)0x5B03B0, ERobo_0 };
+
+ObjectFuncPtr enemyList[] = { Kiki_Main, RhinoTank_Main, Sweep_Main, SpinnerA_Main, SpinnerB_Main, SpinnerC_Main, EPolice_Main, EBuyon,
+ESman, UnindusA_Exec, UnindusB_Exec, UnindusC_Exec, (ObjectFuncPtr)0x5B03B0, (ObjectFuncPtr)0x4A6420, Leon_Main, OMonkeyCage };
+
+const char enemyArraySize = LengthOfArray(enemyList);
 
 TaskHook Kiki_Main_t((intptr_t)Kiki_Main);
 TaskHook RhinoTank_t((intptr_t)RhinoTank_Main);
@@ -12,20 +15,36 @@ TaskHook SpinnerB_t((intptr_t)SpinnerB_Main);
 TaskHook SpinnerC_t((intptr_t)SpinnerC_Main);
 TaskHook EPolice_t((intptr_t)EPolice_Main);
 TaskHook EBuyon_t((intptr_t)EBuyon);
-TaskHook ESman_t((intptr_t)ESman);
-TaskHook UnidusA_t((intptr_t)UnidusA_Main);
-TaskHook UnidusB_t((intptr_t)UnidusB_Main);
-TaskHook UnidusC_t((intptr_t)UnidusC_Main);
+TaskHook ESman_t((intptr_t)0x4C8DD0); //ESman
+TaskHook UnidusA_t((intptr_t)UnindusA_Exec);
+TaskHook UnidusB_t((intptr_t)UnindusB_Exec);
+TaskHook UnidusC_t((intptr_t)UnindusC_Exec); //lava mob RM
 TaskHook EGacha_t((intptr_t)0x5B03B0);
-TaskHook ERobo_t((intptr_t)ERobo_0);
+TaskHook ERobo_t((intptr_t)0x4A6420);
+TaskHook Leon_t((intptr_t)Leon_Main);
+TaskHook OMonkeyCage_t((intptr_t)OMonkeyCage);
 
-static FunctionHook<void, int> IncrasementAct_t((intptr_t)IncrementAct);
+static FunctionHook<void, int> IncrementAct_t((intptr_t)IncrementAct);
 
 TaskHook RingLineV_t((intptr_t)0x7AC180);
 
 task* EnemyLineV = nullptr;
+task* Enemy = nullptr;
+
 
 void Enemy_Delete_r(task* obj)
+{
+	auto task = Enemy;
+	if (task)
+	{
+		FreeTask(task);
+	}
+
+	Enemy = nullptr;
+	Enemy_Delete((ObjectMaster*)obj);
+}
+
+void Enemy_DeleteLineV_r(task* obj)
 {
 	auto task = EnemyLineV;
 	if (task)
@@ -36,6 +55,30 @@ void Enemy_Delete_r(task* obj)
 	EnemyLineV = nullptr;
 	Enemy_Delete((ObjectMaster*)obj);
 }
+
+void CreateEnemyLineVSpawn(task* obj)
+{
+	if (!EnemyLineV)
+	{
+		EnemyLineV = CreateElementalTask(2, 3, (TaskFuncPtr)SpinnerA_Main);
+		EnemyLineV->dest = Enemy_DeleteLineV_r;
+		EnemyLineV->twp->pos = obj->twp->pos;
+		EnemyLineV->twp->pos.y += 7.0f;
+	}
+}
+
+void CreateEnemy(task* obj)
+{
+	if (!Enemy)
+	{
+		Enemy = CreateElementalTask(2, 3, (TaskFuncPtr)SpinnerA_Main);
+		Enemy->dest = Enemy_Delete_r;
+		Enemy->twp->pos = obj->twp->pos;
+		Enemy->twp->pos.y += 4.0f;
+		Enemy->twp->pos.x += 7.0f;
+	}
+}
+
 
 void RingLineV_r(task* obj)
 {
@@ -50,16 +93,9 @@ void RingLineV_r(task* obj)
 
 			if (task && task->twp) {
 
-				if (!EnemyLineV)
-				{
-					LoadPVM("SUPI_SUPI", &SUPI_SUPI_TEXLIST);
-					EnemyLineV = CreateElementalTask(2, 2, (TaskFuncPtr)SpinnerA_Main);
-					EnemyLineV->dest = Enemy_Delete_r;
-					EnemyLineV->twp->pos = task->twp->pos;
-					EnemyLineV->twp->pos.y += 6.0f;
-					data->mode = 1;
-					return;
-				}
+				CreateEnemyLineVSpawn(obj);
+				data->mode = 1;
+				return;
 			}
 		}
 	}
@@ -77,7 +113,7 @@ void IncrementAct_r(int amount)
 		ResetKlonoaGrab(klwk);
 	}
 
-	return IncrasementAct_t.Original(amount);
+	return IncrementAct_t.Original(amount);
 }
 
 static float throwSpd = 5.0f;
@@ -100,7 +136,9 @@ void DestroyEnemy(taskwk* a1)
 	CreateFlash2(a1->pos.x, a2, a1->pos.z, 1.4);
 	CreateExpSpring(a1, 8u);
 	auto a3 = a1->pos.y + 15.0f;
-	CreateAnimal(rand() % 15, a1->pos.x, a3, a1->pos.z);
+
+	if (CurrentLevel < LevelIDs_StationSquare)
+		CreateAnimal(rand() % 15, a1->pos.x, a3, a1->pos.z);
 }
 
 void ThrowEnemy_Action(task* tp)
@@ -307,12 +345,40 @@ void ESman_r(task* obj)
 	}
 }
 
+void Leon_r(task* obj)
+{
+	if (!EnemyCapturedHandle(obj))
+	{
+		Leon_t.Original(obj);
+	}
+}
+
+
+void OMonkeyCage_r(task* obj)
+{
+	auto data = obj->twp;
+	auto pnum = getKlonoaPlayer();
+	bool Enabled = data->mode >= captured;
+
+	if (data->mode == captured) {
+		data->flag |= Status_Hurt;
+		data->mode = 1;
+		obj->disp(obj);
+		return;
+	}
+
+	if (pnum < 0 || !Enabled)
+	{
+		return OMonkeyCage_t.Original(obj);
+	}
+
+}
 
 void EnemyCol_Fix(ObjectMaster* obj, CollisionData* collisionArray, int count, unsigned __int8 list)
 {
 	if (isKlonoa(klonoaPnum))
 	{
-		return Collision_Init(obj, collisionArray, count, 3u);
+		return Collision_Init(obj, collisionArray, count, 4u);
 	}
 
 	return Collision_Init(obj, collisionArray, count, list);
@@ -334,10 +400,15 @@ void init_EnemiesHack()
 	UnidusC_t.Hook(UnidusC_r);
 	EGacha_t.Hook(EGacha_r);
 	ERobo_t.Hook(ERobo_r);
+	Leon_t.Hook(Leon_r);
 
-	IncrasementAct_t.Hook(IncrementAct_r);
+	IncrementAct_t.Hook(IncrementAct_r);
+
 	RingLineV_t.Hook(RingLineV_r);
+	OMonkeyCage_t.Hook(OMonkeyCage_r);
 
-	WriteCall((void*)0x4B0D17, EnemyCol_Fix);
+	//change spinner col list so they can be grabbed
+	WriteCall((void*)0x4B0D17, EnemyCol_Fix);	
+	WriteCall((void*)0x540684, EnemyCol_Fix);
 
 }

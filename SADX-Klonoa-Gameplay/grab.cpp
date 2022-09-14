@@ -62,6 +62,7 @@ void DropEnemy(klonoawk* klwk)
 	{
 		auto data = klwk->enemyGrabPtr->twp;
 		FreeColliWork(data);
+		data->wtimer = 40;
 		data->mode = drop;
 	}
 }

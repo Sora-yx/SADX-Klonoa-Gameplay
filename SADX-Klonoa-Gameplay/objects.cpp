@@ -301,6 +301,7 @@ void AlarmClock_Main(task* tsk)
 void LoadObjTextures()
 {
 	LoadPVM("KObjCommon", &KObjComTexlist);
+	LoadPVM("SUPI_SUPI", &SUPI_SUPI_TEXLIST);
 }
 
 void __cdecl LoadLevelObjTextures_r()
