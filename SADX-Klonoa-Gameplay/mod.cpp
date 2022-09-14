@@ -12,13 +12,13 @@ std::string modpath;
 DataArray_(playerwk*, playerpwp_, 0x3B3CDF0, 8);
 
 extern "C" {
-	__declspec(dllexport) void __cdecl Init(const char* path, const HelperFunctions& helperFunctions)
 
+	__declspec(dllexport) void __cdecl Init(const char* path, const HelperFunctions& helperFunctions)
 	{
-		if (helperFunctions.Version < 11)
+		if (helperFunctions.Version < 13)
 		{
 			MessageBox(WindowHandle,
-				L"Error, your version of the mod loader does not support API version 11. Some functionality will not be available.\nPlease exit the game and update the mod loader for the best experience.",
+				L"Error, your version of the mod loader does not support API version 13. Some functionality will not be available.\nPlease exit the game and update the mod loader for the best experience.",
 				L"Mod Name Error: Mod Loader out of date", MB_OK | MB_ICONERROR);
 		}
 
