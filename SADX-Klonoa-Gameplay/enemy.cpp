@@ -27,10 +27,32 @@ TaskHook OMonkeyCage_t((intptr_t)OMonkeyCage);
 static FunctionHook<void, int> IncrementAct_t((intptr_t)IncrementAct);
 
 TaskHook RingLineV_t((intptr_t)0x7AC180);
+TaskHook UpdateSetAndDelete_t(UpdateSetDataAndDelete);
 
 task* EnemyLineV = nullptr;
 task* Enemy = nullptr;
 
+//a collision can only hit another one depending on the list they are using, so we change the one used when we throw an enemy so it can hit another one.
+char GetColListIDForThrowEnemy()
+{
+	if (CurrentLevel >= LevelIDs_Chaos0 && CurrentLevel <= LevelIDs_E101R)
+		return 0;
+
+	return 4;
+}
+
+void UpdateSetAndDelete_r(task* obj)
+{
+	if (!obj)
+		return;
+
+	if (obj->ocp && obj->ocp->ssCondition)
+	{
+		return UpdateSetAndDelete_t.Original(obj);
+	}
+
+	obj->exec = DestroyTask;
+}
 
 void Enemy_Delete_r(task* obj)
 {
@@ -116,7 +138,7 @@ void IncrementAct_r(int amount)
 	return IncrementAct_t.Original(amount);
 }
 
-static float throwSpd = 5.0f;
+static float dropSpd = 5.0f;
 
 static bool TimingEnemyHurt(taskwk* data, klonoawk* klwk)
 {
@@ -135,9 +157,9 @@ void DestroyEnemy(taskwk* a1)
 	auto a2 = a1->pos.y + 5.0f;
 	CreateFlash2(a1->pos.x, a2, a1->pos.z, 1.4);
 	CreateExpSpring(a1, 8u);
-	auto a3 = a1->pos.y + 15.0f;
+	auto a3 = a1->pos.y + 14.0f;
 
-	if (CurrentLevel < LevelIDs_StationSquare)
+	if (CurrentLevel < LevelIDs_Chaos0)
 		CreateAnimal(rand() % 15, a1->pos.x, a3, a1->pos.z);
 }
 
@@ -156,7 +178,7 @@ void ThrowEnemy_Action(task* tp)
 		return;
 	}
 
-	data->cwp->info->a = 12.0f;
+	data->cwp->info->a = 13.0f;
 	data->pos.x += des.x;
 	data->pos.y += des.y;
 	data->pos.z += des.z;
@@ -200,12 +222,12 @@ static bool EnemyCapturedHandle(task* obj)
 			case drop:
 				if (!TimingEnemyHurt(data, klwk))
 				{
-					data->pos.y -= throwSpd;
+					data->pos.y -= dropSpd;
 				}
 				break;
 			case throwSetup:
 				data->counter.f = 4.0f; //timer
-				CCL_Init(obj, (CCL_INFO*)0x981D10, 1, 4u);
+				CCL_Init(obj, (CCL_INFO*)0x981D10, 1, GetColListIDForThrowEnemy());
 				data->mode++;
 				break;
 			case threw:
@@ -214,10 +236,7 @@ static bool EnemyCapturedHandle(task* obj)
 			case dead:
 				ResetKlonoaGrab(klwk);
 				DestroyEnemy(data);
-				if (obj->ocp && obj->ocp->ssCondition)
-					UpdateSetDataAndDelete(obj);
-				else
-					FreeTask(obj);
+				UpdateSetDataAndDelete(obj);
 				break;
 			}
 
@@ -406,6 +425,7 @@ void init_EnemiesHack()
 
 	RingLineV_t.Hook(RingLineV_r);
 	OMonkeyCage_t.Hook(OMonkeyCage_r);
+	UpdateSetAndDelete_t.Hook(UpdateSetAndDelete_r);
 
 	//change spinner col list so they can be grabbed
 	WriteCall((void*)0x4B0D17, EnemyCol_Fix);	

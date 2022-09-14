@@ -113,3 +113,4 @@ void init_Audio();
 void initKlonoa();
 void init_EnemiesHack();
 void Init_KlonoaAnim();
+void init_BossesHacks();

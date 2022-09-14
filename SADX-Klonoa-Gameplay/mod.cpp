@@ -30,6 +30,7 @@ extern "C" {
 		initKlonoa();
 		init_Audio();
 		init_EnemiesHack();
+		init_BossesHacks();
 		srand((unsigned)time(&t));
 	}
 

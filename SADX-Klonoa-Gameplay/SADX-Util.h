@@ -25,6 +25,7 @@ DataArray(player_parameter, PhysicsArray_, 0x9154E8, 8);
 ObjectFunc(UnindusA_Exec, 0x4AF030);
 ObjectFunc(UnindusB_Exec, 0x4AF3D0);
 ObjectFunc(UnindusC_Exec, 0x4AF770);
+DataPointer(float, Life_Max, 0x03C58158);
 
 
 // BOOL __usercall@<eax>(CharObj2 *Data2@<eax>, EntityData1 *Data1@<edi>)

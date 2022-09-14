@@ -465,7 +465,6 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		}
 		else if (KlonoaCheckDamage(data, co2))
 		{
-
 			data->flag |= 0x8000;
 
 			if ((data->flag & Status_HoldObject) != 0)
@@ -783,7 +782,8 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		return;
 	}
 
-	Sonic_RunsActions_t.Original(data, data2, co2);
+	if (!data->wtimer)
+		Sonic_RunsActions_t.Original(data, data2, co2);
 }
 
 void __cdecl Klonoa_Main_r(task* obj)

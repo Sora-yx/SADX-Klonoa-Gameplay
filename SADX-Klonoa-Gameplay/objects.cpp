@@ -297,11 +297,36 @@ void AlarmClock_Main(task* tsk)
 	LoopTaskC(tsk);
 }
 
+PVMEntry MinimalPVMs[]{
+	{ "GOMA", &GOMA_TEXLIST },
+	{ "PEN", &PEN_TEXLIST },
+	{ "RAKO", &RAKO_TEXLIST },
+	{ "KUJA", &KUJA_TEXLIST },
+	{ "TUBA", &TUBA_TEXLIST },
+	{ "OUM", &OUM_TEXLIST },
+	{ "BANB", &BANB_TEXLIST },
+	{ "USA", &USA_TEXLIST },
+	{ "WARA", &WARA_TEXLIST },
+	{ "GORI", &GORI_TEXLIST },
+	{ "LION", &LION_TEXLIST },
+	{ "ZOU", &ZOU_TEXLIST },
+	{ "MOGU", &MOGU_TEXLIST },
+	{ "KOAR", &KOAR_TEXLIST },
+	{ "SUKA", &SUKA_TEXLIST },
+};
 
 void LoadObjTextures()
 {
 	LoadPVM("KObjCommon", &KObjComTexlist);
 	LoadPVM("SUPI_SUPI", &SUPI_SUPI_TEXLIST);
+	LoadPVM("UNI_A_UNIBODY", &UNI_A_UNIBODY_TEXLIST);
+	LoadPVM("TOGEBALL_TOGEBALL", &TOGEBALL_TOGEBALL_TEXLIST);
+
+	// Load every Minimal texs because most of them will be loaded anyway
+	for (int j = 0; j < LengthOfArray(MinimalPVMs); ++j)
+	{
+		LoadPVM(MinimalPVMs[j].Name, MinimalPVMs[j].TexList);
+	}
 }
 
 void __cdecl LoadLevelObjTextures_r()
@@ -313,6 +338,8 @@ void __cdecl LoadLevelObjTextures_r()
 
 void init_Objects()
 {
+	LoadLevelObjTextures_t.Hook(LoadLevelObjTextures_r);
+
 	if (!obj)
 		return;
 
@@ -323,7 +350,7 @@ void init_Objects()
 	//obj display hack
 	Ring_Display_t.Hook(DreamStone_Display);
 	CheckPoint_t.Hook(AlarmClock_Main);
-	LoadLevelObjTextures_t.Hook(LoadLevelObjTextures_r);
+
 	WriteCall((void*)0x44FA79, DrawDreamStone);	
 	WriteCall((void*)0x614D61, DrawDreamStone);	
 	WriteCall((void*)0x61F302, DrawDreamStoneClip);
