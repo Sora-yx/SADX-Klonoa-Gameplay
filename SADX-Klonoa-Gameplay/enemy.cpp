@@ -21,7 +21,51 @@ TaskHook ERobo_t((intptr_t)ERobo_0);
 
 static FunctionHook<void, int> IncrasementAct_t((intptr_t)IncrementAct);
 
+TaskHook RingLineV_t((intptr_t)0x7AC180);
 
+task* EnemyLineV = nullptr;
+
+void Enemy_Delete_r(task* obj)
+{
+	auto task = EnemyLineV;
+	if (task)
+	{
+		FreeTask(task);
+	}
+
+	EnemyLineV = nullptr;
+	Enemy_Delete((ObjectMaster*)obj);
+}
+
+void RingLineV_r(task* obj)
+{
+	auto data = obj->twp;
+	auto child = obj->ctp;
+
+	if (child)
+	{
+		if (child->next && child->next->next && child->next->next->next)
+		{
+			auto task = child->next->next->next;
+
+			if (task && task->twp) {
+
+				if (!EnemyLineV)
+				{
+					LoadPVM("SUPI_SUPI", &SUPI_SUPI_TEXLIST);
+					EnemyLineV = CreateElementalTask(2, 2, (TaskFuncPtr)SpinnerA_Main);
+					EnemyLineV->dest = Enemy_Delete_r;
+					EnemyLineV->twp->pos = task->twp->pos;
+					EnemyLineV->twp->pos.y += 6.0f;
+					data->mode = 1;
+					return;
+				}
+			}
+		}
+	}
+
+	RingLineV_t.Original(obj);
+}
 
 //reset grab pointer when changing act
 void IncrementAct_r(int amount)
@@ -263,6 +307,7 @@ void ESman_r(task* obj)
 	}
 }
 
+
 void EnemyCol_Fix(ObjectMaster* obj, CollisionData* collisionArray, int count, unsigned __int8 list)
 {
 	if (isKlonoa(klonoaPnum))
@@ -291,6 +336,7 @@ void init_EnemiesHack()
 	ERobo_t.Hook(ERobo_r);
 
 	IncrasementAct_t.Hook(IncrementAct_r);
+	RingLineV_t.Hook(RingLineV_r);
 
 	WriteCall((void*)0x4B0D17, EnemyCol_Fix);
 
