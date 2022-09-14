@@ -1,6 +1,7 @@
 #pragma once
 
 extern HelperFunctions HelperFunctionsGlobal;
+extern uint8_t klonoaPnum;
 
 extern std::string modpath;
 

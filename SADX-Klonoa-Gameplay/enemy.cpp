@@ -1,25 +1,27 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "abilities.h"
 
 ObjectFuncPtr enemyList[14] = { Kiki_Main, RhinoTank_Main, Sweep_Main, SpinnerA_Main, SpinnerB_Main, SpinnerC_Main, EPolice_Main, EBuyon,
 ESman, UnidusA_Main, UnidusB_Main, UnidusC_Main, (ObjectFuncPtr)0x5B03B0, ERobo_0 };
 
-static FunctionHook<void, task*> Kiki_Main_t((intptr_t)Kiki_Main);
-static FunctionHook<void, task*> RhinoTank_t((intptr_t)RhinoTank_Main);
-static FunctionHook<void, task*> Sweep_t((intptr_t)Sweep_Main);
-static FunctionHook<void, task*> SpinnerA_t((intptr_t)SpinnerA_Main);
-static FunctionHook<void, task*> SpinnerB_t((intptr_t)SpinnerB_Main);
-static FunctionHook<void, task*> SpinnerC_t((intptr_t)SpinnerC_Main);
-static FunctionHook<void, task*> EPolice_t((intptr_t)EPolice_Main);
-static FunctionHook<void, task*> EBuyon_t((intptr_t)EBuyon);
-static FunctionHook<void, task*> ESman_t((intptr_t)ESman);
-static FunctionHook<void, task*> UnidusA_t((intptr_t)UnidusA_Main);
-static FunctionHook<void, task*> UnidusB_t((intptr_t)UnidusB_Main);
-static FunctionHook<void, task*> UnidusC_t((intptr_t)UnidusC_Main);
-static FunctionHook<void, task*> EGacha_t((intptr_t)0x5B03B0);
-static FunctionHook<void, task*> ERobo_t((intptr_t)ERobo_0);
+TaskHook Kiki_Main_t((intptr_t)Kiki_Main);
+TaskHook RhinoTank_t((intptr_t)RhinoTank_Main);
+TaskHook Sweep_t((intptr_t)Sweep_Main);
+TaskHook SpinnerA_t((intptr_t)SpinnerA_Main);
+TaskHook SpinnerB_t((intptr_t)SpinnerB_Main);
+TaskHook SpinnerC_t((intptr_t)SpinnerC_Main);
+TaskHook EPolice_t((intptr_t)EPolice_Main);
+TaskHook EBuyon_t((intptr_t)EBuyon);
+TaskHook ESman_t((intptr_t)ESman);
+TaskHook UnidusA_t((intptr_t)UnidusA_Main);
+TaskHook UnidusB_t((intptr_t)UnidusB_Main);
+TaskHook UnidusC_t((intptr_t)UnidusC_Main);
+TaskHook EGacha_t((intptr_t)0x5B03B0);
+TaskHook ERobo_t((intptr_t)ERobo_0);
 
 static FunctionHook<void, int> IncrasementAct_t((intptr_t)IncrementAct);
+
+
 
 //reset grab pointer when changing act
 void IncrementAct_r(int amount)
@@ -130,7 +132,10 @@ static bool EnemyCapturedHandle(task* obj)
 			case dead:
 				ResetKlonoaGrab(klwk);
 				DestroyEnemy(data);
-				UpdateSetDataAndDelete(obj);
+				if (obj->ocp && obj->ocp->ssCondition)
+					UpdateSetDataAndDelete(obj);
+				else
+					FreeTask(obj);
 				break;
 			}
 
@@ -258,6 +263,16 @@ void ESman_r(task* obj)
 	}
 }
 
+void EnemyCol_Fix(ObjectMaster* obj, CollisionData* collisionArray, int count, unsigned __int8 list)
+{
+	if (isKlonoa(klonoaPnum))
+	{
+		return Collision_Init(obj, collisionArray, count, 3u);
+	}
+
+	return Collision_Init(obj, collisionArray, count, list);
+}
+
 void init_EnemiesHack()
 {
 	Kiki_Main_t.Hook(kiki_r);
@@ -276,4 +291,7 @@ void init_EnemiesHack()
 	ERobo_t.Hook(ERobo_r);
 
 	IncrasementAct_t.Hook(IncrementAct_r);
+
+	WriteCall((void*)0x4B0D17, EnemyCol_Fix);
+
 }
