@@ -8,8 +8,6 @@ TaskHook Chaos6_t((intptr_t)Chaos6_Main);
 TaskHook EggHornet_t((intptr_t)EggHornet_Main);
 TaskHook EggViper_t((intptr_t)0x581E10);
 
-TaskHook Enemy_Delete_t((intptr_t)Enemy_Delete);
-
 static FunctionHook<void, int> RunLevelDestructor_t(RunLevelDestructor);
 
 const static int TimerCD = 130;
@@ -28,7 +26,7 @@ struct EnemyBossSpawnS
 
 const EnemyBossSpawnS EnemyBossSpawnPos[] = {
 	{ LevelIDs_Chaos0, { 258.0f, 17.0f, 264.0f}, 0, SpinnerB_Main },
-	{ LevelIDs_Chaos2, {}, 0 },
+	{ LevelIDs_Chaos2, { 26, 19, 43}, 0, SpinnerB_Main },
 	{ LevelIDs_Chaos4, { 34, 38, 166 }, 0, SpinnerB_Main },
 	{ LevelIDs_Chaos4, { 36, 38, -109}, 1, SpinnerA_Main },
 	{ LevelIDs_Chaos6, { -107, 754, -504 }, 0, SpinnerB_Main },
@@ -93,9 +91,12 @@ void CreateEnemy(char id)
 			if (EnemyBossSpawnPos[i].id == id && !enemyBossTask[id]) {
 
 				enemyBossTask[id] = CreateElementalTask(2, 3, (TaskFuncPtr)EnemyBossSpawnPos[i].enemy);
-				enemyBossTask[id]->dest = EnemyBoss_Delete_r;
-				enemyBossTask[id]->twp->pos = EnemyBossSpawnPos[i].pos;
-				enemyBossTask[id]->twp->id = id;
+
+				if (enemyBossTask[id]) {
+					enemyBossTask[id]->dest = EnemyBoss_Delete_r;
+					enemyBossTask[id]->twp->pos = EnemyBossSpawnPos[i].pos;
+					enemyBossTask[id]->twp->id = id;
+				}
 			}
 		}
 	}
@@ -179,14 +180,6 @@ void RunLevelDestructor_r(int a1)
 		resetEnemyBossSpawn();
 
 	RunLevelDestructor_t.Original(a1);
-}
-
-void EnemyDelete_R(task* obj)
-{
-	if (CurrentLevel >= LevelIDs_Chaos0)
-		EnemyBoss_Delete_r(obj);
-
-	Enemy_Delete_t.Original(obj);
 }
 
 void init_BossesHacks()

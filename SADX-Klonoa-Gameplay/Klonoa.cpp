@@ -137,7 +137,7 @@ signed int KlonoaCheckDamage(taskwk* data, playerwk* mwp)
 		return 0;
 
 	char charid = data->counter.b[0];
-	data->wtimer = 120;
+	data->wtimer = 120 * 2;
 	VibConvergence(charid, 7, 59, 6);
 
 	auto curAction = data->mode;
@@ -782,8 +782,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		return;
 	}
 
-	if (!data->wtimer)
-		Sonic_RunsActions_t.Original(data, data2, co2);
+	Sonic_RunsActions_t.Original(data, data2, co2);
 }
 
 void __cdecl Klonoa_Main_r(task* obj)

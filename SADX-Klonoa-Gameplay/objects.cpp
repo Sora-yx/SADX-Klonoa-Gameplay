@@ -319,8 +319,6 @@ void LoadObjTextures()
 {
 	LoadPVM("KObjCommon", &KObjComTexlist);
 	LoadPVM("SUPI_SUPI", &SUPI_SUPI_TEXLIST);
-	LoadPVM("UNI_A_UNIBODY", &UNI_A_UNIBODY_TEXLIST);
-	LoadPVM("TOGEBALL_TOGEBALL", &TOGEBALL_TOGEBALL_TEXLIST);
 
 	// Load every Minimal texs because most of them will be loaded anyway
 	for (int j = 0; j < LengthOfArray(MinimalPVMs); ++j)

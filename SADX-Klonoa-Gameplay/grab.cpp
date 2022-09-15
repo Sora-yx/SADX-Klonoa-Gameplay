@@ -16,7 +16,7 @@ void CheckKlonoaEnemyPtr(klonoawk* klwk, taskwk* data)
 {
 	if (data && klwk && klwk->enemyGrabPtr)
 	{
-		if (!isKlonoaHold(data->counter.b[0]) && data->mode > act_fall)
+		if (!isKlonoaHold(data->counter.b[0]) && data->mode > act_fall && data->mode != act_hurt)
 		{
 			ResetKlonoaGrab(klwk);
 		}
