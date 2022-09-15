@@ -15,6 +15,7 @@ static NJS_TEXLIST KlonoaTexList = { arrayptrandlength(KlonoaTex) };
 
 TaskHook Sonic_Main_t((intptr_t)Sonic_Main);
 TaskHook Sonic_Display_t((intptr_t)Sonic_Display);
+TaskHook Sonic_Delete_t((intptr_t)Sonic_Delete);
 static FunctionHook<void, taskwk*, motionwk2*, playerwk*> Sonic_RunsActions_t((intptr_t)Sonic_Act1);
 
 bool isKlonoa(char pnum)
@@ -333,6 +334,12 @@ void NodeCallback2(NJS_OBJECT* obj)
 		SetVectorDiff(&kl->ringPos);
 		SetVectorDiff(&kl->ringVec);
 	}
+}
+
+void Klonoa_Delete_r(task* obj)
+{
+	klonoa = false;
+	Sonic_Delete_t.Original(obj);
 }
 
 void __cdecl Klonoa_Display_r(task* obj)
@@ -803,6 +810,7 @@ void __cdecl Klonoa_Main_r(task* obj)
 		else
 		{
 			PrintDebug("Klonoa Mod: Failed to load Klonoa worker; mod won't work...\n");
+			klonoa = false;
 		}
 	}
 
@@ -860,6 +868,7 @@ void initKlonoa()
 	Sonic_Main_t.Hook(Klonoa_Main_r);
 	Sonic_RunsActions_t.Hook(Klonoa_runsActions_r);
 	Sonic_Display_t.Hook(Klonoa_Display_r);
+	Sonic_Delete_t.Hook(Klonoa_Delete_r);
 
 	WriteCall((void*)0x418214, Klonoa_late_ActionEx);
 	WriteCall((void*)0x41815E, Klonoa_linkEx);

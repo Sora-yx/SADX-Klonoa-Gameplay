@@ -138,7 +138,7 @@ void SetKlonoaAnims()
 	KlonoaAnimList[33].Property = 4;
 	KlonoaAnimList[33].NextAnim = 37;
 	KlonoaAnimList[33].TransitionSpeed = 0.25f;
-	KlonoaAnimList[33].AnimationSpeed = 0.2f;
+	KlonoaAnimList[33].AnimationSpeed = 0.4f;
 
 	//obj run
 	KlonoaAnimList[34].Animation->motion = KlonoaANM[anmID_holdRun]->getmotion();

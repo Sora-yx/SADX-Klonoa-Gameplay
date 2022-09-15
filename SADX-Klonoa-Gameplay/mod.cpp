@@ -31,6 +31,7 @@ extern "C" {
 		init_Audio();
 		init_EnemiesHack();
 		init_BossesHacks();
+		ObjectAnimAdjust();
 		srand((unsigned)time(&t));
 	}
 
