@@ -248,3 +248,29 @@ void RegularPhysicsFunctions(taskwk* data, motionwk2* data2, playerwk* co2)
 	PSetPosition(data, data2, co2);
 	PResetPosition(data, data2, co2);
 }
+
+bool isOnSnowBoard(int curAnim)
+{
+	if (curAnim >= 103 && curAnim <= 124)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+//fucking kill me
+const float stdPos = 5.2f;
+float kloGetPosYDiff(int curAnim)
+{
+	if (curAnim == 102)
+	{
+		return 6.8f;
+	}
+	else if (isOnSnowBoard(curAnim))
+	{
+		return 8.8f;
+	}
+
+	return stdPos;
+}

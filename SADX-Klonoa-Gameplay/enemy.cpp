@@ -27,10 +27,11 @@ TaskHook OMonkeyCage_t((intptr_t)OMonkeyCage);
 static FunctionHook<void, int> IncrementAct_t((intptr_t)IncrementAct);
 
 TaskHook RingLineV_t((intptr_t)0x7AC180);
+TaskHook RingLine_t((intptr_t)0x7ABC30);
 TaskHook UpdateSetAndDelete_t(UpdateSetDataAndDelete);
 
 task* EnemyLineV = nullptr;
-task* Enemy = nullptr;
+task* EnemyLine = nullptr;
 
 //a collision can only hit another one depending on the list they are using, so we change the one used when we throw an enemy so it can hit another one.
 char GetColListIDForThrowEnemy()
@@ -54,18 +55,6 @@ void UpdateSetAndDelete_r(task* obj)
 	obj->exec = DestroyTask;
 }
 
-void Enemy_Delete_r(task* obj)
-{
-	auto task = Enemy;
-	if (task)
-	{
-		FreeTask(task);
-	}
-
-	Enemy = nullptr;
-	Enemy_Delete((ObjectMaster*)obj);
-}
-
 void Enemy_DeleteLineV_r(task* obj)
 {
 	auto task = EnemyLineV;
@@ -82,23 +71,55 @@ void CreateEnemyLineVSpawn(task* obj)
 {
 	if (!EnemyLineV)
 	{
-		EnemyLineV = CreateElementalTask(2, 3, (TaskFuncPtr)SpinnerA_Main);
+		EnemyLineV = CreateElementalTask(2, 3, (TaskFuncPtr)SpinnerB_Main);
 		EnemyLineV->dest = Enemy_DeleteLineV_r;
 		EnemyLineV->twp->pos = obj->twp->pos;
 		EnemyLineV->twp->pos.y += 7.0f;
 	}
 }
 
-void CreateEnemy(task* obj)
+void Enemy_DeleteLine_r(task* obj)
 {
-	if (!Enemy)
+	auto task = EnemyLineV;
+	if (task)
 	{
-		Enemy = CreateElementalTask(2, 3, (TaskFuncPtr)SpinnerA_Main);
-		Enemy->dest = Enemy_Delete_r;
-		Enemy->twp->pos = obj->twp->pos;
-		Enemy->twp->pos.y += 4.0f;
-		Enemy->twp->pos.x += 7.0f;
+		FreeTask(task);
 	}
+
+	EnemyLine = nullptr;
+	Enemy_Delete((ObjectMaster*)obj);
+}
+
+void CreateEnemyLineSpawn(task* obj)
+{
+	if (!EnemyLine)
+	{
+		EnemyLine = CreateElementalTask(2, 3, (TaskFuncPtr)SpinnerB_Main);
+		EnemyLine->dest = Enemy_DeleteLine_r;
+		EnemyLine->twp->pos = obj->twp->pos;
+		EnemyLine->twp->pos.y += 7.0f;
+	}
+}
+
+void RingLine_r(task* obj)
+{
+	auto data = obj->twp;
+	auto child = obj->ctp;
+
+	if (child && data->mode == 1)
+	{
+		if (child->next && child->next->next && child->next->next->next)
+		{
+			auto task = child->next->next->next;
+
+			if (task && task->twp) {
+
+				CreateEnemyLineSpawn(obj);
+			}
+		}
+	}
+
+	RingLine_t.Original(obj);
 }
 
 
@@ -113,11 +134,9 @@ void RingLineV_r(task* obj)
 		{
 			auto task = child->next->next->next;
 
-			if (task && task->twp) {
+			if (task && task->twp && data->mode == 3) {
 
 				CreateEnemyLineVSpawn(obj);
-				data->mode = 1;
-				return;
 			}
 		}
 	}
@@ -424,6 +443,7 @@ void init_EnemiesHack()
 	IncrementAct_t.Hook(IncrementAct_r);
 
 	RingLineV_t.Hook(RingLineV_r);
+	RingLine_t.Hook(RingLine_r);
 	OMonkeyCage_t.Hook(OMonkeyCage_r);
 	UpdateSetAndDelete_t.Hook(UpdateSetAndDelete_r);
 

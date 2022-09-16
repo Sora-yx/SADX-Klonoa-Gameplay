@@ -62,6 +62,34 @@ bool isKlonoaHold(char pnum)
 	return playertwp[pnum]->mode >= act_super_jump && playertwp[pnum]->mode <= act_throwAir;
 }
 
+void Klonoa_CalcColCenterPos(playerwk* co2, taskwk* data)
+{
+	NJS_VECTOR a2a = { 0 };
+
+	auto info = data->cwp->info;
+	a2a.z = 0.0;
+	a2a.x = 0.0;
+	a2a.y = co2->p.center_height - 5.2f;
+	PConvertVector_P2G(data, &a2a);
+	info->center = a2a;
+	info->center.x += data->pos.x;
+	info->center.y += data->pos.y;
+	info->center.z += data->pos.z;
+}
+
+static void __declspec(naked) Klonoa_CalcColCenterPosASM()
+{
+	__asm
+	{
+		push edi 
+		push ecx 
+		call Klonoa_CalcColCenterPos
+		pop ecx 
+		pop edi 
+		retn
+	}
+}
+
 //used for cutscene and character select
 void DrawKlonoa_Event(NJS_ACTION* anim, float frame, QueuedModelFlagsB flg)
 {
@@ -333,7 +361,7 @@ void NodeCallback2(NJS_OBJECT* obj)
 		njCalcVector(v1, &v, &kl->ringVec); // ring vec
 		SetVectorDiff(&kl->ringPos);
 		SetVectorDiff(&kl->ringVec);
-	}
+	}	
 }
 
 void Klonoa_Delete_r(task* obj)
@@ -362,6 +390,7 @@ void __cdecl Klonoa_Display_r(task* obj)
 
 	Direct3D_SetZFunc(1u);
 	BackupConstantAttr();
+
 	AddConstantAttr(0, NJD_FLAG_IGNORE_SPECULAR);
 
 	if (SuperSonicFlag)
@@ -387,9 +416,8 @@ void __cdecl Klonoa_Display_r(task* obj)
 		njSetTexture(&KlonoaTexList);
 
 		njPushMatrix(0);
-		NJS_VECTOR pos = data->cwp->info->center;
-		pos.y -= 5.2f;
-		njTranslateV(0, &pos);
+	
+		njTranslateV(0, &data->cwp->info->center);
 
 		njScaleV(0, &KLScaleDiff);
 
@@ -814,7 +842,6 @@ void __cdecl Klonoa_Main_r(task* obj)
 		}
 	}
 
-
 	switch (data->mode)
 	{
 	case act_hover:
@@ -859,6 +886,38 @@ void __cdecl Klonoa_Main_r(task* obj)
 	klonoaPnum = pnum;
 }
 
+void __cdecl Sonic_Snowboard_Main_r(task* a1)
+{
+	auto data = a1->twp;
+	int pNum = (unsigned __int8)data->counter.b[0];
+	auto data2 = (motionwk2*)EntityData2Ptrs[pNum];
+	auto pData = playertwp[pNum];
+	auto objMtn = a1->mwp;
+	auto curAnim = playerpwp[pNum]->mj.action;
+	auto klwk = (klonoawk*)playertp[pNum]->awp;
+
+	if (curAnim < 102 || curAnim > 124)
+	{
+		if ((data->flag & 8) == 0)
+		{
+			data->pos.y = data->pos.y - 5.2199998f;
+			ObjectMovableSRegularExecute(a1);
+			data->pos.y = data->pos.y - -5.2199998f;
+		}
+		Sonic_Snowboard_Display((ObjectMaster*)a1);
+	}
+	else
+	{
+		data->pos = pData->cwp->info->center;
+		if (isKlonoa(pNum))
+			data->pos.y += 7.2f;
+		data->ang = pData->ang;
+		data->ang.y = 0x8000 - pData->ang.y;
+		objMtn->spd = data2->spd;
+		data->flag &= 0xF7u;
+		Sonic_Snowboard_Display((ObjectMaster*)a1);
+	}
+}
 
 void initKlonoa()
 {
@@ -875,4 +934,7 @@ void initKlonoa()
 
 	init_Objects();
 
+	//patch klonoa translate display
+	WriteCall((void*)0x49BEFA, Klonoa_CalcColCenterPosASM);
+	WriteJump(Sonic_Snowboard_Main, Sonic_Snowboard_Main_r);
 }

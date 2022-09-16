@@ -1,6 +1,6 @@
 #include "pch.h"
 
-AnimationFile* KlonoaANM[30] = { 0 };
+AnimationFile* KlonoaANM[50] = { 0 };
 #define AnimCount 160
 #define boneCount 48
 AnimData_t KlonoaAnimList[AnimCount] = { 0 };
@@ -57,6 +57,9 @@ void SetKlonoaAnims()
 	KlonoaAnimList[2].AnimationSpeed = 0.50f;
 	KlonoaAnimList[2].Property = 4;
 	KlonoaAnimList[2].NextAnim = 2;
+
+	KlonoaAnimList[7] = KlonoaAnimList[0];
+	KlonoaAnimList[8] = KlonoaAnimList[0];
 
 	//walk
 	KlonoaAnimList[9].Animation->motion = KlonoaANM[anmID_walk]->getmotion();
@@ -132,6 +135,20 @@ void SetKlonoaAnims()
 	KlonoaAnimList[16].NextAnim = 16;;
 	KlonoaAnimList[16].TransitionSpeed = 0.25f;
 	KlonoaAnimList[16].AnimationSpeed = 0.5f;	
+
+	//landing
+	KlonoaAnimList[19].Animation->motion = KlonoaANM[animID_Landing]->getmotion();
+	KlonoaAnimList[19].Property = 4;
+	KlonoaAnimList[19].NextAnim = 0;
+	KlonoaAnimList[19].TransitionSpeed = 0.25f;
+	KlonoaAnimList[19].AnimationSpeed = 0.5f;
+
+	//brake
+	KlonoaAnimList[20].Animation->motion = KlonoaANM[animID_Brake]->getmotion();
+	KlonoaAnimList[20].Property = 4;
+	KlonoaAnimList[20].NextAnim = 0;
+	KlonoaAnimList[20].TransitionSpeed = 0.25f;
+	KlonoaAnimList[20].AnimationSpeed = 0.8f;
 	
 	//pick obj (bullet for now)
 	KlonoaAnimList[33].Animation->motion = KlonoaANM[anmID_bulletStart]->getmotion();
@@ -271,6 +288,95 @@ void SetKlonoaAnims()
 	KlonoaAnimList[87].AnimationSpeed = 1.0f;
 	KlonoaAnimList[87].Property = 5;
 
+	//board
+	KlonoaAnimList[102].Animation->motion = KlonoaANM[animID_Board]->getmotion();
+	KlonoaAnimList[102].NextAnim = 102;
+	KlonoaAnimList[102].TransitionSpeed = 0.125;
+	KlonoaAnimList[102].AnimationSpeed = 1.0f;
+	KlonoaAnimList[102].Property = 3;
+
+
+	//board brake right
+	KlonoaAnimList[103].Animation->motion = KlonoaANM[animID_BoardRight]->getmotion();
+	KlonoaAnimList[103].NextAnim = 103;
+	KlonoaAnimList[103].TransitionSpeed = 0.125;
+	KlonoaAnimList[103].AnimationSpeed = 0.5f;
+	KlonoaAnimList[103].Property = 5;
+
+	//board brake left
+	KlonoaAnimList[104].Animation->motion = KlonoaANM[animID_BoardLeft]->getmotion();
+	KlonoaAnimList[104].NextAnim = 104;
+	KlonoaAnimList[104].TransitionSpeed = 0.125;
+	KlonoaAnimList[104].AnimationSpeed = 0.5f;
+	KlonoaAnimList[104].Property = 5;
+
+	KlonoaAnimList[114] = KlonoaAnimList[102];
+
+	//falling board
+	KlonoaAnimList[105].Animation->motion = KlonoaANM[animID_FallBoard]->getmotion();
+	KlonoaAnimList[105].NextAnim = 111;
+	KlonoaAnimList[105].TransitionSpeed = 0.125;
+	KlonoaAnimList[105].AnimationSpeed = 0.2f;
+	KlonoaAnimList[105].Property = 4;
+
+	//jump board
+	KlonoaAnimList[106].Animation->motion = KlonoaANM[animID_BoardJump]->getmotion();
+	KlonoaAnimList[106].NextAnim = 105;
+	KlonoaAnimList[106].TransitionSpeed = 0.125;
+	KlonoaAnimList[106].AnimationSpeed = 0.5f;
+	KlonoaAnimList[106].Property = 4;
+
+	//board right side
+	KlonoaAnimList[107].Animation->motion = KlonoaANM[animID_BoardRight]->getmotion();
+	KlonoaAnimList[107].NextAnim = 107;
+	KlonoaAnimList[107].TransitionSpeed = 0.125;
+	KlonoaAnimList[107].AnimationSpeed = 0.3f;
+	KlonoaAnimList[107].Property = 12;
+
+	//board left side
+	KlonoaAnimList[108].Animation->motion = KlonoaANM[animID_BoardLeft]->getmotion();
+	KlonoaAnimList[108].NextAnim = 108;
+	KlonoaAnimList[108].TransitionSpeed = 0.125;
+	KlonoaAnimList[108].AnimationSpeed = 0.3f;
+	KlonoaAnimList[108].Property = 12;
+
+	KlonoaAnimList[111] = KlonoaAnimList[105];
+	KlonoaAnimList[112] = KlonoaAnimList[105];
+
+	//losing balance, don't have a counterpart so stick to neutral
+	KlonoaAnimList[115] = KlonoaAnimList[102]; 
+
+	//trick 1
+	KlonoaAnimList[116].Animation->motion = KlonoaANM[animID_trick1]->getmotion();
+	KlonoaAnimList[116].NextAnim = 112;
+	KlonoaAnimList[116].TransitionSpeed = 0.125;
+	KlonoaAnimList[116].AnimationSpeed = 0.5f;
+	KlonoaAnimList[116].Property = 4;
+
+	//trick 2
+	KlonoaAnimList[117].Animation->motion = KlonoaANM[animID_trick2]->getmotion();
+	KlonoaAnimList[117].NextAnim = 112;
+	KlonoaAnimList[117].TransitionSpeed = 0.125;
+	KlonoaAnimList[117].AnimationSpeed = 0.5f;
+	KlonoaAnimList[117].Property = 4;
+
+	//trick 3
+	KlonoaAnimList[118].Animation->motion = KlonoaANM[animID_trick3]->getmotion();
+	KlonoaAnimList[118].NextAnim = 112;
+	KlonoaAnimList[118].TransitionSpeed = 0.125;
+	KlonoaAnimList[118].AnimationSpeed = 0.5f;
+	KlonoaAnimList[118].Property = 4;
+
+	KlonoaAnimList[119] = KlonoaAnimList[118];
+	KlonoaAnimList[120] = KlonoaAnimList[118];
+	KlonoaAnimList[121] = KlonoaAnimList[117];
+
+	//crouch
+	KlonoaAnimList[124].Animation->motion = KlonoaANM[animID_Crouch]->getmotion();
+	KlonoaAnimList[124].NextAnim = 124;
+	KlonoaAnimList[124].TransitionSpeed = 0.125;
+	KlonoaAnimList[124].AnimationSpeed = 0.3f;
+	KlonoaAnimList[124].Property = 3;
 
 	//hover
 	KlonoaAnimList[anm_hover].Animation->motion = KlonoaANM[anmID_hover]->getmotion();
@@ -364,6 +470,18 @@ void LoadKlonoa_AnimFiles()
 	KlonoaANM[21] = LoadObjectAnim("holdJump");
 	KlonoaANM[22] = LoadObjectAnim("holdFall");
 	KlonoaANM[23] = LoadObjectAnim("throw");
+	KlonoaANM[24] = LoadObjectAnim("throw"); //TO DO ADD THROW AIR
+	KlonoaANM[25] = LoadObjectAnim("Brake");
+	KlonoaANM[26] = LoadObjectAnim("Landing");
+	KlonoaANM[27] = LoadObjectAnim("Board");
+	KlonoaANM[28] = LoadObjectAnim("Crouch");
+	KlonoaANM[29] = LoadObjectAnim("FallBoard");
+	KlonoaANM[30] = LoadObjectAnim("trick1");
+	KlonoaANM[31] = LoadObjectAnim("trick2");
+	KlonoaANM[32] = LoadObjectAnim("trick3");
+	KlonoaANM[33] = LoadObjectAnim("BoardLeft");
+	KlonoaANM[34] = LoadObjectAnim("BoardRight");
+	KlonoaANM[35] = LoadObjectAnim("BoardJump");
 }
 
 void InitKlonoaCharSelAnim()
