@@ -13,7 +13,7 @@ signed int hover_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 	co2->mj.reqaction = anm_hover;
 	co2->spd.y = 0.0f;
 	klwk->hoverTimer = hoverTimer;
-	PlayCustomSound(hover);
+	PlayCustomSound(se_hover);
 	return 1;
 }
 

@@ -93,6 +93,11 @@ AnimationFile* LoadObjectAnim(const char* name) {
 	return LoadANM("anims", name);
 }
 
+AnimationFile* LoadEventAnim(const char* name) {
+	PrintDebug("[Klonoa Mod] Loading event animation: %s... ", name);
+	return LoadANM("anims\\events", name);
+}
+
 void DrawChunkModel(NJS_CNK_MODEL* model) {
 	DrawChunkModel_(model->vlist, model->plist);
 }

@@ -10,6 +10,8 @@ void FreeMDL(ModelInfo* pointer);
 
 void LoadAnimation(AnimationFile** info, const char* name, const HelperFunctions& helperFunctions);
 
+AnimationFile* LoadEventAnim(const char* name);
+
 inline AnimationFile* LoadANM(const char* type, const char* name);
 AnimationFile* LoadObjectAnim(const char* name);
 void LookAt(NJS_VECTOR* unit, Angle* outx, Angle* outy);

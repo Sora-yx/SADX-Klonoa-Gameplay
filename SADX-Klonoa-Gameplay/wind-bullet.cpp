@@ -18,7 +18,7 @@ signed int KlonoaWBullet_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 	co2->mj.reqaction = isOnGround ? anm_windBullet : anm_windBulletAir;
 	co2->spd.y = 0.0f;
 
-	PlayCustomSound(shot);
+	PlayCustomSound(se_shot);
 	return 1;
 }
 
@@ -140,13 +140,13 @@ void BulletLookForTarget(klonoawk* klwk, taskwk* data)
 			{
 				data->mode = act_stnd;
 				co2->mj.reqaction = 0;
-				PlayCustomSoundVolume(pickEnemy, 1);
+				PlayCustomSoundVolume(se_pickEnemy, 1);
 				return;
 			}
 
 			//grab enemy
 			data->mode = act_holdStd;
-			PlayCustomSoundVolume(pickEnemy, 1);
+			PlayCustomSoundVolume(se_pickEnemy, 1);
 			return;
 		}
 	}

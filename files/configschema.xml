@@ -2,11 +2,8 @@
 <ConfigSchema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonicretro.org">
 	<Groups>
 	<Group name="gameplay" display="1. Gameplay">
-	      <Property name="allowHomingAttack" display="Allow Homing Attack" type="bool" defaultvalue="False">
-        <HelpText>Disable Klonoa Hover and restore Homing Attack.</HelpText>
-      </Property>
-      <Property name="allowSpinDash" display="Allow Spin Dash" type="bool" defaultvalue="False">
-        <HelpText>Disable Klonoa Wind Bullet and restore Spin Dash.</HelpText>
+	      <Property name="allowKlonoaMoves" display="Allow Klonoa Moves" type="bool" defaultvalue="True">
+        <HelpText>Use Klonoa moves for a new gameplay experience. Disable this if you just want a simple Sonic skin.</HelpText>
       </Property>
 	  
 	  	        <Property name="nerfPhysics" display="Custom Physics" type="bool" defaultvalue="True">

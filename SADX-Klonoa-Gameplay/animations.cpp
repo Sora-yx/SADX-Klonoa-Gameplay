@@ -1,6 +1,7 @@
 #include "pch.h"
 
 AnimationFile* KlonoaANM[50] = { 0 };
+AnimationFile* KlonoaEvANM[50] = { 0 };
 #define AnimCount 160
 #define boneCount 48
 AnimData_t KlonoaAnimList[AnimCount] = { 0 };
@@ -492,10 +493,17 @@ void InitKlonoaCharSelAnim()
 	SonicCharSelAnim[3] = 0;
 }
 
+void LoadKlonoaEventAnims()
+{
+	KlonoaEvANM[0] = LoadEventAnim("Upgrade0");
+}
+
 void Init_KlonoaAnim()
 {
 	LoadKlonoa_AnimFiles();
 	SetKlonoaAnims();
+	LoadKlonoaEventAnims();
+
 	WriteJump((void*)0x49AB47, SetAnimList);
 	WriteData((short*)0x49ACD8, (short)0x9090);
 	WriteData<2>((void*)0x4916A5, 0x90u); // disable metal's weird tilting thing

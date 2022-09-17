@@ -32,14 +32,16 @@ enum klonoaVoice
 
 enum soundEffect
 {
-	jump = 100,
-	hover,
-	shot,
-	pickEnemy,
-	alarmClock,
-	dreamStn,
-	bubbleHit,
-	death,
+	se_jump = 100,
+	se_hover,
+	se_shot,
+	se_pickEnemy,
+	se_alarmClock,
+	se_dreamStn,
+	se_bubbleHit,
+	se_death,
+	se_heart,
+	se_heartLarge,
 };
 
 void Sounds_Init();

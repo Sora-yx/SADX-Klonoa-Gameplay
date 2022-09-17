@@ -122,7 +122,7 @@ int PlayDreamStoneSound(int ID, void* a2, int a3, void* a4)
 		return PlaySound(ID, a2, a3, a4);
 	}
 
-	PlayCustomSoundVolume(dreamStn, 0.2f);
+	PlayCustomSoundVolume(se_dreamStn, 0.2f);
 	return 1;
 }
 
@@ -157,10 +157,15 @@ void Heart_Exec(task* obj)
 		data->ang.y += 400;
 		if (GetCollidingEntityA((EntityData1*)data))
 		{
-			if (data->scl.z == 2.0f)
+			if (data->scl.z == 2.0f) {
+				PlayCustomSoundVolume(se_heartLarge, 0.5f);
 				ResetKlonoaHP();
+			}
 			else
+			{
+				PlayCustomSoundVolume(se_heart, 0.5f);
 				AddKlonoaHP(1);
+			}
 
 			data->mode++;
 		}
@@ -204,13 +209,13 @@ void savepointCollision_r(task* tsk, taskwk* data)
 			SetRestartData(&playertwp[pNum]->pos, (Rotation3*)&playertwp[pNum]->ang);
 		}
 		SetBroken(tsk);
-		PlayCustomSoundVolume(alarmClock, 0.7f);
+		PlayCustomSoundVolume(se_alarmClock, 0.7f);
 	}
 
 	if (GetCollidingEntityA((EntityData1*)data))
 	{
 		if (!data->wtimer) {
-			PlayCustomSound(bubbleHit);
+			PlayCustomSound(se_bubbleHit);
 			data->wtimer = 40;
 		}
 	}
@@ -304,18 +309,7 @@ void AlarmClock_Main(task* tsk)
 		savepoint_data->tp[1] = CreateChildTask(
 			LoadObj_Data1, (TaskFuncPtr)nullsub, tsk);
 
-		if (useHP)
-		{
-			task* heart = CreateElementalTask(2, 2, Heart_Exec);
-			if (heart)
-			{
-				heart->twp->pos = data->pos;
 
-				heart->twp->pos.x += 20.0f;
-				heart->twp->pos.z += 20.0f;
-
-			}
-		}
 		initCollidata(data);
 
 		savepoint_data->ang.y = 0xFFFFC000;
@@ -331,6 +325,16 @@ void AlarmClock_Main(task* tsk)
 		else
 		{ 
 			CreateChildTask((LoadObj)(LoadObj_Data1), Bubble_ChildMain, tsk);
+		}
+		if (useHP)
+		{
+			task* heart = CreateElementalTask(2, 2, Heart_Exec);
+			if (heart)
+			{
+				heart->twp->pos = data->pos;
+				heart->twp->pos.x += 20.0f;
+				heart->twp->pos.z += 20.0f;
+			}
 		}
 		break;
 	case 1:

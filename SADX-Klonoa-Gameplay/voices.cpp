@@ -166,7 +166,7 @@ void KillPlayer_r(int pno)
 {
 	if (isKlonoa(pno))
 	{
-		PlayCustomSoundVolume(death, 0.5f);
+		PlayCustomSoundVolume(se_death, 0.5f);
 	}
 
 	KillPlayer_t.Original(pno);
@@ -176,7 +176,7 @@ void KillPlayerFall_r(int pno)
 {
 	if (isKlonoa(pno))
 	{
-		PlayCustomSoundVolume(death, 0.5f);
+		PlayCustomSoundVolume(se_death, 0.5f);
 	}
 
 	KillP1ByFallingDown_t.Original(pno);
