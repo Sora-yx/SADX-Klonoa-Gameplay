@@ -1,9 +1,14 @@
 #include "pch.h"
+#include "hud.h"
+#include "hp.h"
 
 ModelInfo* dreamStoneMDL = nullptr;
 ModelInfo* alarmClockMDL = nullptr;
+ModelInfo* boardMDL = nullptr;
+ModelInfo* heartMDL = nullptr;
+ModelInfo* largeHeartMDL = nullptr;
 
-static NJS_TEXNAME KObjCommonTex[2] = { 0 };
+static NJS_TEXNAME KObjCommonTex[3] = { 0 };
 static NJS_TEXLIST KObjComTexlist = { arrayptrandlength(KObjCommonTex) };
 
 TaskHook CheckPoint_t((intptr_t)CheckPoint_Main);
@@ -24,7 +29,6 @@ bool isKlonoaAndObj(ModelInfo* obj)
 
 void __cdecl DreamStone_Display(task* obj)
 {
-
 	if (!isKlonoaAndObj(dreamStoneMDL))
 	{
 		return Ring_Display_t.Original(obj);
@@ -109,13 +113,10 @@ void __cdecl DrawDreamStoneClip(NJS_MODEL_SADX* model, float scale)
 			}
 		}
 	}
-
-
 }
 
 int PlayDreamStoneSound(int ID, void* a2, int a3, void* a4)
 {
-
 	if (!isKlonoaAndObj(dreamStoneMDL))
 	{
 		return PlaySound(ID, a2, a3, a4);
@@ -123,6 +124,54 @@ int PlayDreamStoneSound(int ID, void* a2, int a3, void* a4)
 
 	PlayCustomSoundVolume(dreamStn, 0.2f);
 	return 1;
+}
+
+void Heart_Disp(task* obj)
+{
+	if (MissedFrames)
+		return;
+
+	auto data = obj->twp;
+	njSetTexture(&KObjComTexlist);
+	njPushMatrix(0);
+	njTranslateV(0, &data->pos);
+	njRotateY_(data->ang.y);
+
+	dsDrawObject((NJS_OBJECT*)data->timer.l);
+	njPopMatrix(1u);
+}
+
+void Heart_Exec(task* obj)
+{
+	auto data = obj->twp;
+
+	switch (data->mode)
+	{
+	case 0:
+		obj->disp = Heart_Disp;
+		data->timer.l = data->scl.z == 2.0f ? (int)largeHeartMDL->getmodel() : (int)heartMDL->getmodel();
+		CCL_Init(obj, (CCL_INFO*)&CSphere_Collision, 1, 4u);
+		data->mode++;
+		break;
+	case 1:
+		data->ang.y += 400;
+		if (GetCollidingEntityA((EntityData1*)data))
+		{
+			if (data->scl.z == 2.0f)
+				ResetKlonoaHP();
+			else
+				AddKlonoaHP(1);
+
+			data->mode++;
+		}
+		break;
+	default:
+		FreeTask(obj);
+		return;
+	}
+
+	AddToCollisionList((EntityData1*)data);
+	obj->disp(obj);
 }
 
 void savepointCollision_r(task* tsk, taskwk* data)
@@ -172,7 +221,6 @@ void savepointCollision_r(task* tsk, taskwk* data)
 	AddToCollisionList((EntityData1*)data);
 }
 
-
 void Bubble_ChildMain(task* obj)
 {
 	auto data = obj->twp;
@@ -195,7 +243,6 @@ void Bubble_ChildMain(task* obj)
 
 	obj->disp(obj);
 }
-
 
 void AlarmClock_Display(task* tsk)
 {
@@ -257,7 +304,18 @@ void AlarmClock_Main(task* tsk)
 		savepoint_data->tp[1] = CreateChildTask(
 			LoadObj_Data1, (TaskFuncPtr)nullsub, tsk);
 
+		if (useHP)
+		{
+			task* heart = CreateElementalTask(2, 2, Heart_Exec);
+			if (heart)
+			{
+				heart->twp->pos = data->pos;
 
+				heart->twp->pos.x += 20.0f;
+				heart->twp->pos.z += 20.0f;
+
+			}
+		}
 		initCollidata(data);
 
 		savepoint_data->ang.y = 0xFFFFC000;
@@ -319,6 +377,7 @@ void LoadObjTextures()
 {
 	LoadPVM("KObjCommon", &KObjComTexlist);
 	LoadPVM("SUPI_SUPI", &SUPI_SUPI_TEXLIST);
+	loadKLHud();
 
 	// Load every Minimal texs because most of them will be loaded anyway
 	for (int j = 0; j < LengthOfArray(MinimalPVMs); ++j)
@@ -344,19 +403,25 @@ void init_Objects()
 	//load models
 	dreamStoneMDL = LoadChunkModel("DreamStone");
 	alarmClockMDL = LoadBasicModel("Alarm");
+	boardMDL = LoadBasicModel("board");
+	heartMDL = LoadBasicModel("heart");
+	largeHeartMDL = LoadBasicModel("largeHeart");
 
 	//obj display hack
 	Ring_Display_t.Hook(DreamStone_Display);
 	CheckPoint_t.Hook(AlarmClock_Main);
+
 
 	WriteCall((void*)0x44FA79, DrawDreamStone);	
 	WriteCall((void*)0x614D61, DrawDreamStone);	
 	WriteCall((void*)0x61F302, DrawDreamStoneClip);
 
 	//obj sound hack
+	//ring
 	WriteCall((void*)0x4504DA, PlayDreamStoneSound);
 	WriteCall((void*)0x450557, PlayDreamStoneSound);
 	WriteCall((void*)0x45051F, PlayDreamStoneSound);	
 	WriteCall((void*)0x614DE1, PlayDreamStoneSound);	
-	WriteCall((void*)0x61F598, PlayDreamStoneSound);
+	WriteCall((void*)0x61F598, PlayDreamStoneSound);	
+	WriteCall((void*)0x44FE95, PlayDreamStoneSound);
 }

@@ -1,6 +1,7 @@
 #include "pch.h"
 
 //series of hacks to make bosses spawn enemy so we can defeat them Klonoa style! 
+
 TaskHook Chaos0_t((intptr_t)Chaos0_Main);
 TaskHook Chaos2_t((intptr_t)Chaos2_Main);
 TaskHook Chaos4_t((intptr_t)Chaos4_Main);
@@ -78,11 +79,12 @@ void EnemyBoss_Delete_r(task* obj)
 	{
 		char id = obj->twp->id;
 		FreeTask(enemyBossTask[id]);
+		timer = 0; //reset respawn timer
 		enemyBossTask[id] = nullptr;
 	}
 }
 
-void CreateEnemy(char id)
+static void CreateEnemy(char id)
 {
 	for (int i = 0; i < LengthOfArray(EnemyBossSpawnPos); i++)
 	{
@@ -102,9 +104,9 @@ void CreateEnemy(char id)
 	}
 }
 
-void static SpawnEnemyCheck()
+static void SpawnEnemyCheck()
 {
-	if (!IsIngame())
+	if (!IsIngame() || !isKlonoa(klonoaPnum))
 		return;
 
 	if (Life_Max <= 0.0f && !TimeThing)

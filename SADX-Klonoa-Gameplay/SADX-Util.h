@@ -53,3 +53,16 @@ static inline void initCollidata(taskwk* a1)
 		call initCPDataPtr
 	}
 }
+
+
+// void __usercall SonicHoldObject(playerwk *a1@<eax>, taskwk *a2@<ecx>)
+static const void* const sHoldObjPtr = (void*)0x4955E0;
+static inline void SonicHoldObject(playerwk* a1, taskwk* a2)
+{
+	__asm
+	{
+		mov ecx, a2
+		mov eax, a1
+		call sHoldObjPtr
+	}
+}

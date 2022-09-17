@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "abilities.h"
 #include "objects.h"
+#include "hp.h"
 
 bool klonoa = false;
 uint8_t klonoaPnum = 0;
@@ -28,19 +29,6 @@ bool isKlonoa(char pnum)
 	return false;
 }
 
-
-bool LoadKlonoa_Worker(task* obj) {
-
-	if (obj->twp->mode == 0 && !obj->awp) {
-		void* mem = AllocateMemory(sizeof(klonoawk));
-		memset(mem, 0, sizeof(klonoawk));
-		obj->awp = (anywk*)mem;
-		return true;
-	}
-
-	return false;
-}
-
 int getKlonoaPlayer()
 {
 	for (uint8_t i = 0; i < 8; i++)
@@ -54,40 +42,24 @@ int getKlonoaPlayer()
 	return -1;
 }
 
+bool LoadKlonoa_Worker(task* obj) {
+
+	if (obj->twp->mode == 0 && !obj->awp) {
+		void* mem = AllocateMemory(sizeof(klonoawk));
+		memset(mem, 0, sizeof(klonoawk));
+		obj->awp = (anywk*)mem;
+		return true;
+	}
+
+	return false;
+}
+
 bool isKlonoaHold(char pnum)
 {
 	if (!playertwp[pnum])
 		return false;
 
 	return playertwp[pnum]->mode >= act_super_jump && playertwp[pnum]->mode <= act_throwAir;
-}
-
-void Klonoa_CalcColCenterPos(playerwk* co2, taskwk* data)
-{
-	NJS_VECTOR a2a = { 0 };
-
-	auto info = data->cwp->info;
-	a2a.z = 0.0;
-	a2a.x = 0.0;
-	a2a.y = co2->p.center_height - 5.2f;
-	PConvertVector_P2G(data, &a2a);
-	info->center = a2a;
-	info->center.x += data->pos.x;
-	info->center.y += data->pos.y;
-	info->center.z += data->pos.z;
-}
-
-static void __declspec(naked) Klonoa_CalcColCenterPosASM()
-{
-	__asm
-	{
-		push edi 
-		push ecx 
-		call Klonoa_CalcColCenterPos
-		pop ecx 
-		pop edi 
-		retn
-	}
 }
 
 //used for cutscene and character select
@@ -222,9 +194,11 @@ signed int KlonoaCheckDamage(taskwk* data, playerwk* mwp)
 	data->flag &= 0xFAFFu;
 	char rng = rand() % 2;
 
-	if (Rings > 0)
+
+	if (useHP || Rings > 0)
 		PlayCustomSoundVolume(rng ? kl_pain : kl_pain2, 1.0f);
 
+	DamageKlonoa(1);
 	return 1;
 }
 
@@ -417,7 +391,9 @@ void __cdecl Klonoa_Display_r(task* obj)
 
 		njPushMatrix(0);
 	
-		njTranslateV(0, &data->cwp->info->center);
+		NJS_VECTOR pos = data->cwp->info->center;
+		pos.y -= kloGetPosYDiff(curAnim);
+		njTranslateV(0, &pos);
 
 		njScaleV(0, &KLScaleDiff);
 
@@ -552,7 +528,6 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		}
 		else
 		{
-
 			if (co2->spd.y < 0.0f)
 			{
 				co2->mj.reqaction = anm_fall;
@@ -825,7 +800,6 @@ void __cdecl Klonoa_Main_r(task* obj)
 	auto data = obj->twp;
 	motionwk2* data2 = (motionwk2*)obj->mwp;
 	playerwk* co2 = (playerwk*)obj->mwp->work.l;
-
 	char pnum = data->counter.b[0];
 
 	if (!data->mode)
@@ -833,6 +807,7 @@ void __cdecl Klonoa_Main_r(task* obj)
 		if (LoadKlonoa_Worker(obj)) {
 			LoadPVM("KlonoaTex", &KlonoaTexList);
 			LoadPVM("KNU_EFF", &KNU_EFF_TEXLIST);
+			ResetKlonoaHP();
 			klonoa = true;
 		}
 		else
@@ -934,7 +909,6 @@ void initKlonoa()
 
 	init_Objects();
 
-	//patch klonoa translate display
-	WriteCall((void*)0x49BEFA, Klonoa_CalcColCenterPosASM);
 	WriteJump(Sonic_Snowboard_Main, Sonic_Snowboard_Main_r);
+	PickDrop_Patches();
 }

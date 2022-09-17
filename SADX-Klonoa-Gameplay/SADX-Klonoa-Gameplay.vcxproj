@@ -169,6 +169,8 @@
     <ClInclude Include="abilities.h" />
     <ClInclude Include="audio.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="hp.h" />
+    <ClInclude Include="hud.h" />
     <ClInclude Include="mod.h" />
     <ClInclude Include="objects.h" />
     <ClInclude Include="pch.h" />
@@ -183,6 +185,8 @@
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="hover.cpp" />
     <ClCompile Include="grab.cpp" />
+    <ClCompile Include="hud.cpp" />
+    <ClCompile Include="hp.cpp" />
     <ClCompile Include="Klonoa.cpp" />
     <ClCompile Include="mod.cpp" />
     <ClCompile Include="objects.cpp" />

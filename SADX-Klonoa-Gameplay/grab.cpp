@@ -90,6 +90,7 @@ signed int ThrowEnemy_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 	return 0;
 }
 
+
 //patch regular obj pick /drop anim frames check BS
 
 void FixSonicDropThrowObject()
@@ -103,12 +104,11 @@ void FixSonicDropThrowObject()
 	WriteData<1>((int*)0x49337c, 0x77);
 }
 
-float pickAnimFrame = 4.0f;
+float pickAnimFrame = 5.0f;
 //fix animation frame check for object throw / drop etc.
-void ObjectAnimAdjust()
+void PickDrop_Patches()
 {
 	FixSonicDropThrowObject();
-
 	//pick obj
 	WriteData((float**)0x495327, &pickAnimFrame);
 	//throw obj on ground (Klo animation is way too short so we reduce the check to 6 frames)

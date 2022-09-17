@@ -205,7 +205,6 @@ void ThrowEnemy_Action(task* tp)
 	EntryColliList(data);
 }
 
-
 static bool EnemyCapturedHandle(task* obj)
 {
 	auto data = obj->twp;
@@ -390,7 +389,6 @@ void Leon_r(task* obj)
 		Leon_t.Original(obj);
 	}
 }
-
 
 void OMonkeyCage_r(task* obj)
 {

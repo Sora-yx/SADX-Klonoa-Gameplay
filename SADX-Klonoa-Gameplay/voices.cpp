@@ -165,7 +165,7 @@ void KillPlayer_r(int pno)
 {
 	if (isKlonoa(pno))
 	{
-		PlayCustomSoundVolume(death, 1.0f);
+		PlayCustomSoundVolume(death, 0.5f);
 	}
 
 	KillPlayer_t.Original(pno);
@@ -175,7 +175,7 @@ void KillPlayerFall_r(int pno)
 {
 	if (isKlonoa(pno))
 	{
-		PlayCustomSoundVolume(death, 1.0f);
+		PlayCustomSoundVolume(death, 0.5f);
 	}
 
 	KillP1ByFallingDown_t.Original(pno);
@@ -234,7 +234,8 @@ void init_Audio()
 	AddVoices("4000");
 	AddVoices("4000");
 
-
 	Sounds_Init();
+	WriteData<5>((int*)0x495376, 0x90); //remove grab obj voice	
+	//WriteData<5>((int*)0x498A44, 0x90); //remove throw obj voice
 
 }

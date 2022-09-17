@@ -16,6 +16,7 @@ extern bool allowHomingAttack;
 extern bool allowSpinDash;
 extern bool hud;
 extern bool obj;
+extern bool useHP;
 
 extern const NJS_VECTOR KLScaleDiff;
 
@@ -30,6 +31,8 @@ struct klonoawk
 	NJS_VECTOR ringPos;
 	NJS_VECTOR ringVec;
 };
+
+bool LoadKlonoa_Worker(task* obj);
 
 enum klonoaAnimDLL //dll is for the array on init
 {
@@ -137,4 +140,5 @@ void initKlonoa();
 void init_EnemiesHack();
 void Init_KlonoaAnim();
 void init_BossesHacks();
-void ObjectAnimAdjust();
+void PickDrop_Patches();
+void initKlonoaHP();

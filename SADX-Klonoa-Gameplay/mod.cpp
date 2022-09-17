@@ -1,5 +1,6 @@
 #include "pch.h"
 #include <fstream>
+#include "hud.h"
 
 time_t t = NULL;
 
@@ -31,7 +32,7 @@ extern "C" {
 		init_Audio();
 		init_EnemiesHack();
 		init_BossesHacks();
-		ObjectAnimAdjust();
+		initKlonoaHP();
 		srand((unsigned)time(&t));
 	}
 
@@ -39,6 +40,8 @@ extern "C" {
 	{
 		if (GameState >= 15)
 			RunCustomSounds();
+
+		heartHud_Render();
 	}
 
 
