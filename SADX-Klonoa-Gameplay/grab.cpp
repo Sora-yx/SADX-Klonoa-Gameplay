@@ -111,7 +111,7 @@ void PickDrop_Patches()
 	FixSonicDropThrowObject();
 	//pick obj
 	WriteData((float**)0x495327, &pickAnimFrame);
-	//throw obj on ground (Klo animation is way too short so we reduce the check to 6 frames)
+	//throw obj on ground (Klo animation is way too short so we reduce the check to 3 frames)
 	WriteData<1>((int*)0x493365, 0x40);
-	WriteData<1>((int*)0x493364, 0x80);
+	WriteData<1>((int*)0x493364, 0x40);
 }
