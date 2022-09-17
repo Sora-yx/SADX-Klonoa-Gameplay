@@ -33,6 +33,7 @@ extern "C" {
 		init_EnemiesHack();
 		init_BossesHacks();
 		initKlonoaHP();
+		init_Hud();
 		srand((unsigned)time(&t));
 	}
 
@@ -41,7 +42,7 @@ extern "C" {
 		if (GameState >= 15)
 			RunCustomSounds();
 
-		heartHud_Render();
+		DrawKlonoaHUD();
 	}
 
 

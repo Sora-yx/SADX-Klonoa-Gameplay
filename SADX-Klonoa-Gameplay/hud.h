@@ -6,11 +6,11 @@ enum HudE
 	heartEmpty,
 	heart,
 	bgHeart,
-	bgLife,
+	bgLifeStone,
 };
 
-void heartHud_Render();
-void loadKLHud();
+void DrawKlonoaHUD();
+void loadKLHudTex();
 void DrawKlonoaHP();
 
 extern NJS_SPRITE Heart_SPRITE;
