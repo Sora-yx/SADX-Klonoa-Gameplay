@@ -36,7 +36,7 @@ task* EnemyLine = nullptr;
 //a collision can only hit another one depending on the list they are using, so we change the one used when we throw an enemy so it can hit another one.
 char GetColListIDForThrowEnemy()
 {
-	if (CurrentLevel >= LevelIDs_Chaos0 && CurrentLevel <= LevelIDs_E101R)
+	if (isBossLevel())
 		return 0;
 
 	return 4;
@@ -106,7 +106,7 @@ void RingLine_r(task* obj)
 	auto data = obj->twp;
 	auto child = obj->ctp;
 
-	if (child && data->mode == 1)
+	if (hasLightShoes(klonoaPnum) && child && data->mode == 1)
 	{
 		if (child->next && child->next->next && child->next->next->next)
 		{
@@ -128,7 +128,7 @@ void RingLineV_r(task* obj)
 	auto data = obj->twp;
 	auto child = obj->ctp;
 
-	if (child)
+	if (hasLightShoes(klonoaPnum) && child)
 	{
 		if (child->next && child->next->next && child->next->next->next)
 		{
@@ -197,7 +197,11 @@ void ThrowEnemy_Action(task* tp)
 		return;
 	}
 
-	data->cwp->info->a = 13.0f;
+	if (CurrentLevel != LevelIDs_Chaos4)
+		data->cwp->info->a = 13.0f;
+	else
+		data->cwp->info->a = 30.0f;
+
 	data->pos.x += des.x;
 	data->pos.y += des.y;
 	data->pos.z += des.z;
@@ -244,7 +248,7 @@ static bool EnemyCapturedHandle(task* obj)
 				}
 				break;
 			case throwSetup:
-				data->counter.f = 4.0f; //timer
+				data->counter.f = 5.0f; //timer
 				CCL_Init(obj, (CCL_INFO*)0x981D10, 1, GetColListIDForThrowEnemy());
 				data->mode++;
 				break;
@@ -448,5 +452,4 @@ void init_EnemiesHack()
 	//change spinner col list so they can be grabbed
 	WriteCall((void*)0x4B0D17, EnemyCol_Fix);	
 	WriteCall((void*)0x540684, EnemyCol_Fix);
-
 }

@@ -31,7 +31,6 @@ DataPointer(NJS_SPRITE, AncientLightSprite, 0x981A28);
 DataPointer(NJS_SPRITE, AncientLightSprite2, 0x981A08);
 DataPointer(NJS_TEXLIST, textlist_ancient_light, 0x981998);
 
-
 // BOOL __usercall@<eax>(CharObj2 *Data2@<eax>, EntityData1 *Data1@<edi>)
 static const void* const SonicCheckStopPtr = (void*)0x494FF0;
 static inline signed int SonicCheckStop(playerwk* a1, taskwk* a2)

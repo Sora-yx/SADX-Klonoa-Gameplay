@@ -46,11 +46,15 @@ void ThrowEnemyCalcDirection(taskwk* data, klonoawk* klwk)
 	njPopMatrix(1u);
 	njAddVector(&startPos, &data->cwp->info->center);
 
-	dirspd = { 6.0f, 0.0f, 0.0f };
+	dirspd = { 5.0f, 0.0f, 0.0f };
 	PConvertVector_P2G(data, &dirspd);
 
 	enemyData->pos = startPos;
-	enemyData->pos.y += 6.0f;
+
+	if (CurrentLevel != LevelIDs_Chaos4)
+		enemyData->pos.y += 6.0f;
+	else
+		enemyData->pos.y -= 2.0f;
 
 	auto wk = (enemywk*)klwk->enemyGrabPtr->mwp;
 	wk->home = dirspd;

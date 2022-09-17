@@ -34,7 +34,6 @@ bool isTargetAnEnemy(task* enemy) {
 	return false;
 }
 
-
 signed int WindBullet_CheckHitEnemy(taskwk* bulletData, klonoawk* klwk, playerwk* co2)
 {
 	if (!bulletData || !bulletData->cwp)

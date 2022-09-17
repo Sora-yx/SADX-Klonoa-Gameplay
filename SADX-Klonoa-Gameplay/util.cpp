@@ -234,7 +234,6 @@ int IsPlayerInsideSphere_(NJS_VECTOR* center, float radius) {
 	return 0;
 }
 
-
 void SetVectorDiff(NJS_VECTOR* des)
 {
 	des->x *= 0.2f;
@@ -281,4 +280,9 @@ bool hasLightShoes(char pnum)
 		return false;
 
 	return (playerpwp[pnum]->equipment & Upgrades_LightShoes) != 0;
+}
+
+bool isBossLevel()
+{
+	return (CurrentLevel >= LevelIDs_Chaos0 && CurrentLevel <= LevelIDs_E101R);
 }

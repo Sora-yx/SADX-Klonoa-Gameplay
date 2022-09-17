@@ -31,10 +31,10 @@ struct EnemyBossSpawnS
 
 const EnemyBossSpawnS EnemyBossSpawnPos[] = {
 	{ LevelIDs_Chaos0, { 258.0f, 17.0f, 264.0f}, 0, SpinnerB_Main },
-	{ LevelIDs_Chaos0, { 295.0f, 140.0f, 267.0f}, 1, SpinnerB_Main },
 	{ LevelIDs_Chaos2, { 26, 19, 43}, 0, SpinnerB_Main },
 	{ LevelIDs_Chaos4, { 34, 38, 166 }, 0, SpinnerB_Main },
-	{ LevelIDs_Chaos4, { 36, 38, -109}, 1, SpinnerA_Main },
+	{ LevelIDs_Chaos4, { 36, 38, -109}, 1, SpinnerA_Main },	
+	{ LevelIDs_Chaos4, { 113, 38, -11}, 2, SpinnerA_Main },
 	{ LevelIDs_Chaos6, { -107, 754, -504 }, 0, SpinnerB_Main },
 	{ LevelIDs_Chaos6, { 151, 760, -414}, 1, SpinnerC_Main },
 	{ LevelIDs_Chaos6, { -113, 754, -285 }, 2,  SpinnerA_Main },
@@ -57,11 +57,11 @@ char getNumberOfEnemyToSpawn()
 	switch (CurrentLevel)
 	{
 	case LevelIDs_Chaos0:
-		return 2;
+		return 1;
 	case LevelIDs_Chaos2:
 		return 1;
 	case LevelIDs_Chaos4:
-		return 2;
+		return 3;
 	case LevelIDs_Chaos6:
 		return 3;
 	case LevelIDs_EggHornet:
@@ -228,8 +228,22 @@ void chaos2_r(task* obj)
 	Chaos2_t.Original(obj);
 }
 
+static float one = 1.0f;
+static float two = 2.0f;
+static intptr_t Chaos4Damage = 0x55560f;
+
 void chaos4_r(task* obj)
 {
+	auto data = obj->twp;
+
+	if (!data->mode)
+	{
+		if (isKlonoa(klonoaPnum))
+			WriteData((float**)Chaos4Damage, &two);
+		else
+			WriteData((float**)Chaos4Damage, &one);
+	}
+
 	SpawnEnemyCheck();
 	Chaos4_t.Original(obj);
 }
