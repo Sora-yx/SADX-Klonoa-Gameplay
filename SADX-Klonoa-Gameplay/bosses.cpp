@@ -184,6 +184,16 @@ void RunLevelDestructor_r(int a1)
 	RunLevelDestructor_t.Original(a1);
 }
 
+void RemoveEnemyBounceThing(unsigned __int8 playerID, float speedX, float speedY, float speedZ)
+{
+	if (isKlonoa(playerID))
+	{
+		return;
+	}
+
+	return EnemyBounceThing(playerID, speedX, speedY, speedZ);
+}
+
 void init_BossesHacks()
 {
 	if (!allowKlonoaMoves)
@@ -196,4 +206,14 @@ void init_BossesHacks()
 	EggHornet_t.Hook(eggHornet_r);
 	EggViper_t.Hook(eggViper_r);
 	RunLevelDestructor_t.Hook(RunLevelDestructor_r);
+
+	//remove bounce after hitting a boss
+	WriteCall((void*)0x571D36, RemoveEnemyBounceThing);	
+	WriteCall((void*)0x54C98E, RemoveEnemyBounceThing);	
+	WriteCall((void*)0x799C4E, RemoveEnemyBounceThing);	
+	WriteCall((void*)0x551FD2, RemoveEnemyBounceThing); //chaos 4	
+	WriteCall((void*)0x559399, RemoveEnemyBounceThing); //chaos 6	
+	WriteCall((void*)0x580C7E, RemoveEnemyBounceThing); //egg viper
+	WriteCall((void*)0x580BED, RemoveEnemyBounceThing); //egg viper	
+	WriteCall((void*)0x580D2C, RemoveEnemyBounceThing); //egg viper
 }

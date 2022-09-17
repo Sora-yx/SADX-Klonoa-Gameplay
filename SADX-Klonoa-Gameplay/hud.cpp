@@ -5,7 +5,6 @@ static NJS_TEXNAME KHud[4] = { 0 };
 static NJS_TEXLIST KHudTexlist = { arrayptrandlength(KHud) };
 static const float ringPos = 52.0f;
 
-const char diff = 9;
 static NJS_TEXANIM Hud_TEXANIM[] = {
 	{ 0x20, 0x27, 0, 0, 0, 0, 0x100, 0x100, dream, 0x20 },
 	{ 0x32, 0x27, 0, 0, 0, 0, 0x100, 0x100, heartEmpty, 0x20 },
@@ -54,7 +53,6 @@ void DrawHeartHUD()
 	late_DrawSprite2D(&Hud_BGSprite, bgHeart, 22045.498f, NJD_SPRITE_ALPHA | NJD_SPRITE_COLOR, LATE_LIG);
 }
 
-
 void DrawKlonoaHUD()
 {
 	if (!isKlonoa(klonoaPnum) || !isHudAllowed())
@@ -78,8 +76,6 @@ void DrawKlonoaHUD()
 	ResetMaterial();
 	HelperFunctionsGlobal.PopScaleUI();
 }
-
-
 
 static void __declspec(naked) HudDisplayRingsASM()
 {
