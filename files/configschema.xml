@@ -12,8 +12,13 @@
 	  	        <Property name="nerfPhysics" display="Custom Physics" type="bool" defaultvalue="True">
         <HelpText>Enable custom physics to fit Klonoa speed more.</HelpText>
       </Property>
+	  
+	  	<Property name="useHP" display="Use HP (Hearts)" type="bool" defaultvalue="True">
+        <HelpText>Use HP to manage Klonoa life instead of rings, this will force Klonoa objects to show up.</HelpText>
+      </Property>
 
-		
+
+
 		</Group>
 		
 			<Group name="visual" display="2. Visuals">
