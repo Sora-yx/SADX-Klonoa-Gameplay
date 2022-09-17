@@ -48,4 +48,6 @@ void ReadConfig(const char* path, const HelperFunctions& helperFunctions) {
 		Sonic_ChargeSpinDash_t.Hook(Sonic_ChargeSpinDash_r);
 	}
 
+	if (useHP)
+		obj = true;
 }
