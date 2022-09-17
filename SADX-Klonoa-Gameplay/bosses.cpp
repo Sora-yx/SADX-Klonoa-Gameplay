@@ -106,7 +106,7 @@ static void CreateEnemy(char id)
 
 static void SpawnEnemyCheck()
 {
-	if (!IsIngame() || !isKlonoa(klonoaPnum))
+	if (!IsIngame() || !isKlonoa(klonoaPnum) || EV_MainThread_ptr)
 		return;
 
 	if (Life_Max <= 0.0f && !TimeThing)
