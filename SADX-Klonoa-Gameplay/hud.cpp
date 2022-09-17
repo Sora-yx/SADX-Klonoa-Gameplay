@@ -30,9 +30,11 @@ bool isHudAllowed()
 
 void DrawDreamStoneHUD()
 {
+	float posY = isBossLevel() ? 40.0f : 0.0f;
+
 	float posX = HorizontalStretch * 520.0;
 	Hud_BGSprite.p.x = posX;
-	Hud_BGSprite.p.y = ringPos - 10.0f;
+	Hud_BGSprite.p.y = ringPos - 10.0f + posY;
 	Stone_SPRITE.p = Hud_BGSprite.p;
 
 	SetMaterialAndSpriteColor_Float(1.0f, 0.086, 0.890, 0.129); //set green color to dream stone icon
