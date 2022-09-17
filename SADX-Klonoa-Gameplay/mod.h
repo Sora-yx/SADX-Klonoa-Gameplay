@@ -12,8 +12,7 @@ extern ModelInfo* KlonoaMDL;
 #define charIndex counter.b[0]
 #define TaskHook static FunctionHook<void, task*>
 
-extern bool allowHomingAttack;
-extern bool allowSpinDash;
+extern bool allowKlonoaMoves;
 extern bool hud;
 extern bool obj;
 extern bool useHP;

@@ -186,6 +186,9 @@ void RunLevelDestructor_r(int a1)
 
 void init_BossesHacks()
 {
+	if (!allowKlonoaMoves)
+		return;
+
 	Chaos0_t.Hook(chaos0_r);
 	Chaos2_t.Hook(chaos2_r);
 	Chaos4_t.Hook(chaos4_r);

@@ -7,7 +7,7 @@ extern ObjectFuncPtr enemyList[size];
 
 signed int KlonoaWBullet_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 {
-	if ((AttackButtons & Controllers[data->charIndex].PressedButtons) == 0 || allowSpinDash || klwk->currentBulletPtr)
+	if ((AttackButtons & Controllers[data->charIndex].PressedButtons) == 0 || !allowKlonoaMoves || klwk->currentBulletPtr)
 	{
 		return 0;
 	}
