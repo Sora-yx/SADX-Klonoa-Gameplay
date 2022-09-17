@@ -47,22 +47,20 @@ void __cdecl DreamStone_Display(task* obj)
 		njPushMatrix(0);
 		njTranslate(0, data->pos.x, data->pos.y, data->pos.z);
 
-
 		njRotateY_((unsigned __int16)data->ang.y);
 		njScaleV(0, &scl);
-		CnkDisableSpecular();
+
 		if (QueueCharacterAnimations)
 		{
 			DrawQueueDepthBias = 32.0f;
-			njCnkDrawObject(dreamStoneMDL->getmodel());
+			dsDrawObject(dreamStoneMDL->getmodel());
 			DrawQueueDepthBias = 0.0f;
 		}
 		else
 		{
-			njCnkDrawObject(dreamStoneMDL->getmodel());
+			dsDrawObject(dreamStoneMDL->getmodel());
 		}
 
-		CnkRestoreSpecular();
 		njPopMatrix(1u);
 
 	}
@@ -78,7 +76,7 @@ void __cdecl DrawDreamStone(NJS_MODEL_SADX* a1)
 	NJS_VECTOR scl = { 0.5f, 0.5f, 0.5f };
 	njSetTexture(&KObjComTexlist);
 	njScaleV(0, &scl);
-	njCnkDrawObject(dreamStoneMDL->getmodel());
+	dsDrawObject(dreamStoneMDL->getmodel());
 }
 
 
@@ -99,7 +97,7 @@ void __cdecl DrawDreamStoneClip(NJS_MODEL_SADX* model, float scale)
 		fogemulation &= ~2u;
 		DrawQueueDepthBias = -47952.0f;
 
-		njCnkDrawObject(dreamStoneMDL->getmodel());
+		dsDrawObject(dreamStoneMDL->getmodel());
 		fogemulation |= 2u;
 	}
 
@@ -109,7 +107,7 @@ void __cdecl DrawDreamStoneClip(NJS_MODEL_SADX* model, float scale)
 		{
 			if (scale == 0.0f || model->r == 0.0f || (radius = scale * model->r, IsVisible(&model->center, radius)))
 			{
-				njCnkDrawObject(dreamStoneMDL->getmodel());
+				dsDrawObject(dreamStoneMDL->getmodel());
 			}
 		}
 	}
@@ -406,7 +404,7 @@ void init_Objects()
 		return;
 
 	//load models
-	dreamStoneMDL = LoadChunkModel("DreamStone");
+	dreamStoneMDL = LoadBasicModel("DreamStone");
 	alarmClockMDL = LoadBasicModel("Alarm");
 	boardMDL = LoadBasicModel("board");
 	heartMDL = LoadBasicModel("heart");
