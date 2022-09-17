@@ -42,3 +42,4 @@ void SetVectorDiff(NJS_VECTOR* des);
 bool isKlonoaHold(char pnum);
 void RegularPhysicsFunctions(taskwk* data, motionwk2* data2, playerwk* co2);
 float kloGetPosYDiff(int curAnim);
+bool hasLightShoes(char pnum);

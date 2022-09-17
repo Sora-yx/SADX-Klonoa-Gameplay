@@ -35,6 +35,8 @@ extern "C" {
 		initKlonoaHP();
 		init_Hud();
 		srand((unsigned)time(&t));
+
+		WriteData<1>((int*)0x4BF050, 0xC3);
 	}
 
 	__declspec(dllexport) void __cdecl OnFrame()

@@ -73,6 +73,8 @@ void DrawKlonoaHUD()
 
 	DrawDreamStoneHUD();
 
+	njColorBlendingMode(NJD_SOURCE_COLOR, NJD_COLOR_BLENDING_SRCALPHA);
+	njColorBlendingMode(NJD_DESTINATION_COLOR, NJD_COLOR_BLENDING_ONE);
 	ResetMaterial();
 	HelperFunctionsGlobal.PopScaleUI();
 }

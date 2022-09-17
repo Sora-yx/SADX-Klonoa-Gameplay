@@ -377,6 +377,7 @@ void LoadObjTextures()
 {
 	LoadPVM("KObjCommon", &KObjComTexlist);
 	LoadPVM("SUPI_SUPI", &SUPI_SUPI_TEXLIST);
+	LoadPVM("ANCIENT_LIGHT", &textlist_ancient_light);
 	loadKLHudTex();
 
 	// Load every Minimal texs because most of them will be loaded anyway

@@ -274,3 +274,11 @@ float kloGetPosYDiff(int curAnim)
 
 	return stdPos;
 }
+
+bool hasLightShoes(char pnum)
+{
+	if (!playerpwp[pnum])
+		return false;
+
+	return (playerpwp[pnum]->equipment & Upgrades_LightShoes) != 0;
+}
