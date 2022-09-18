@@ -4,7 +4,7 @@ static const char hoverTimer = 70;
 
 signed int hover_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 {
-	if ((JumpButtons & Controllers[data->charIndex].PressedButtons) == 0 || !allowKlonoaMoves)
+	if ((JumpButtons & Controllers[data->charIndex].PressedButtons) == 0 || !allowKlonoaMoves || klwk->hoverUsed)
 	{
 		return 0;
 	}
@@ -13,6 +13,7 @@ signed int hover_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 	co2->mj.reqaction = anm_hover;
 	co2->spd.y = 0.0f;
 	klwk->hoverTimer = hoverTimer;
+	klwk->hoverUsed = true;
 	PlayCustomSound(se_hover);
 	return 1;
 }

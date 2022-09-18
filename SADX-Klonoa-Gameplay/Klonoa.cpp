@@ -517,13 +517,9 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		break;
 	case act_jump:
 	case act_fall:
-		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2))
+		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2) || (data->flag & 3))
 		{
-			break;
-		}
-
-		if (data->flag & 3)
-		{
+			klwk->hoverUsed = false;
 			break;
 		}
 		else
@@ -670,7 +666,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 
 		break;
 	case act_holdStd:
-		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2))
+		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2) || !klwk->enemyGrabPtr)
 		{
 			DropEnemy(klwk);
 			return;
@@ -690,7 +686,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 
 		break;
 	case act_holdRun:
-		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2))
+		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2) || !klwk->enemyGrabPtr)
 		{
 			DropEnemy(klwk);
 			return;
@@ -728,7 +724,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		break;
 	case act_holdJump:
 	case act_holdFall:
-		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2))
+		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2) || !klwk->enemyGrabPtr)
 		{
 			DropEnemy(klwk);
 			klwk->superJumpCount = 0;
@@ -757,7 +753,6 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 			}
 
 			data->flag &= 0xFAu;
-
 			return;
 		}
 		else

@@ -23,6 +23,7 @@ struct klonoawk
 {
 	int generalTimer;
 	int hoverTimer;
+	bool hoverUsed;
 	bool bulletShot;
 	char superJumpCount;
 	task* currentBulletPtr;
