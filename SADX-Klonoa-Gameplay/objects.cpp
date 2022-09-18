@@ -79,7 +79,6 @@ void __cdecl DrawDreamStone(NJS_MODEL_SADX* a1)
 	dsDrawObject(dreamStoneMDL->getmodel());
 }
 
-
 void __cdecl DrawDreamStoneClip(NJS_MODEL_SADX* model, float scale)
 {
 	if (!isKlonoaAndObj(dreamStoneMDL))
@@ -394,7 +393,6 @@ void __cdecl LoadLevelObjTextures_r()
 	LoadObjTextures();
 	LoadLevelObjTextures_t.Original();
 }
-
 
 void init_Objects()
 {

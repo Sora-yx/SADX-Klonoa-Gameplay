@@ -30,7 +30,7 @@ struct EnemyBossSpawnS
 };
 
 const EnemyBossSpawnS EnemyBossSpawnPos[] = {
-	{ LevelIDs_Chaos0, { 258.0f, 17.0f, 264.0f}, 0, SpinnerB_Main },
+	{ LevelIDs_Chaos0, { 258.0f, 17.0f, 280.0f}, 0, SpinnerB_Main },
 	{ LevelIDs_Chaos2, { 26, 19, 43}, 0, SpinnerB_Main },
 	{ LevelIDs_Chaos4, { 34, 38, 166 }, 0, SpinnerB_Main },
 	{ LevelIDs_Chaos4, { 36, 38, -109}, 1, SpinnerA_Main },	
@@ -307,9 +307,9 @@ void init_BossesHacks()
 	RunLevelDestructor_t.Hook(RunLevelDestructor_r);
 
 	//remove bounce after hitting a boss
-	WriteCall((void*)0x571D36, RemoveEnemyBounceThing);
-	WriteCall((void*)0x54C98E, RemoveEnemyBounceThing);
-	WriteCall((void*)0x799C4E, RemoveEnemyBounceThing);
+	WriteCall((void*)0x571D36, RemoveEnemyBounceThing);	 //chaos 0
+	WriteCall((void*)0x54A401, RemoveEnemyBounceThing); //egg hornet
+	WriteCall((void*)0x54C98E, RemoveEnemyBounceThing); //chaos 2
 	WriteCall((void*)0x551FD2, RemoveEnemyBounceThing); //chaos 4	
 	WriteCall((void*)0x559399, RemoveEnemyBounceThing); //chaos 6	
 	WriteCall((void*)0x580C7E, RemoveEnemyBounceThing); //egg viper

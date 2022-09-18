@@ -1,11 +1,11 @@
 #include "pch.h"
 
-#define AddVoices(A, B) HelperFunctionsGlobal.ReplaceFile("system\\sounddata\\voice_jp\\wma\\" A ".wav", "system\\sounddata\\voice_us\\wma\\" B ".wav")
+#define AddVoices(A) HelperFunctionsGlobal.ReplaceFile("system\\sounddata\\voice_jp\\wma\\" A ".wma", "system\\sounddata\\voice_us\\wma\\" A ".wav")
+
 static FunctionHook<void, int> PlayVoice_t((intptr_t)PlayVoice);
 static FunctionHook<void, unsigned __int8, float, NJS_VECTOR*> DoExplosionRockThing_t((intptr_t)0x446D90);
 static FunctionHook<void, int> KillPlayer_t(KillHimP);
 static FunctionHook<void, int> KillP1ByFallingDown_t(KillHimByFallingDownP); //gotta love symbol name
-
 
 //we identify Sonic voice clip and replace them with some random Klonoa speech voice, all done in code to avoid duplicate voices files. :D
 
@@ -59,7 +59,8 @@ static const std::unordered_map<int16_t, int16_t> Sonicvoice_ids_map = {
 	{ 1682, 1686 },
 };
 
-int SonicVoiceIDs2[] = { 396, 422, 425,432, 435, 440, 442, 444, 457, 464, 466, 476, 484, 499, 502, 505, 518, 529, 531,
+//other sonic voices that aren't followed by each other
+int SonicVoiceIDs2[] = { 396, 406, 422, 425,432, 435, 440, 442, 444, 457, 464, 466, 476, 484, 499, 502, 505, 518, 529, 531,
 534, 549, 556, 558, 561, 565, 573, 600, 608, 610, 613, 615, 629, 632, 642, 654, 664, 694, 696, 707, 717, 766, 789, 791, 827, 830,
 832, 861, 864, 866, 871, 948, 950, 1074, 1082, 1093, 1148, 1150, 1282, 1288, 1290, 1385, 1409, 1416, 1419, 1452, 1457, 1464,
 1469, 1492, 1494, 1513, 1515, 1520, 1540, 1546, 1548 };
@@ -190,7 +191,6 @@ void PlayReboundVoice(unsigned __int8 playerID, float speedX, float speedY, floa
 		switch (reboundCount)
 		{
 		case 0:
-		default:
 			PlayCustomSoundVolume(kl_bounce01, 1.0f);
 			reboundCount++;
 			break;
@@ -199,10 +199,10 @@ void PlayReboundVoice(unsigned __int8 playerID, float speedX, float speedY, floa
 			reboundCount++;
 			break;
 		case 2:
+		default:
 			PlayCustomSoundVolume(kl_bounce03, 1.0f);
 			reboundCount = 0;
 			break;
-
 		}
 	}
 
@@ -222,18 +222,6 @@ void init_Audio()
 	KillPlayer_t.Hook(KillPlayer_r);
 	KillP1ByFallingDown_t.Hook(KillPlayerFall_r);
 	WriteCall((void*)0x4413CD, PlayReboundVoice);
-
-	AddVoices("1837");
-	AddVoices("1838");
-	AddVoices("1839");
-	AddVoices("1840");
-	AddVoices("1842");
-	AddVoices("1843");
-	AddVoices("1844");
-	AddVoices("1847");
-	AddVoices("1848");
-	AddVoices("4000");
-	AddVoices("4000");
 
 	Sounds_Init();
 	WriteData<5>((int*)0x495376, 0x90); //remove grab obj voice	
