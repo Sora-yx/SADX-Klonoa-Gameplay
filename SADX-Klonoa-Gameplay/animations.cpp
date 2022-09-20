@@ -652,6 +652,29 @@ void LoadKlonoaEventAnims()
 	KlonoaEvANM[1] = LoadEventAnim("battlePos");
 }
 
+void SetKlonoaEventANims()
+{
+	action_s_item_r0.motion = KlonoaEvANM[0]->getmotion();
+	action_s_item_r2.motion = KlonoaEvANM[0]->getmotion();
+	action_s_item_r1.motion = KlonoaEvANM[0]->getmotion();
+	action_s_item_s1.motion = KlonoaEvANM[0]->getmotion();
+	action_s_item_s0.motion = KlonoaEvANM[0]->getmotion();
+	action_s_item_s2.motion = KlonoaEvANM[0]->getmotion();
+	action_s_item_l0.motion = KlonoaEvANM[0]->getmotion();
+	action_s_item_l1.motion = KlonoaEvANM[0]->getmotion();
+	action_s_item_l2.motion = KlonoaEvANM[0]->getmotion();
+
+	action_s_item_r0.object = KlonoaMDL->getmodel();
+	action_s_item_r2.object = KlonoaMDL->getmodel();
+	action_s_item_r1.object = KlonoaMDL->getmodel();
+	action_s_item_s1.object = KlonoaMDL->getmodel();
+	action_s_item_s0.object = KlonoaMDL->getmodel();
+	action_s_item_s2.object = KlonoaMDL->getmodel();
+	action_s_item_l0.object = KlonoaMDL->getmodel();
+	action_s_item_l1.object = KlonoaMDL->getmodel();
+	action_s_item_l2.object = KlonoaMDL->getmodel();
+}
+
 void Init_KlonoaAnim()
 {
 	LoadKlonoa_AnimFiles();
