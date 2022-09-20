@@ -10,7 +10,9 @@ AnimData_t MetalAnimList[AnimCount];
 static FunctionHook<void, taskwk*, int> DrawEventActionPL_t((intptr_t)0x417FB0);
 static FunctionHook<void, task*, NJS_ACTION*, NJS_TEXLIST*, float, char, char> EV_SetAction_t((intptr_t)EV_SetAction);
 static FunctionHook<void, task*, NJS_OBJECT*, NJS_MOTION*, NJS_TEXLIST*, float, int, int> EV_SetMotion_t((intptr_t)EV_SetMotion);
-static FunctionHook<void, task*, char*> EV_SetFace_t((intptr_t)0x4310D0);
+static FunctionHook<void> LoadPlayerMotionDataAll_t((intptr_t)0x5034A0);
+
+static bool setAnim = false;
 
 extern NJS_TEXLIST KlonoaTexList;
 
@@ -652,8 +654,11 @@ void LoadKlonoaEventAnims()
 	KlonoaEvANM[1] = LoadEventAnim("battlePos");
 }
 
-void SetKlonoaEventANims()
+void SetKlonoaEventAnims()
 {
+	if (setAnim)
+		return;
+
 	action_s_item_r0.motion = KlonoaEvANM[0]->getmotion();
 	action_s_item_r2.motion = KlonoaEvANM[0]->getmotion();
 	action_s_item_r1.motion = KlonoaEvANM[0]->getmotion();
@@ -673,6 +678,14 @@ void SetKlonoaEventANims()
 	action_s_item_l0.object = KlonoaMDL->getmodel();
 	action_s_item_l1.object = KlonoaMDL->getmodel();
 	action_s_item_l2.object = KlonoaMDL->getmodel();
+
+	setAnim = true;
+}
+
+void LoadPlayerMotionDataAll_r()
+{
+	LoadPlayerMotionDataAll_t.Original();
+	SetKlonoaEventAnims();
 }
 
 void Init_KlonoaAnim()
@@ -683,6 +696,7 @@ void Init_KlonoaAnim()
 
 	EV_SetAction_t.Hook(EV_SetAction_r);
 	EV_SetMotion_t.Hook(EV_SetMotion_r);
+	LoadPlayerMotionDataAll_t.Hook(LoadPlayerMotionDataAll_r);
 
 	WriteJump((void*)0x49AB47, SetAnimList);
 	WriteData((short*)0x49ACD8, (short)0x9090);
@@ -690,8 +704,8 @@ void Init_KlonoaAnim()
 	WriteData((char*)0x49BE22, (char)0xEB);
 
 	WriteJump(InitSonicCharSelAnims, InitKlonoaCharSelAnim);
-	//hack all events actions to use Chunk draw function
 
+	//hack all rendering events actions to use Chunk model draw function instead (cutscene anim support)
 	WriteCall((void*)0x418214, late_actionClipEx_r);
 	WriteCall((void*)0x41815E, late_ActionLinkEx_r);
 	WriteCall((void*)0x41812E, late_ActionLinkMesh_r);

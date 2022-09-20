@@ -143,5 +143,3 @@ void init_BossesHacks();
 void PickDrop_Patches();
 void init_Hud();
 void initKlonoaHP();
-
-void SetKlonoaEventANims();
