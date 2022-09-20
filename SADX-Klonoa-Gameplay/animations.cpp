@@ -7,6 +7,159 @@ AnimationFile* KlonoaEvANM[50] = { 0 };
 AnimData_t KlonoaAnimList[AnimCount] = { 0 };
 AnimData_t MetalAnimList[AnimCount];
 
+static FunctionHook<void, taskwk*, int> DrawEventActionPL_t((intptr_t)0x417FB0);
+static FunctionHook<void, task*, NJS_ACTION*, NJS_TEXLIST*, float, char, char> EV_SetAction_t((intptr_t)EV_SetAction);
+static FunctionHook<void, task*, NJS_OBJECT*, NJS_MOTION*, NJS_TEXLIST*, float, int, int> EV_SetMotion_t((intptr_t)EV_SetMotion);
+static FunctionHook<void, task*, char*> EV_SetFace_t((intptr_t)0x4310D0);
+
+extern NJS_TEXLIST KlonoaTexList;
+
+//Series of hack to make all the rendering events anim function working with Chunk Model
+
+void DrawKlonoa_Event(NJS_ACTION* anim, float frame, QueuedModelFlagsB flg)
+{
+	NJS_ACTION act2 = *anim;
+
+	if (QueueCharacterAnimations)
+	{
+		DrawQueueDepthBias = -5952.0;
+		njCnkAction_Queue(&act2, frame, QueuedModelFlagsB_EnableZWrite);
+		DrawQueueDepthBias = 0.0;
+	}
+	else
+	{
+		njCnkAction(&act2, frame);
+	}
+}
+
+//used for cutscene and charSel
+void __cdecl Klonoa_linkEx(NJS_ACTION_LINK* action, float frame, int flag)
+{
+	if (action)
+	{
+		njSetTexture(&KlonoaTexList);
+		return njCnkActionLink(action, frame, (QueuedModelFlagsB)flag);
+	}
+}
+
+void __cdecl late_actionClipEx_r(NJS_ACTION* anim, float a2, QueuedModelFlagsB a3)
+{
+	if (anim && anim->object == KlonoaMDL->getmodel())
+	{
+		njSetTexture(&KlonoaTexList);
+		return DrawKlonoa_Event(anim, a2, a3);
+	}
+
+	late_ActionEx(anim, a2, (LATE)a3);
+}
+
+void __cdecl late_ActionLinkEx_r(NJS_ACTION_LINK* action, float frame, int flag)
+{
+	if (action && action->object == KlonoaMDL->getmodel())
+	{
+		njSetTexture(&KlonoaTexList);
+		return njCnkActionLink(action, frame, flag);
+	}
+
+	late_ActionLinkEx(action, frame, (LATE)flag);
+}
+
+void late_ActionLinkMesh_r(NJS_ACTION_LINK* actionLink, float frame, LATE flgs)
+{
+	if (actionLink)
+	{
+		if (actionLink->object && actionLink->object == KlonoaMDL->getmodel())
+		{
+			njSetTexture(&KlonoaTexList);
+			return Klonoa_linkEx(actionLink, frame, flgs);
+		}
+	}
+
+	return late_ActionLinkMesh(actionLink, frame, flgs);
+}
+
+void late_ActionLink_r(NJS_ACTION_LINK* actionLink, float frame, LATE flgs)
+{
+	if (actionLink)
+	{
+		if (actionLink->object == KlonoaMDL->getmodel())
+		{
+			njSetTexture(&KlonoaTexList);
+			return Klonoa_linkEx(actionLink, frame, flgs);
+		}
+	}
+
+	return late_ActionLink(actionLink, frame, flgs);
+}
+
+void late_ActionMesh_r(NJS_ACTION* act, float frame, LATE flgs)
+{
+	if (act)
+	{
+		if (act->object == KlonoaMDL->getmodel())
+		{
+			njSetTexture(&KlonoaTexList);
+			return DrawKlonoa_Event(act, frame, (QueuedModelFlagsB)flgs);
+		}
+	}
+
+	return late_ActionMesh(act, frame, flgs);
+}
+
+void __cdecl late_Action_r(NJS_ACTION* anim, float a2, QueuedModelFlagsB a3)
+{
+	if (anim)
+	{
+		if (anim->object == KlonoaMDL->getmodel())
+		{
+			njSetTexture(&KlonoaTexList);
+			return DrawKlonoa_Event(anim, a2, a3);
+		}
+	}
+
+	return late_Action(anim, a2, (LATE)a3);
+}
+
+void __cdecl EV_SetMotion_r(task* a1, NJS_OBJECT* a2, NJS_MOTION* a3, NJS_TEXLIST* a4, float a5, int a6, int a7)
+{
+	if (a1)
+	{
+		int pnum = getKlonoaPlayer();
+
+		if (pnum >= 0 && a2 && a2 != KlonoaMDL->getmodel())
+		{
+			if (a4 == &SONIC_TEXLIST || a4 == &SUPERSONIC_TEXLIST)
+			{
+				a2 = KlonoaMDL->getmodel();
+				a3 = KlonoaEvANM[1]->getmotion();
+				a4 = &KlonoaTexList;
+			}
+		}
+	}
+
+	EV_SetMotion_t.Original(a1, a2, a3, a4, a5, a6, a7);
+}
+
+void __cdecl EV_SetAction_r(task* a1, NJS_ACTION* a2, NJS_TEXLIST* a3, float speed, char mode, char linkframe)
+{
+	if (a1)
+	{
+		int pnum = getKlonoaPlayer();
+
+		if (pnum >= 0 && a2 && a2->object && a2->object != KlonoaMDL->getmodel())
+		{
+			if (a3 == &SONIC_TEXLIST || a3 == &SUPERSONIC_TEXLIST)
+			{
+				a2->object = KlonoaMDL->getmodel();
+				a2->motion = KlonoaEvANM[1]->getmotion();
+				a3 = &KlonoaTexList;
+			}
+		}
+	}
+
+	EV_SetAction_t.Original(a1, a2, a3, speed, mode, linkframe);
+}
+
 int loc_49AB51 = 0x49AB51;
 __declspec(naked) void SetAnimList()
 {
@@ -38,7 +191,6 @@ void SetKlonoaAnims()
 		KlonoaAnimList[i].TransitionSpeed = 0.25f;
 		KlonoaAnimList[i].AnimationSpeed = 0.5f;
 	}
-
 
 	KlonoaAnimList[0].Animation->motion = KlonoaANM[anmID_stand]->getmotion();
 	KlonoaAnimList[0].AnimationSpeed = 0.5f;
@@ -135,7 +287,7 @@ void SetKlonoaAnims()
 	KlonoaAnimList[16].Property = 3;
 	KlonoaAnimList[16].NextAnim = 16;;
 	KlonoaAnimList[16].TransitionSpeed = 0.25f;
-	KlonoaAnimList[16].AnimationSpeed = 0.5f;	
+	KlonoaAnimList[16].AnimationSpeed = 0.5f;
 
 	//landing
 	KlonoaAnimList[19].Animation->motion = KlonoaANM[animID_Landing]->getmotion();
@@ -150,7 +302,7 @@ void SetKlonoaAnims()
 	KlonoaAnimList[20].NextAnim = 0;
 	KlonoaAnimList[20].TransitionSpeed = 0.25f;
 	KlonoaAnimList[20].AnimationSpeed = 0.8f;
-	
+
 	//pick obj (bullet for now)
 	KlonoaAnimList[33].Animation->motion = KlonoaANM[anmID_bulletStart]->getmotion();
 	KlonoaAnimList[33].Property = 4;
@@ -345,7 +497,7 @@ void SetKlonoaAnims()
 	KlonoaAnimList[112] = KlonoaAnimList[105];
 
 	//losing balance, don't have a counterpart so stick to neutral
-	KlonoaAnimList[115] = KlonoaAnimList[102]; 
+	KlonoaAnimList[115] = KlonoaAnimList[102];
 
 	//trick 1
 	KlonoaAnimList[116].Animation->motion = KlonoaANM[animID_trick1]->getmotion();
@@ -445,6 +597,7 @@ void SetKlonoaAnims()
 	KlonoaAnimList[anm_throwStd].Property = 4;
 }
 
+
 void LoadKlonoa_AnimFiles()
 {
 	KlonoaANM[0] = LoadObjectAnim("stand");
@@ -496,6 +649,7 @@ void InitKlonoaCharSelAnim()
 void LoadKlonoaEventAnims()
 {
 	KlonoaEvANM[0] = LoadEventAnim("Upgrade0");
+	KlonoaEvANM[1] = LoadEventAnim("battlePos");
 }
 
 void Init_KlonoaAnim()
@@ -504,9 +658,21 @@ void Init_KlonoaAnim()
 	SetKlonoaAnims();
 	LoadKlonoaEventAnims();
 
+	EV_SetAction_t.Hook(EV_SetAction_r);
+	EV_SetMotion_t.Hook(EV_SetMotion_r);
+
 	WriteJump((void*)0x49AB47, SetAnimList);
 	WriteData((short*)0x49ACD8, (short)0x9090);
 	WriteData<2>((void*)0x4916A5, 0x90u); // disable metal's weird tilting thing
 	WriteData((char*)0x49BE22, (char)0xEB);
+
 	WriteJump(InitSonicCharSelAnims, InitKlonoaCharSelAnim);
+	//hack all events actions to use Chunk draw function
+
+	WriteCall((void*)0x418214, late_actionClipEx_r);
+	WriteCall((void*)0x41815E, late_ActionLinkEx_r);
+	WriteCall((void*)0x41812E, late_ActionLinkMesh_r);
+	WriteCall((void*)0x41814B, late_ActionLink_r);
+	WriteCall((void*)0x4181FD, late_ActionMesh_r);
+	WriteCall((void*)0x41820D, late_Action_r);
 }

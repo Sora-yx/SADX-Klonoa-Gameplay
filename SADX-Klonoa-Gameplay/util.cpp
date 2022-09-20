@@ -108,6 +108,7 @@ void njCnkAction_Queue(NJS_ACTION* action, float frame, QueuedModelFlagsB flags)
 
 void njCnkAction(NJS_ACTION* action, float frame) {
 	DisplayAnimationFrame(action, frame, (QueuedModelFlagsB)0, 0, (void(__cdecl*)(NJS_MODEL_SADX*, int, int))DrawChunkModel);
+
 }
 
 void NullModel(NJS_MODEL_SADX*, int, int)
@@ -209,9 +210,8 @@ static inline void late_ActionLinkEx_(NJS_ACTION_LINK* action, float frameNumber
 
 void njCnkActionLink(NJS_ACTION_LINK* action, float frame, int flag)
 {
-	late_ActionLinkEx_(action, frame, (QueuedModelFlagsB)flag, 0.0, (void(__cdecl*)(NJS_MODEL_SADX*, int, int))DrawChunkModel);
+	late_ActionLinkEx_(action, frame, (QueuedModelFlagsB)flag, 0.0f, (void(__cdecl*)(NJS_MODEL_SADX*, int, int))DrawChunkModel);
 }
-
 
 float GetSquare(NJS_VECTOR* orig, NJS_VECTOR* dest) {
 	return powf(dest->x - orig->x, 2) + powf(dest->y - orig->y, 2) + powf(dest->z - orig->z, 2);
@@ -290,4 +290,15 @@ bool hasLightShoes(char pnum)
 bool isBossLevel()
 {
 	return (CurrentLevel >= LevelIDs_Chaos0 && CurrentLevel <= LevelIDs_E101R);
+}
+
+void SetupChunkModelRender()
+{
+	SetupWorldMatrix();
+	Direct3D_SetChunkModelRenderState();
+}
+
+void ResetChunkModelRender()
+{
+	Direct3D_UnsetChunkModelRenderState();
 }

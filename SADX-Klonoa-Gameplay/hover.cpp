@@ -4,7 +4,7 @@ static const char hoverTimer = 70;
 
 signed int hover_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 {
-	if ((JumpButtons & Controllers[data->charIndex].PressedButtons) == 0 || !allowKlonoaMoves || klwk->hoverUsed)
+	if ((JumpButtons & Controllers[data->charIndex].PressedButtons) == 0 || !allowKlonoaMoves || klwk->hoverUsed && !infiniteHover)
 	{
 		return 0;
 	}

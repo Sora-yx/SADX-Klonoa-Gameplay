@@ -12,7 +12,7 @@ const NJS_VECTOR orgScale = { 1.0f, 1.0f, 1.0f };
 ModelInfo* KlonoaMDL = nullptr;
 
 static NJS_TEXNAME KlonoaTex[2] = { 0 };
-static NJS_TEXLIST KlonoaTexList = { arrayptrandlength(KlonoaTex) };
+NJS_TEXLIST KlonoaTexList = { arrayptrandlength(KlonoaTex) };
 
 TaskHook Sonic_Main_t((intptr_t)Sonic_Main);
 TaskHook Sonic_Display_t((intptr_t)Sonic_Display);
@@ -62,37 +62,14 @@ bool isKlonoaHold(char pnum)
 	return playertwp[pnum]->mode >= act_super_jump && playertwp[pnum]->mode <= act_throwAir;
 }
 
-//used for cutscene and character select
-void DrawKlonoa_Event(NJS_ACTION* anim, float frame, QueuedModelFlagsB flg)
-{
-	SetupWorldMatrix();
-	Direct3D_SetChunkModelRenderState();
-
-	NJS_ACTION act2 = *anim;
-
-	if (*(int*)0x3ABD9CC)
-	{
-		DrawQueueDepthBias = -5952.0;
-		njCnkAction_Queue(&act2, frame, QueuedModelFlagsB_EnableZWrite);
-		DrawQueueDepthBias = 0.0;
-	}
-	else
-	{
-		njCnkAction(&act2, frame);
-	}
-
-	Direct3D_UnsetChunkModelRenderState();
-}
-
 //regular draw during gameplay
 void DrawKlonoa(playerwk* co2, int animNum, NJS_ACTION* action)
 {
-	SetupWorldMatrix();
-	Direct3D_SetChunkModelRenderState();
+	SetupChunkModelRender();
 
 	NJS_ACTION act2 = *action;
 
-	if (*(int*)0x3ABD9CC)
+	if (QueueCharacterAnimations)
 	{
 		DrawQueueDepthBias = -5952.0f;
 		njCnkAction_Queue(&act2, co2->mj.nframe, QueuedModelFlagsB_EnableZWrite);
@@ -103,7 +80,8 @@ void DrawKlonoa(playerwk* co2, int animNum, NJS_ACTION* action)
 		njCnkAction(&act2, co2->mj.nframe);
 	}
 
-	Direct3D_UnsetChunkModelRenderState();
+	ResetChunkModelRender();
+
 	njPopMatrix(1);
 }
 
@@ -133,7 +111,6 @@ void Klonoa_Fall(taskwk* data, playerwk* co2)
 
 signed int KlonoaCheckDamage(taskwk* data, playerwk* mwp)
 {
-
 	if (data->id == 2 || (data->flag & 4) == 0 && (!mwp || (mwp->attr & 0x10000) == 0))
 		return 0;
 
@@ -241,51 +218,6 @@ signed int KlonoaCheckBeInTheAir(playerwk* co2, taskwk* data, klonoawk* klwk)
 	return 1;
 }
 
-//used for cutscene and charSel
-void __cdecl Klonoa_late_ActionEx(NJS_ACTION* anim, float a2, QueuedModelFlagsB a3)
-{
-	NJS_VECTOR scale = { 0.9f, 0.9f, 0.9f };
-
-	for (int i = 0; i < 4; i++) {
-
-		if (anim && anim->motion && SonicCharSelAnim[i] && SonicCharSelAnim[i]->motion)
-		{
-			if (anim->motion == SonicCharSelAnim[i]->motion) {
-				njSetTexture(&KlonoaTexList);
-				njScaleV(0, &scale);
-				DrawKlonoa_Event(anim, a2, a3);
-				return;
-			}
-		}
-	}
-
-	late_ActionEx(anim, a2, (LATE)a3);
-}
-
-//used for cutscene and charSel
-void __cdecl  Klonoa_linkEx(NJS_ACTION_LINK* action, float frame, int flag)
-{
-	NJS_VECTOR scale = { 0.9f, 0.9f, 0.9f };
-
-	if (!IsIngame()) {
-
-		for (uint8_t i = 0; i < 4; i++) {
-
-			if (action && action->motionlink->motion[0] && SonicCharSelAnim[i] && SonicCharSelAnim[i]->motion)
-			{
-				if (action->motionlink->motion[0] == SonicCharSelAnim[i]->motion) {
-					njSetTexture(&KlonoaTexList);
-					scale = { 0.9f, 0.9f, 0.9f };
-					njScaleV(0, &scale);
-					njCnkActionLink(action, frame, flag);
-					return;
-				}
-			}
-		}
-	}
-
-	late_ActionLinkEx(action, frame, (LATE)flag);
-}
 
 short twistamount[8] = {};
 void(__cdecl** NodeCallbackFuncPtr)(NJS_OBJECT* obj) = (decltype(NodeCallbackFuncPtr))0x3AB9908;
@@ -405,15 +337,12 @@ void __cdecl Klonoa_Display_r(task* obj)
 
 		NJS_ACTION* action = co2->mj.plactptr[curAnim].actptr;
 
-		if (data->ewp->action.list && !IsIngame())
+		if (data->ewp->action.list)
 		{
 			//TO DO: Replace some Event Sonic Anim and make those play
-
-			/**Direct3D_PerformLighting(0);
-			ClampGlobalColorThing_Thing();
-			njPopMatrix(1u);
-			return Sonic_Display_t.Original(obj);*/
+			SetupChunkModelRender();
 			DrawEventAction(data);
+			ResetChunkModelRender();
 		}
 		else
 		{
@@ -533,7 +462,6 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 			{
 				data->flag &= ~Status_Attack;
 				data->flag &= ~Status_Ball;
-				return;
 			}
 		}
 		break;
@@ -586,7 +514,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 			break;
 		}
 
-		if ((JumpButtons & Controllers[data->charIndex].HeldButtons) == 0)
+		if ((JumpButtons & Controllers[data->charIndex].HeldButtons) == 0 || data->flag & 3)
 		{
 			Klonoa_Fall(data, co2);
 			break;
@@ -596,7 +524,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		{
 			klwk->hoverTimer--;
 		}
-		else
+		else if (!infiniteHover)
 		{
 			Klonoa_Fall(data, co2);
 			break;
@@ -705,7 +633,6 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		{
 			co2->mj.reqaction = anm_holdRun;
 		}
-
 
 		if (PCheckBreak(data) && co2->spd.x >= (double)co2->p.jog_speed)
 		{
@@ -899,8 +826,6 @@ void initKlonoa()
 	Sonic_Display_t.Hook(Klonoa_Display_r);
 	Sonic_Delete_t.Hook(Klonoa_Delete_r);
 
-	WriteCall((void*)0x418214, Klonoa_late_ActionEx);
-	WriteCall((void*)0x41815E, Klonoa_linkEx);
 
 	init_Objects();
 

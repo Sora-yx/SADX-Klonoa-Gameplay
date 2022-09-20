@@ -5,6 +5,7 @@ bool nerfPhysics = true;
 bool hud = true;
 bool obj = true;
 bool useHP = true;
+bool infiniteHover = false;
 
 static UsercallFunc(signed int, Sonic_ChargeSpinDash_t, (playerwk* a1, taskwk* a2), (a1, a2), 0x496EE0, rEAX, rEAX, rEDI);
 
@@ -25,6 +26,7 @@ void ReadConfig(const char* path, const HelperFunctions& helperFunctions) {
 	allowKlonoaMoves = config->getBool("gameplay", "allowKlonoaMoves", true);
 	nerfPhysics = config->getBool("gameplay", "nerfPhysics", true);
 	useHP = config->getBool("gameplay", "useHP", true);
+	infiniteHover = config->getBool("gameplay", "infiniteHover", true);
 
 	hud = config->getBool("visual", "hud", true);
 	obj = config->getBool("visual", "obj", true);

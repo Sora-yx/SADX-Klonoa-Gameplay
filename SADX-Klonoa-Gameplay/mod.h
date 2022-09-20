@@ -16,6 +16,7 @@ extern bool allowKlonoaMoves;
 extern bool hud;
 extern bool obj;
 extern bool useHP;
+extern bool infiniteHover;
 
 extern const NJS_VECTOR KLScaleDiff;
 
@@ -32,7 +33,6 @@ struct klonoawk
 	NJS_VECTOR ringVec;
 };
 
-bool LoadKlonoa_Worker(task* obj);
 
 enum klonoaAnimDLL //dll is for the array on init
 {
