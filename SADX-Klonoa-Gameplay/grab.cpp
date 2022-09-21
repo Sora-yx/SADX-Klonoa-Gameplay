@@ -2,6 +2,9 @@
 
 void ResetKlonoaGrab(klonoawk* klwk)
 {
+	if (CharacterBossActive)
+		return;
+
 	auto task = klwk->enemyGrabPtr;
 
 	if (task)
@@ -47,6 +50,7 @@ void ThrowEnemyCalcDirection(taskwk* data, klonoawk* klwk)
 	njAddVector(&startPos, &data->cwp->info->center);
 
 	dirspd = { 5.0f, 0.0f, 0.0f };
+
 	PConvertVector_P2G(data, &dirspd);
 
 	enemyData->pos = startPos;
@@ -56,8 +60,18 @@ void ThrowEnemyCalcDirection(taskwk* data, klonoawk* klwk)
 	else
 		enemyData->pos.y -= 2.0f;
 
-	auto wk = (enemywk*)klwk->enemyGrabPtr->mwp;
-	wk->home = dirspd;
+	if (!CharacterBossActive) {
+		auto wk = (enemywk*)klwk->enemyGrabPtr->mwp;
+		wk->home = dirspd;
+	}
+	else
+	{
+		auto wk = (playerwk*)klwk->enemyGrabPtr->mwp->work.l;
+		if (wk)
+		{
+			wk->acc = dirspd;
+		}
+	}
 }
 
 void DropEnemy(klonoawk* klwk)
@@ -65,9 +79,16 @@ void DropEnemy(klonoawk* klwk)
 	if (klwk && klwk->enemyGrabPtr && klwk->enemyGrabPtr->twp)
 	{
 		auto data = klwk->enemyGrabPtr->twp;
-		FreeColliWork(data);
-		data->wtimer = 40;
-		data->mode = drop;
+		if (!CharacterBossActive) {
+			FreeColliWork(data);
+			data->wtimer = 40;
+			data->mode = drop;
+		}
+		else
+		{
+			data->timer.b[0] = 20;
+			data->mode = Bdrop;
+		}
 	}
 }
 
@@ -81,8 +102,14 @@ signed int ThrowEnemy_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 	auto enemyData = klwk->enemyGrabPtr->twp;
 
 	if (enemyData) {
-		FreeColliWork(enemyData);
-		enemyData->mode = throwSetup;
+		if (!CharacterBossActive) {
+			FreeColliWork(enemyData);
+			enemyData->mode = throwSetup;
+		}
+		else
+		{
+			enemyData->mode = BthrowSetup;
+		}
 		bool isOnGround = (data->flag & 3);
 		data->mode = isOnGround ? act_throwStd : act_throwAir;
 		co2->mj.reqaction = anm_throwStd; //todo find throw in the air

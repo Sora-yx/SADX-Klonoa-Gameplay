@@ -62,9 +62,52 @@ signed int WindBullet_CheckHitEnemy(taskwk* bulletData, klonoawk* klwk, playerwk
 					{
 						if ((co2->equipment & Upgrades_AncientLight)) //can only destroy monkey cage with the ancien light
 						{
-							target->mode = captured; 
+							target->mode = captured;
 							return 1;
 						}
+					}
+				}
+			}
+		}
+	}
+
+	return 0;
+}
+
+
+bool isTargetCharBoss(task* enemy) {
+
+	if (CharacterBossActive) {
+		if ((ObjectFuncPtr)enemy->exec == Knuckles_Main || (ObjectFuncPtr)enemy->exec == Gamma_Main) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+signed int WindBullet_CheckHitCharBoss(taskwk* bulletData, klonoawk* klwk, playerwk* co2)
+{
+	if (!bulletData || !bulletData->cwp || !CharacterBossActive)
+		return 0;
+
+	auto cwp = bulletData->cwp;
+
+	//Loop the collision array of the bullet...
+	for (int i = 0; i < 16; i++)
+	{
+		auto target = cwp->hit_info[i].hit_twp;
+
+		if (target != nullptr) //if the collision hit something, start looking for more data.
+		{
+			if (target->cwp->mytask && target->cwp->mytask->twp) // if the target has an exec and twp data
+			{
+				if (isTargetCharBoss(target->cwp->mytask)) //check if it's a char fight...
+				{
+					if (!target->wtimer) {
+						target->mode = Bcaptured; //set the enemy to a new custom state, see "bosses.cpp"
+						klwk->enemyGrabPtr = target->cwp->mytask; //we copy the task of the boss for external use with Klonoa.
+						return 1;
 					}
 				}
 			}
@@ -132,8 +175,9 @@ void BulletLookForTarget(klonoawk* klwk, taskwk* data)
 	if (klwk->currentBulletPtr) {
 
 		auto co2 = playerpwp[data->counter.b[0]];
+
 		//if bullet hit an enemy
-		if (WindBullet_CheckHitEnemy(klwk->currentBulletPtr->twp, klwk, co2))
+		if (WindBullet_CheckHitEnemy(klwk->currentBulletPtr->twp, klwk, co2) || WindBullet_CheckHitCharBoss(klwk->currentBulletPtr->twp, klwk, co2))
 		{
 			//if target is monkey in cage, don't grab it, destroy instead.
 			if (klwk->currentBulletPtr->exec == (TaskFuncPtr)OMonkeyCage)

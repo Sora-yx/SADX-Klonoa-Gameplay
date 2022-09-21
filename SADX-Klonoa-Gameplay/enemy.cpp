@@ -159,7 +159,7 @@ void IncrementAct_r(int amount)
 
 static float dropSpd = 5.0f;
 
-static bool TimingEnemyHurt(taskwk* data, klonoawk* klwk)
+static bool TimingEnemyHurt(taskwk* data)
 {
 	if (data && --data->wtimer <= 0)
 	{
@@ -242,7 +242,7 @@ static bool EnemyCapturedHandle(task* obj)
 				}
 				break;
 			case drop:
-				if (!TimingEnemyHurt(data, klwk))
+				if (!TimingEnemyHurt(data))
 				{
 					data->pos.y -= dropSpd;
 				}
@@ -386,13 +386,6 @@ void ESman_r(task* obj)
 	}
 }
 
-void Leon_r(task* obj)
-{
-	if (!EnemyCapturedHandle(obj))
-	{
-		Leon_t.Original(obj);
-	}
-}
 
 void OMonkeyCage_r(task* obj)
 {
@@ -440,7 +433,6 @@ void init_EnemiesHack()
 	UnidusC_t.Hook(UnidusC_r);
 	EGacha_t.Hook(EGacha_r);
 	ERobo_t.Hook(ERobo_r);
-	Leon_t.Hook(Leon_r);
 
 	IncrementAct_t.Hook(IncrementAct_r);
 

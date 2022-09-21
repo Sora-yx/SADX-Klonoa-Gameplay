@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "abilities.h"
 
 //series of hacks to make bosses spawn enemy so we can defeat them Klonoa style! 
 
@@ -9,10 +10,15 @@ TaskHook Chaos6_t((intptr_t)Chaos6_Main);
 TaskHook EggHornet_t((intptr_t)EggHornet_Main);
 TaskHook EggViper_t((intptr_t)0x581E10);
 
+TaskHook Knux_Main_t((intptr_t)Knuckles_Main);
+TaskHook Gamma_Main_t((intptr_t)Gamma_Main);
+TaskHook KnuxBossAI_t((intptr_t)0x4D5DE0);
+
 NJS_SPRITE portalEffSprite = { 0 };
 NJS_SPRITE starEffSprite = { 0 };
 
 static FunctionHook<void, int> RunLevelDestructor_t(RunLevelDestructor);
+static FunctionHook<void> sub_4C27B0_t((intptr_t)0x4C27B0);
 
 const static int TimerPortalCD = 100;
 const static int TimerMobCD = 200;
@@ -33,7 +39,7 @@ const EnemyBossSpawnS EnemyBossSpawnPos[] = {
 	{ LevelIDs_Chaos0, { 258.0f, 17.0f, 280.0f}, 0, SpinnerB_Main },
 	{ LevelIDs_Chaos2, { 26, 19, 43}, 0, SpinnerB_Main },
 	{ LevelIDs_Chaos4, { 34, 38, 166 }, 0, SpinnerB_Main },
-	{ LevelIDs_Chaos4, { 36, 38, -109}, 1, SpinnerA_Main },	
+	{ LevelIDs_Chaos4, { 36, 38, -109}, 1, SpinnerA_Main },
 	{ LevelIDs_Chaos4, { 113, 38, -11}, 2, SpinnerA_Main },
 	{ LevelIDs_Chaos6, { -107, 754, -504 }, 0, SpinnerB_Main },
 	{ LevelIDs_Chaos6, { 151, 760, -414}, 1, SpinnerC_Main },
@@ -266,6 +272,210 @@ void eggViper_r(task* obj)
 	EggViper_t.Original(obj);
 }
 
+
+static float dropSpd = 5.0f;
+
+static bool BTimingEnemyHurt(taskwk* data)
+{
+	if (data && --data->timer.b[0] <= 0)
+	{
+		data->mode = bDone;
+		return true;
+	}
+
+	return false;
+}
+
+void BThrowEnemy_Action(task* tp)
+{
+	auto data = tp->twp;
+	int timer = data->timer.b[0]--;
+
+	if (timer <= 0.0f)
+	{
+		data->mode = bDone;
+		return;
+	}
+
+	auto wk = (playerwk*)tp->mwp->work.l;
+	if (wk)
+	{
+		njAddVector(&data->pos, &wk->acc);
+	}
+}
+
+struct EVBOSS_WORK
+{
+	char mode;
+	char smode;
+	char type;
+	char attackmode;
+	__int16 timer;
+	__int16 count;
+	char* attackmodetbl;
+	int flag;
+	void(__cdecl* exec)(task*);
+	void(__cdecl* exit)(task*);
+	NJS_POINT3 targetpos;
+	unsigned int old_ang;
+	float homing_dist;
+	int ana_ang;
+	float ana_str;
+	float dist;
+	float distxz;
+	unsigned int btn_on;
+	unsigned int btn_press;
+	task* stp;
+	taskwk* stwp;
+	motionwk2* smwp;
+	CharObj2* spwp;
+	task* dtp;
+	taskwk* dtwp;
+	motionwk2* dmwp;
+	CharObj2* dpwp;
+	task* ltp;
+	task* ring_tp;
+	task* wall_tp;
+	float fpara[4];
+	__int16 spara[8];
+	NJS_POINT3 init_pos;
+};
+
+static bool CharacterCapturedHandle(task* obj)
+{
+	auto data = obj->twp;
+
+	if (data)
+	{
+		bool Enabled = data->mode >= Bcaptured && data->mode <= bDone;
+
+		if (Enabled)
+		{
+			auto pnum = getKlonoaPlayer();
+
+			if (pnum < 0)
+				return false;
+
+			auto player = playertwp[pnum];
+			auto klwk = (klonoawk*)playertp[pnum]->awp;
+
+			if (!player || !klwk)
+				return false;
+
+			data->ang.x -= 1524;
+
+			switch (data->mode)
+			{
+			case Bcaptured:
+				if (obj->exec == (TaskFuncPtr)Knuckles_Main)
+				{
+					PlayVoice(1011);
+					EV_SetAction(obj, KNUCKLES_ACTIONS[6], &KNUCKLES_TEXLIST, 0.80000001f, 3, 0);
+				}
+
+				if (obj->exec == (TaskFuncPtr)Gamma_Main)
+				{
+					PlayVoice(1212);
+					EV_SetAction(obj, E102_ACTIONS[16], &E102_TEXLIST, 0.80000001f, 3, 0);
+				}
+
+				data->mode++;
+				break;
+			case Bcaptured2:
+				data->ang.y = player->ang.y;
+				if (player && isKlonoa(pnum))
+				{
+			
+					data->pos = { player->pos.x, player->pos.y + 16.0f, player->pos.z };
+				}
+				break;
+			case Bdrop:
+				if (!BTimingEnemyHurt(data))
+				{
+					data->pos.y -= dropSpd;
+				}
+				break;
+			case BthrowSetup:
+				data->timer.b[0] = 20;
+				data->mode++;
+				break;
+			case Bthrew:
+				BThrowEnemy_Action(obj);
+				break;
+			case bDone:
+			default:
+				EV_ClrAction(obj);
+				player->mode = 1;
+				data->mode = 1;
+				data->pos = player->pos;
+				if ((player->flag & 3) == 0)
+				{
+					data->pos.y -= 2.0f;
+				}
+				data->pos.x += 15.0f;
+				data->pos.z += 10.0f;
+				data->flag |= Status_Hurt;
+				break;
+			}
+
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void Knuckles_Main_r(task* obj)
+{
+	if (CharacterBossActive)
+	{
+		int pnum = getKlonoaPlayer();
+
+		if (pnum >= 0)
+		{
+			if (CharacterCapturedHandle(obj))
+			{
+				return;
+			}
+		}
+	}
+
+	Knux_Main_t.Original(obj);
+}
+
+void Gamma_Main_r(task* obj)
+{
+	if (CharacterBossActive)
+	{
+		int pnum = getKlonoaPlayer();
+
+		if (pnum >= 0)
+		{
+			CharacterCapturedHandle(obj);
+		}
+	}
+
+	Gamma_Main_t.Original(obj);
+}
+
+void sub_4C27B0_r()
+{
+	int pnum = getKlonoaPlayer();
+	if (pnum >= 0)
+	{
+		if (playertwp[1])
+		{
+			if (playertwp[1]->mode >= Bcaptured)
+			{
+				CameraReleaseEventCamera();
+				return;
+			}
+		}
+	}
+
+	sub_4C27B0_t.Original();
+}
+
 void RunLevelDestructor_r(int a1)
 {
 	if (!a1)
@@ -304,6 +514,11 @@ void init_BossesHacks()
 	Chaos6_t.Hook(chaos6_r);
 	EggHornet_t.Hook(eggHornet_r);
 	EggViper_t.Hook(eggViper_r);
+
+	Knux_Main_t.Hook(Knuckles_Main_r);
+	Gamma_Main_t.Hook(Gamma_Main_r);
+	sub_4C27B0_t.Hook(sub_4C27B0_r);
+
 	RunLevelDestructor_t.Hook(RunLevelDestructor_r);
 
 	//remove bounce after hitting a boss
@@ -315,4 +530,6 @@ void init_BossesHacks()
 	WriteCall((void*)0x580C7E, RemoveEnemyBounceThing); //egg viper
 	WriteCall((void*)0x580BED, RemoveEnemyBounceThing); //egg viper	
 	WriteCall((void*)0x580D2C, RemoveEnemyBounceThing); //egg viper
+
+
 }

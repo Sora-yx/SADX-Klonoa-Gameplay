@@ -11,10 +11,25 @@ static FunctionHook<void, taskwk*, int> DrawEventActionPL_t((intptr_t)0x417FB0);
 static FunctionHook<void, task*, NJS_ACTION*, NJS_TEXLIST*, float, char, char> EV_SetAction_t((intptr_t)EV_SetAction);
 static FunctionHook<void, task*, NJS_OBJECT*, NJS_MOTION*, NJS_TEXLIST*, float, int, int> EV_SetMotion_t((intptr_t)EV_SetMotion);
 static FunctionHook<void> LoadPlayerMotionDataAll_t((intptr_t)0x5034A0);
+static FunctionHook<void, task*, char*> EV_SetFace_t((intptr_t)0x4310D0);
 
 static bool setAnim = false;
 
 extern NJS_TEXLIST KlonoaTexList;
+
+static const std::unordered_map<uint16_t, uint16_t> AnimMotion_ids_map = {
+	{ 1, anm_std },
+	{ 3, anm_walk},
+	{ 4, anm_walk2 },
+	{ 5, anm_walk3 },
+	{ 6, anm_run },
+	{ 7, anm_brake },
+	{ 10, anm_fall},
+	{ 14, anm_jump},
+	{ 18, anm_run2},
+	{ 20, anm_turnAround},
+	{ 123, anm_bStance1 },
+};
 
 //Series of hack to make all the rendering events anim function working with Chunk Model
 
@@ -122,44 +137,76 @@ void __cdecl late_Action_r(NJS_ACTION* anim, float a2, QueuedModelFlagsB a3)
 	return late_Action(anim, a2, (LATE)a3);
 }
 
+bool isSonicNextAnim(NJS_TEXLIST* tex)
+{
+	int pnum = getKlonoaPlayer();
+
+	if (pnum >= 0)
+	{
+		if (tex == &SONIC_TEXLIST || tex == &SUPERSONIC_TEXLIST)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+//convert all Sonic event anims with Klonoa anim counterpart on run time
 void __cdecl EV_SetMotion_r(task* a1, NJS_OBJECT* a2, NJS_MOTION* a3, NJS_TEXLIST* a4, float a5, int a6, int a7)
 {
-	if (a1)
+	if (a1 && a2 && a2 != KlonoaMDL->getmodel())
 	{
-		int pnum = getKlonoaPlayer();
-
-		if (pnum >= 0 && a2 && a2 != KlonoaMDL->getmodel())
-		{
-			if (a4 == &SONIC_TEXLIST || a4 == &SUPERSONIC_TEXLIST)
-			{
-				a2 = KlonoaMDL->getmodel();
-				a3 = KlonoaEvANM[1]->getmotion();
-				a4 = &KlonoaTexList;
-			}
+		if (isSonicNextAnim(a4)) {
+			a2 = KlonoaMDL->getmodel();
+			a3 = KlonoaEvANM[1]->getmotion();
+			a4 = &KlonoaTexList;
 		}
 	}
 
 	EV_SetMotion_t.Original(a1, a2, a3, a4, a5, a6, a7);
 }
 
-void __cdecl EV_SetAction_r(task* a1, NJS_ACTION* a2, NJS_TEXLIST* a3, float speed, char mode, char linkframe)
+bool ConvertSonicActionToKloAction(NJS_ACTION* a2)
 {
-	if (a1)
+	for (uint8_t i = 1; i < 124; i++)
 	{
-		int pnum = getKlonoaPlayer();
-
-		if (pnum >= 0 && a2 && a2->object && a2->object != KlonoaMDL->getmodel())
+		if (SONIC_ACTIONS[i] == a2)
 		{
-			if (a3 == &SONIC_TEXLIST || a3 == &SUPERSONIC_TEXLIST)
+			if ((AnimMotion_ids_map.find(i)->first == i))
 			{
-				a2->object = KlonoaMDL->getmodel();
-				a2->motion = KlonoaEvANM[1]->getmotion();
-				a3 = &KlonoaTexList;
+				uint16_t id = AnimMotion_ids_map.find(i)->second;
+
+				if (KlonoaAnimList[id].Animation)
+				{
+					a2->motion = KlonoaAnimList[id].Animation->motion;
+					return true;
+				}
 			}
 		}
 	}
 
-	EV_SetAction_t.Original(a1, a2, a3, speed, mode, linkframe);
+	return false;
+}
+
+void __cdecl EV_SetAction_r(task* obj, NJS_ACTION* anim, NJS_TEXLIST* tex, float speed, char mode, char linkframe)
+{
+	if (obj && anim && anim->object != KlonoaMDL->getmodel())
+	{
+		if (isSonicNextAnim(tex))
+		{
+			anim->object = KlonoaMDL->getmodel();
+			tex = &KlonoaTexList;
+
+			if (!ConvertSonicActionToKloAction(anim)) //if the animation didn't get replaced, apply a placeholder as a failafe.
+				anim->motion = KlonoaEvANM[1]->getmotion();
+
+			if (speed > 1.0f)
+				speed = 1.0f;
+		}
+	}
+
+	EV_SetAction_t.Original(obj, anim, tex, speed, mode, linkframe);
 }
 
 int loc_49AB51 = 0x49AB51;
@@ -688,6 +735,13 @@ void LoadPlayerMotionDataAll_r()
 	SetKlonoaEventAnims();
 }
 
+TaskFunc(EV_ClrFace, 0x4310F0);
+void EV_Wait_r(task* tp)
+{
+	EV_SetAng(playertp[0], 0, 57000, 0);
+	EV_ClrFace(tp);
+}
+
 void Init_KlonoaAnim()
 {
 	LoadKlonoa_AnimFiles();
@@ -712,4 +766,6 @@ void Init_KlonoaAnim()
 	WriteCall((void*)0x41814B, late_ActionLink_r);
 	WriteCall((void*)0x4181FD, late_ActionMesh_r);
 	WriteCall((void*)0x41820D, late_Action_r);
+
+	WriteCall((void*)0x6E7C5E, EV_Wait_r);
 }

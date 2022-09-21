@@ -77,8 +77,17 @@ enum klonoaAnimDLL //dll is for the array on init
 enum klonoaAnim //regular ID used to play anim on the character
 {
 	anm_std,
+	anm_bStance0,
+	anm_bStance1,
+	anm_walk = 9,
+	anm_walk2,
+	anm_walk3,
+	anm_run,
+	anm_run2,
 	anm_jump = 14,
 	anm_fall = 18,
+	anm_brake = 20,
+	anm_turnAround = 30,
 	anm_board = 102,
 	anm_brakeBoard,
 	anm_brakeLeftBoard,
@@ -132,6 +141,17 @@ enum enemyState
 	threw,
 	dead
 
+};
+
+
+enum charBossState
+{
+	Bcaptured = 100,
+	Bcaptured2,
+	Bdrop,
+	BthrowSetup,
+	Bthrew,
+	bDone,
 };
 
 void ReadConfig(const char* path, const HelperFunctions& helperFunctions);

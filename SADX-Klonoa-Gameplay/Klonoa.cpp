@@ -65,8 +65,6 @@ bool isKlonoaHold(char pnum)
 //regular draw during gameplay
 void DrawKlonoa(playerwk* co2, int animNum, NJS_ACTION* action)
 {
-	SetupChunkModelRender();
-
 	NJS_ACTION act2 = *action;
 
 	if (QueueCharacterAnimations)
@@ -79,10 +77,6 @@ void DrawKlonoa(playerwk* co2, int animNum, NJS_ACTION* action)
 	{
 		njCnkAction(&act2, co2->mj.nframe);
 	}
-
-	ResetChunkModelRender();
-
-	njPopMatrix(1);
 }
 
 
@@ -331,20 +325,19 @@ void __cdecl Klonoa_Display_r(task* obj)
 
 		njRotateZ_(data->ang.z);
 		njRotateX_(data->ang.x);
-		njRotateY_(0x8000 - data->ang.y);
+		njRotateY_(-0x8000 - LOWORD(data->ang.y));
 
 		SpinDash_RotateModel(curAnim, (taskwk*)data);
 
 		NJS_ACTION* action = co2->mj.plactptr[curAnim].actptr;
 
-		if (data->ewp->action.list)
+		SetupChunkModelRender();
+
+		if (data->ewp->action.list) //cutscene / charsel
 		{
-			//TO DO: Replace some Event Sonic Anim and make those play
-			SetupChunkModelRender();
 			DrawEventAction(data);
-			ResetChunkModelRender();
 		}
-		else
+		else //regular gameplay
 		{
 			if (co2->mj.mtnmode == 2) {
 				action = co2->mj.actwkptr;
@@ -357,6 +350,8 @@ void __cdecl Klonoa_Display_r(task* obj)
 			njPopMatrix(1);
 			*NodeCallbackFuncPtr = nullptr;
 		}
+
+		ResetChunkModelRender();
 
 		njPopMatrix(1u);
 	}

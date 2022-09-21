@@ -20,7 +20,7 @@ static NJS_SPRITE Hud_BGSprite = { {0}, 1.0f, 1.0f, {0}, &KHudTexlist, Hud_TEXAN
 bool isHudAllowed()
 {
 	if (!hud || !IsIngame() && !IsGamePaused() || MissedFrames || HideHud < 0 ||
-		CurrentLevel >= LevelIDs_TwinkleCircuit || GameMode == GameModes_Adventure_Field)
+		CurrentLevel >= LevelIDs_TwinkleCircuit || GameMode == GameModes_Adventure_Field && !CharacterBossActive)
 	{
 		return false;
 	}
