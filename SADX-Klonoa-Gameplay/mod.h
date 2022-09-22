@@ -10,7 +10,7 @@ extern ModelInfo* KlonoaMDL;
 #define TARGET_DYNAMIC(name) ((decltype(name##_r)*)name##_t->Target())
 #define charID counter.b[1]
 #define charIndex counter.b[0]
-#define TaskHook static FunctionHook<void, task*>
+#define TaskHook FunctionHook<void, task*>
 
 extern bool allowKlonoaMoves;
 extern bool hud;

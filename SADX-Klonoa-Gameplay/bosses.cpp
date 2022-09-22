@@ -499,7 +499,7 @@ void init_BossesHacks()
 	if (!allowKlonoaMoves)
 		return;
 
-	//portal effects used for enemy spawn
+	//copy ancient light sprites then edit that copy to create custom portal effects used for enemy spawn
 	memcpy(&portalEffSprite, &AncientLightSprite, sizeof(NJS_SPRITE));
 	memcpy(&starEffSprite, &AncientLightSprite2, sizeof(NJS_SPRITE));
 

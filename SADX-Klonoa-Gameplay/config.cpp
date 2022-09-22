@@ -26,7 +26,7 @@ void ReadConfig(const char* path, const HelperFunctions& helperFunctions) {
 	allowKlonoaMoves = config->getBool("gameplay", "allowKlonoaMoves", true);
 	nerfPhysics = config->getBool("gameplay", "nerfPhysics", true);
 	useHP = config->getBool("gameplay", "useHP", true);
-	infiniteHover = config->getBool("gameplay", "infiniteHover", true);
+	infiniteHover = config->getBool("gameplay", "infiniteHover", false);
 
 	hud = config->getBool("visual", "hud", true);
 	obj = config->getBool("visual", "obj", true);

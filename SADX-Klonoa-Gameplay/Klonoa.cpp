@@ -17,7 +17,7 @@ NJS_TEXLIST KlonoaTexList = { arrayptrandlength(KlonoaTex) };
 TaskHook Sonic_Main_t((intptr_t)Sonic_Main);
 TaskHook Sonic_Display_t((intptr_t)Sonic_Display);
 TaskHook Sonic_Delete_t((intptr_t)Sonic_Delete);
-static FunctionHook<void, taskwk*, motionwk2*, playerwk*> Sonic_RunsActions_t((intptr_t)Sonic_Act1);
+FunctionHook<void, taskwk*, motionwk2*, playerwk*> Sonic_RunsActions_t((intptr_t)Sonic_Act1);
 
 bool isKlonoa(char pnum)
 {
