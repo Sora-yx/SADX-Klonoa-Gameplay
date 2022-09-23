@@ -202,6 +202,9 @@ void ThrowEnemy_Action(task* tp)
 	else
 		data->cwp->info->a = 30.0f;
 
+	data->cwp->info->damage |= 3u;
+	data->cwp->info->damage |= 0xCu;
+
 	data->pos.x += des.x;
 	data->pos.y += des.y;
 	data->pos.z += des.z;

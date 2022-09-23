@@ -699,6 +699,7 @@ void LoadKlonoaEventAnims()
 {
 	KlonoaEvANM[0] = LoadEventAnim("Upgrade0");
 	KlonoaEvANM[1] = LoadEventAnim("battlePos");
+	KlonoaEvANM[2] = LoadEventAnim("Victory");
 }
 
 void SetKlonoaEventAnims()
@@ -725,6 +726,9 @@ void SetKlonoaEventAnims()
 	action_s_item_l0.object = KlonoaMDL->getmodel();
 	action_s_item_l1.object = KlonoaMDL->getmodel();
 	action_s_item_l2.object = KlonoaMDL->getmodel();
+
+	action_s_s0071_sonic.object = KlonoaMDL->getmodel();
+	action_s_s0071_sonic.motion = KlonoaEvANM[2]->getmotion();
 
 	setAnim = true;
 }

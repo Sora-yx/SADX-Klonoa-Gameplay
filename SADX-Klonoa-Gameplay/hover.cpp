@@ -22,7 +22,7 @@ signed int hover_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 void hover_Physics(taskwk* data, motionwk2* data2, playerwk* co2)
 {
 	PResetAngle(data, data2, co2);
-	if (co2->spd.y <= 0.0)
+	if (co2->spd.y <= 0.0f)
 	{
 		PGetAccelerationGlik(data, data2, co2);
 		PGetSpeedGlik(data, data2, co2);
