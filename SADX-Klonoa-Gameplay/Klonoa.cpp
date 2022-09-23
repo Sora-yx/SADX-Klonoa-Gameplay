@@ -457,6 +457,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 			{
 				data->flag &= ~Status_Attack;
 				data->flag &= ~Status_Ball;
+				return;
 			}
 		}
 		break;

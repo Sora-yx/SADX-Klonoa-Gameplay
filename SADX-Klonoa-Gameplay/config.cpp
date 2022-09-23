@@ -45,6 +45,8 @@ void ReadConfig(const char* path, const HelperFunctions& helperFunctions) {
 	if (allowKlonoaMoves)
 	{
 		Sonic_ChargeSpinDash_t.Hook(Sonic_ChargeSpinDash_r);
+		WriteJump((void*)0x49937e, (void*)0x49a848); //remove SH spin dash on building
+		WriteData<1>((int*)0x499383, 0x90);
 	}
 
 	if (useHP)
