@@ -2,3 +2,4 @@
 - Special thanks to Kell for fixing an interpolation issue with animations in SADX that allowed Klonoa to work properly in-game.
 - Special thanks to ItsEasyActually for fixing many issues on the Blender SA addon that made the rendering of Klonoa much better and easier in-game.
 - Life Icon from Klonoa Heroes ripped by Meta Warp.
+- Some part of the code uses SA2 Sonic by MainMemory as a reference, specially to draw chunk model.
