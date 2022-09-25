@@ -23,7 +23,7 @@ This is very different from regular character replacement, the original Sonic mo
 
 - This is done with custom code injected through the SADX Mod Loader.
 - Klonoa is loaded from an external model that got converted to the Sonic Adventure format with the [SA Blender addon](https://github.com/Justin113D/BlenderSASupport/wiki#how-to-create-model-mods-for-the-sonic-adventure-games) as well as his animations. 
-- This is similar to what the [SA2 Sonic Mod](https://github.com/X-Hax/SADXChunkModels/blob/master/SA2Sonic/SA2Sonic.cpp) does.
+- This is similar to what the [SA2 Sonic Mod](https://gamebanana.com/mods/247991) does.
 
 Special thanks to [Triph](https://github.com/entriphy) for exporting Klonoa models and anims from the PS2 game and uploaded all of them, this project couldn't exist otherwise.
 
