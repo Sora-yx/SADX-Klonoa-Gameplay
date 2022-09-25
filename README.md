@@ -52,4 +52,15 @@ Adding all the custom abilities also took a lot of efforts to make everything wo
 3. Launch the Mod Manager and enable "Klonoa Gameplay".
 4. (optional) Use the "configure" button in the Mod Manager to tweak the mod's configuration.
 
+## FAQ
+
+"Why does Klonoa doesn't have any blending / lighting effect?"
+- The model format used is Chunk Model which isn't compatible with Lantern Engine at the moment. Therefore, Klonoa won't benefit from the lighting effects/blending stuff. Only basic model are compatible.
+
+"Can you convert the model to Basic format?"
+- Unfortunanely no, the basic format doesn't support weights, which if you don't know is the standard for any 3D game and Klonoa doesn't make an exception. Sonic Adventure did because it was an early 3D game.
+
+"Can you do that with X game and Y character"
+- In theory, if you have the models and animations imported in Blender, they can be ported to both Adventure games assuming they aren't too greedy. It's a lot of work though and I don't plan to do something like that again anytime soon.
+
 
