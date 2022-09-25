@@ -429,7 +429,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		}
 	}
 
-	CheckKlonoaEnemyPtr(klwk, data);
+	CheckKlonoaEnemyPtr(klwk, data, co2);
 
 	switch (data->mode)
 	{

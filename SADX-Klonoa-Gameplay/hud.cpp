@@ -156,5 +156,7 @@ void init_Hud()
 	if (hud) {
 		HMODULE hud = GetModuleHandle(L"sadx-hud-plus");
 		HudPlus = hud != NULL;
+
+
 	}
 }
