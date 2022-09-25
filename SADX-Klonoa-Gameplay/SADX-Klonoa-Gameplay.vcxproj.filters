@@ -104,5 +104,8 @@
     <ClCompile Include="hp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="tornado.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

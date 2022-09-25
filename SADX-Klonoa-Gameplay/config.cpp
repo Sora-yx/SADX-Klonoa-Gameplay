@@ -8,6 +8,7 @@ bool useHP = true;
 bool infiniteHover = false;
 
 static UsercallFunc(signed int, Sonic_ChargeSpinDash_t, (playerwk* a1, taskwk* a2), (a1, a2), 0x496EE0, rEAX, rEAX, rEDI);
+static UsercallFuncVoid(DoHomingAttack_t, (playerwk* a1, taskwk* a2, motionwk2* a3), (a1, a2, a3), 0x494B80, rEAX, rECX, stack4);
 
 BOOL Sonic_ChargeSpinDash_r(playerwk* co2, taskwk* data)
 {
@@ -19,6 +20,17 @@ BOOL Sonic_ChargeSpinDash_r(playerwk* co2, taskwk* data)
 	return Sonic_ChargeSpinDash_t.Original(co2, data);
 }
 
+void DoHomingAttack_r(playerwk* a1, taskwk* data, motionwk2* a3)
+{
+	if (isKlonoa(data->charIndex) && !EV_MainThread_ptr)
+	{
+		data->mode = act_fall;
+		a1->mj.reqaction = anm_fall;
+		return;
+	}
+
+	return DoHomingAttack_t.Original(a1, data, a3);
+}
 
 void ReadConfig(const char* path, const HelperFunctions& helperFunctions) {
 	//Ini file Configuration
@@ -45,6 +57,7 @@ void ReadConfig(const char* path, const HelperFunctions& helperFunctions) {
 	if (allowKlonoaMoves)
 	{
 		Sonic_ChargeSpinDash_t.Hook(Sonic_ChargeSpinDash_r);
+		DoHomingAttack_t.Hook(DoHomingAttack_r);
 		WriteJump((void*)0x49937e, (void*)0x49a848); //remove SH spin dash on building
 		WriteData<1>((int*)0x499383, 0x90);
 	}

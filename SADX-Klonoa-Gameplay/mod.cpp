@@ -34,6 +34,7 @@ extern "C" {
 		init_BossesHacks();
 		initKlonoaHP();
 		init_Hud();
+		Tornado_init();
 		srand((unsigned)time(&t));
 	}
 

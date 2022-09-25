@@ -15,8 +15,6 @@ static FunctionHook<void, task*, char*> EV_SetFace_t((intptr_t)0x4310D0);
 
 static bool setAnim = false;
 
-extern NJS_TEXLIST KlonoaTexList;
-
 static const std::unordered_map<uint16_t, uint16_t> AnimMotion_ids_map = {
 	{ 1, anm_std },
 	{ 3, anm_walk},

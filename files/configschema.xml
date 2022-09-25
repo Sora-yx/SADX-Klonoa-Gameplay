@@ -13,9 +13,10 @@
 	  	<Property name="useHP" display="Use HP (Hearts)" type="bool" defaultvalue="True">
         <HelpText>Use HP to manage Klonoa life instead of rings, this will force Klonoa objects to show up.</HelpText>
       </Property>
-
-
-
+	  
+	  	  	<Property name="infiniteHover" display="Infinite Hover" type="bool" defaultvalue="False">
+        <HelpText>Have no fear, Klonoa is here!</HelpText>
+      </Property>
 		</Group>
 		
 			<Group name="visual" display="2. Visuals">
@@ -26,10 +27,9 @@
         <HelpText>Replace some objects with their Klonoa counterpart (only apply when playing Klonoa)</HelpText>
       </Property>
 	  
-
+	
 		
 		</Group>
-
 		</Groups>
 
 </ConfigSchema>

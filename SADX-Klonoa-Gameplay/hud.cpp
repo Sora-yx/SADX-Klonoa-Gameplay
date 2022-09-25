@@ -28,6 +28,56 @@ bool isHudAllowed()
 	return true;
 }
 
+static Uint32 StoneTimer = 0;
+
+void DrawDreamStoneCounter(bool up) {
+
+	auto backup = Hud_RingTimeLife;
+	Hud_RingTimeLife.ang = -1000;
+
+	Hud_RingTimeLife.p.x = HorizontalStretch * 520.0f;
+	Hud_RingTimeLife.p.y = ringPos - 10.0f + up ? 40.0f : 0.0f;
+
+
+	int16_t rings = Rings;
+
+	//Draw the ring counter if rings > 0, or draw blinking red zeros
+	if (rings == 0) {
+		if (!IsGamePaused())
+		{
+			StoneTimer += 1024;
+		}
+
+		float color = 1.0f - powf(njSin(StoneTimer), 2); //makes the color go from 0 to 1 to 0 etc
+
+		SetMaterialAndSpriteColor_Float(1, 1, color, color);
+
+		for (uint8_t i = 0; i < 3; ++i) {
+			njDrawSprite2D_ForcePriority(&Hud_RingTimeLife, 0, -1.501f, NJD_SPRITE_ALPHA | NJD_SPRITE_COLOR | NJD_SPRITE_ANGLE);
+			Hud_RingTimeLife.p.x -= 16;
+		}
+	}
+	else {
+		if (rings > 999) {
+			rings = 999;
+		}
+
+		for (uint8_t i = 0; i < 3; ++i) {
+			if (rings <= 0) {
+				njDrawSprite2D_ForcePriority(&Hud_RingTimeLife, 0, -1.501f, NJD_SPRITE_ALPHA | NJD_SPRITE_ANGLE);
+			}
+			else {
+				njDrawSprite2D_ForcePriority(&Hud_RingTimeLife, rings % 10, -1.501f, NJD_SPRITE_ALPHA | NJD_SPRITE_ANGLE);
+				rings /= 10;
+			}
+
+			Hud_RingTimeLife.p.x -= 16;
+		}
+	}
+
+	Hud_RingTimeLife = backup;
+}
+
 void DrawDreamStoneHUD()
 {
 	float posY = isBossLevel() ? 40.0f : 0.0f;
@@ -74,6 +124,7 @@ void DrawKlonoaHUD()
 	}
 
 	DrawDreamStoneHUD();
+	DrawDreamStoneCounter(isBossLevel());
 
 	njColorBlendingMode(NJD_SOURCE_COLOR, NJD_COLOR_BLENDING_SRCALPHA);
 	njColorBlendingMode(NJD_DESTINATION_COLOR, NJD_COLOR_BLENDING_ONE);
@@ -81,31 +132,17 @@ void DrawKlonoaHUD()
 	HelperFunctionsGlobal.PopScaleUI();
 }
 
-static void __declspec(naked) HudDisplayRingsASM()
-{
-	__asm
-	{
-		push esi 
-		push bl 
-		push eax 
-		//call HudDisplayRings_r
-		pop eax 
-		pop bl 
-		pop esi 
-		retn
-	}
-}
-
 
 void loadKLHudTex()
 {
-    if (!hud)
-        return;
+	if (!hud)
+		return;
 
-    LoadPVM("hud", &KHudTexlist);
+	LoadPVM("hud", &KHudTexlist);
 }
+
 
 void init_Hud()
 {
-   
+
 }

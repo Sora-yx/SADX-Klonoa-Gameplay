@@ -20,6 +20,9 @@ extern bool infiniteHover;
 
 extern const NJS_VECTOR KLScaleDiff;
 
+extern NJS_TEXLIST KlonoaTexList;
+
+
 struct klonoawk
 {
 	int generalTimer;
@@ -163,3 +166,4 @@ void init_BossesHacks();
 void PickDrop_Patches();
 void init_Hud();
 void initKlonoaHP();
+void Tornado_init();

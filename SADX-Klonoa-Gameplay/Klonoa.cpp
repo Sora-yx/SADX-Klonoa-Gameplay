@@ -14,6 +14,11 @@ ModelInfo* KlonoaMDL = nullptr;
 static NJS_TEXNAME KlonoaTex[2] = { 0 };
 NJS_TEXLIST KlonoaTexList = { arrayptrandlength(KlonoaTex) };
 
+PVMEntry klonoaTex_Entry[] = {
+	{"KlonoaTex", &KlonoaTexList},
+	{"KNU_EFF", &KNU_EFF_TEXLIST},
+};
+
 TaskHook Sonic_Main_t((intptr_t)Sonic_Main);
 TaskHook Sonic_Display_t((intptr_t)Sonic_Display);
 TaskHook Sonic_Delete_t((intptr_t)Sonic_Delete);
@@ -723,8 +728,12 @@ void __cdecl Klonoa_Main_r(task* obj)
 	if (!data->mode)
 	{
 		if (LoadKlonoa_Worker(obj)) {
-			LoadPVM("KlonoaTex", &KlonoaTexList);
-			LoadPVM("KNU_EFF", &KNU_EFF_TEXLIST);
+
+			for (int i = 0; i < LengthOfArray(klonoaTex_Entry); i++)
+			{
+				LoadPVM(klonoaTex_Entry[i].Name, klonoaTex_Entry[i].TexList);
+			}
+
 			ResetKlonoaHP();
 			klonoa = true;
 		}
@@ -822,9 +831,12 @@ void initKlonoa()
 	Sonic_Display_t.Hook(Klonoa_Display_r);
 	Sonic_Delete_t.Hook(Klonoa_Delete_r);
 
-
 	init_Objects();
 
 	WriteJump(Sonic_Snowboard_Main, Sonic_Snowboard_Main_r);
 	PickDrop_Patches();
+
+	for (int i = 0; i < LengthOfArray(klonoaTex_Entry); i++) {
+		HelperFunctionsGlobal.RegisterCharacterPVM(Characters_Sonic, klonoaTex_Entry[i]);
+	}
 }
