@@ -38,7 +38,7 @@ void DrawDreamStoneCounter(float posY, bool boss) {
 
 	Hud_RingTimeLife.p.x = HorizontalStretch * 583.0f;
 	Hud_RingTimeLife.p.y = ringPos - 12.0f + posY;
-	Hud_RingTimeLife.p.y += boss ? 59.5f : 0.0f;
+	Hud_RingTimeLife.p.y += boss ? 39.5f : 0.0f;
 
 	int16_t rings = Rings;
 
@@ -87,7 +87,7 @@ void DrawDreamStoneHUD(bool bosslevel)
 	//isBossLevel() ? 40.0f : 0.0f;
 	static const float posX = HorizontalStretch * 520.0f;
 	static const float posY = HudPlus ? 0.0f : 20.0f;
-	static const float bossPosY = bosslevel ? 59.0f : 0.0f;
+	static const float bossPosY = bosslevel ? 39.0f : 0.0f;
 	Hud_BGSprite.p.x = posX;
 	Hud_BGSprite.p.y = ringPos - posY + bossPosY;
 
