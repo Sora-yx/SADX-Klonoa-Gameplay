@@ -153,6 +153,7 @@ void IncrementAct_r(int amount)
 		auto klwk = (klonoawk*)playertp[pnum]->awp;
 		ResetKlonoaGrab(klwk);
 	}
+	FreeAllCustomSounds();
 
 	return IncrementAct_t.Original(amount);
 }
@@ -235,6 +236,7 @@ static bool EnemyCapturedHandle(task* obj)
 
 			data->ang.y += 1024;
 
+
 			switch (data->mode)
 			{
 			case captured:
@@ -242,6 +244,8 @@ static bool EnemyCapturedHandle(task* obj)
 				{
 					data->pos = player->pos;
 					data->pos.y += 16.0f;
+					data->ang.x = player->ang.x;
+					data->ang.z = player->ang.z;
 				}
 				break;
 			case drop:

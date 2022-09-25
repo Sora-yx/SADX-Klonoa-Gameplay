@@ -19,9 +19,9 @@ PVMEntry klonoaTex_Entry[] = {
 	{"KNU_EFF", &KNU_EFF_TEXLIST},
 };
 
-TaskHook Sonic_Main_t((intptr_t)Sonic_Main);
-TaskHook Sonic_Display_t((intptr_t)Sonic_Display);
-TaskHook Sonic_Delete_t((intptr_t)Sonic_Delete);
+TaskHook Sonic_Main_t(SonicTheHedgehog);
+TaskHook Sonic_Display_t(SonicDisplay);
+TaskHook Sonic_Delete_t(SonicDestruct);
 FunctionHook<void, taskwk*, motionwk2*, playerwk*> Sonic_RunsActions_t((intptr_t)Sonic_Act1);
 
 bool isKlonoa(char pnum)
@@ -272,6 +272,7 @@ void NodeCallback2(NJS_OBJECT* obj)
 void Klonoa_Delete_r(task* obj)
 {
 	klonoa = false;
+	FreeAllCustomSounds();
 	Sonic_Delete_t.Original(obj);
 }
 
