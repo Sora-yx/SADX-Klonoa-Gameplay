@@ -33,7 +33,7 @@ static Uint32 StoneTimer = 0;
 
 void DrawDreamStoneCounter(float posY, bool boss) {
 
-	auto backup = Hud_RingTimeLife;
+	static const auto backup = Hud_RingTimeLife;
 	Hud_RingTimeLife.ang = -1000;
 
 	Hud_RingTimeLife.p.x = HorizontalStretch * 583.0f;
@@ -85,11 +85,12 @@ void DrawDreamStoneCounter(float posY, bool boss) {
 void DrawDreamStoneHUD(bool bosslevel)
 {
 	//isBossLevel() ? 40.0f : 0.0f;
-	float posX = HorizontalStretch * 520.0f;
+	static const float posX = HorizontalStretch * 520.0f;
 	static const float posY = HudPlus ? 0.0f : 20.0f;
-
+	static const float bossPosY = bosslevel ? 59.0f : 0.0f;
 	Hud_BGSprite.p.x = posX;
-	Hud_BGSprite.p.y = ringPos - posY - bosslevel ? 90.0f : 0.0f;
+	Hud_BGSprite.p.y = ringPos - posY + bossPosY;
+
 	Stone_SPRITE.p = Hud_BGSprite.p;
 
 	SetMaterialAndSpriteColor_Float(1.0f, 0.086f, 0.890f, 0.129f); //set green color to dream stone icon
@@ -130,9 +131,9 @@ void DrawKlonoaHUD()
 		DrawKlonoaHP();
 	}
 
-	bool boss = isBossLevel();
+	static bool boss = isBossLevel();
 	DrawDreamStoneHUD(boss);
-	float posY = HudPlus ? 20.0f : 0.0f;
+	static float posY = HudPlus ? 20.0f : 0.0f;
 	DrawDreamStoneCounter(posY, boss);
 
 	njColorBlendingMode(NJD_SOURCE_COLOR, NJD_COLOR_BLENDING_SRCALPHA);
