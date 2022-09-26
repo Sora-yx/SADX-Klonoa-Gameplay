@@ -38,13 +38,13 @@ As you can imagine, SADX was never planned to have a character that can grab ene
 ## Features
 
 * Klonoa playable with his original animations!
-* Hover ability, while jumping, hold A to hover for a bit, this is similar to Knuckles glide but with a much shorter duration time.
-* Capture enemy, (press the action button close enough from an enemy to capture them, this also work on character fight.)
-* Throw enemy, press the action button to throw an enemy and damage the other ones (including bosses.)
-* Super Jump, while holding an enemy, press jump twice to do a Super Jump. WAHOO!
+* Hover ability: while jumping, hold A to hover for a bit, this is similar to Knuckles glide but with a much shorter duration time.
+* Capture enemy: (press the action button close enough from an enemy to capture them, this also works on character fight.)
+* Throw enemy: press the action button to throw an enemy and damage the other ones (including bosses.)
+* Super Jump: while holding an enemy, press jump twice to do a Super Jump. WAHOO!
 * Bosses fight have been edited to be beatable in a Klonoa style.
 * Replace common objects with their Klonoa counterpart (optional).
-* Custom HUD with HP system (hearts) instaed of rings (optional).
+* Custom HUD with HP system (hearts) instead of rings (optional).
 
 ## Install
 
