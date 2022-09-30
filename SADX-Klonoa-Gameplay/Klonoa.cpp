@@ -815,8 +815,7 @@ void __cdecl Sonic_Snowboard_Main_r(task* a1)
 	else
 	{
 		data->pos = pData->cwp->info->center;
-		if (isKlonoa(pNum))
-			data->pos.y += 7.2f;
+
 		data->ang = pData->ang;
 		data->ang.y = 0x8000 - pData->ang.y;
 		objMtn->spd = data2->spd;
