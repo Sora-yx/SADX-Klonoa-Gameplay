@@ -16,6 +16,9 @@ signed int KlonoaWBullet_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 	bool isOnGround = (data->flag & 3);
 	data->mode = isOnGround ? act_windBullet : act_windBulletAir;
 	co2->mj.reqaction = isOnGround ? anm_windBullet : anm_windBulletAir;
+
+	if (co2->spd.x > 0.5f && isOnGround)
+		co2->spd.x = 0.5f;
 	co2->spd.y = 0.0f;
 
 	PlayCustomSound(se_shot);

@@ -753,6 +753,7 @@ void __cdecl Klonoa_Main_r(task* obj)
 		break;
 
 	case act_super_jump:
+	case act_windBulletAir:
 	case act_holdJump:
 	case act_holdFall:
 		PResetAngle(data, data2, co2);
@@ -765,6 +766,7 @@ void __cdecl Klonoa_Main_r(task* obj)
 		RegularPhysicsFunctions(data, data2, co2);
 
 		break;
+	case act_windBullet:
 	case act_holdStd:
 		PGetRotation(data, data2, co2);
 		PGetAcceleration(data, data2, co2);
