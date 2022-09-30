@@ -181,7 +181,7 @@ static void SpawnEnemyCheck()
 	if (!IsIngame() || !isKlonoa(klonoaPnum) || EV_MainThread_ptr)
 		return;
 
-	if (Life_Max <= 0.0f && !TimeThing)
+	if (Life_Max <= 0.0f)
 	{
 		for (int i = 0; i < LengthOfArray(enemyBossTask); i++)
 		{
