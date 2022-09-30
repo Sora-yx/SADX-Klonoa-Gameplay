@@ -582,15 +582,16 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 				co2->spd.y = co2->p.jmp_addit * 0.80000001f + co2->spd.y;
 			}
 
-			if (KlonoaWBullet_CheckInput(data, co2, klwk))
+			if (KlonoaWBullet_CheckInput(data, co2, klwk) || hover_CheckInput(data, co2, klwk))
 			{
-				break;
+				data->flag &= ~Status_Attack;
+				data->flag &= ~Status_Ball;
+				return;
 			}
 			else if (data2->spd.y <= 0.0f)
 			{
 				data->mode = act_fall;
 				co2->mj.reqaction = anm_fall;
-
 			}
 		}
 
