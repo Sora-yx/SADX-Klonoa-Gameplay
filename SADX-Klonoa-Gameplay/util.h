@@ -48,3 +48,4 @@ bool hasLightShoes(char pnum);
 bool isBossLevel();
 void SetupChunkModelRender();
 void ResetChunkModelRender();
+bool isSuper(char pnum);

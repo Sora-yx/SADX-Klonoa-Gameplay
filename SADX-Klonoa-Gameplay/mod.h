@@ -167,3 +167,4 @@ void PickDrop_Patches();
 void init_Hud();
 void initKlonoaHP();
 void Tornado_init();
+void InitSuperKlonoa(HMODULE h);

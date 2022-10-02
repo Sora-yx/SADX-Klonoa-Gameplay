@@ -197,7 +197,7 @@ void savepointCollision_r(task* tsk, taskwk* data)
 		return;
 
 	//todo make bullet able to hit it, (maybe add config to avoid that?)
-	if (data->cwp->flag & 1) {
+	if (data->cwp->flag & 1 && data->cwp->hit_cwp && data->cwp->hit_cwp->mytask == playertp[pNum]) {
 		data->mode = 2;
 		savepoint_data->ang_spd.y = 0.0f;
 		cpData->write_timer = 300;

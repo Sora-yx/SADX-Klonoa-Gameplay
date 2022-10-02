@@ -10,13 +10,18 @@ const NJS_VECTOR KLScaleDiff = { 0.2f, 0.2f, 0.2f };
 const NJS_VECTOR orgScale = { 1.0f, 1.0f, 1.0f };
 
 ModelInfo* KlonoaMDL = nullptr;
+ModelInfo* SuperKlonoaMDL = nullptr;
 
 static NJS_TEXNAME KlonoaTex[2] = { 0 };
 NJS_TEXLIST KlonoaTexList = { arrayptrandlength(KlonoaTex) };
 
+static NJS_TEXNAME SuperKlonoaTex[3] = { 0 };
+NJS_TEXLIST SuperKlonoaTexList = { arrayptrandlength(SuperKlonoaTex) };
+
 PVMEntry klonoaTex_Entry[] = {
 	{"KlonoaTex", &KlonoaTexList},
 	{"KNU_EFF", &KNU_EFF_TEXLIST},
+	{"SuperKlonoaTex", &SuperKlonoaTexList},
 };
 
 TaskHook Sonic_Main_t(SonicTheHedgehog);
@@ -71,6 +76,15 @@ bool isKlonoaHold(char pnum)
 void DrawKlonoa(playerwk* co2, int animNum, NJS_ACTION* action)
 {
 	NJS_ACTION act2 = *action;
+
+	if (act2.object == SuperKlonoaMDL->getmodel())
+	{
+		PrintDebug("SUPER KLONOA MDL\n");
+	}
+	else
+	{
+		PrintDebug("KLONOA MDL\n");
+	}
 
 	if (QueueCharacterAnimations)
 	{
@@ -230,7 +244,7 @@ void NodeCallback2(NJS_OBJECT* obj)
 	char pnum = klonoaPnum;
 	auto co2 = playerpwp[pnum];
 	auto kl = (klonoawk*)playertp[pnum]->awp;
-	auto klMDL = KlonoaMDL->getmodel();
+	auto klMDL = isSuper(pnum) ? SuperKlonoaMDL->getmodel() : KlonoaMDL->getmodel();
 
 	float* v1 = _nj_current_matrix_ptr_;
 
@@ -319,7 +333,8 @@ void __cdecl Klonoa_Display_r(task* obj)
 
 	if (!(data->wtimer & 2))
 	{
-		njSetTexture(&KlonoaTexList);
+		NJS_TEXLIST* texture = isSuper(pnum) ? &SuperKlonoaTexList : &KlonoaTexList;
+		njSetTexture(texture);
 
 		njPushMatrix(0);
 	
@@ -827,6 +842,7 @@ void __cdecl Sonic_Snowboard_Main_r(task* a1)
 void initKlonoa()
 {
 	KlonoaMDL = LoadChunkModel("Klonoa");
+	SuperKlonoaMDL = LoadChunkModel("SuperKlonoa");
 	Init_KlonoaAnim();
 
 	Sonic_Main_t.Hook(Klonoa_Main_r);

@@ -4,7 +4,9 @@ AnimationFile* KlonoaANM[50] = { 0 };
 AnimationFile* KlonoaEvANM[50] = { 0 };
 #define AnimCount 160
 #define boneCount 48
+
 AnimData_t KlonoaAnimList[AnimCount] = { 0 };
+
 AnimData_t MetalAnimList[AnimCount];
 
 static FunctionHook<void, taskwk*, int> DrawEventActionPL_t((intptr_t)0x417FB0);
@@ -14,6 +16,7 @@ static FunctionHook<void> LoadPlayerMotionDataAll_t((intptr_t)0x5034A0);
 static FunctionHook<void, task*, char*> EV_SetFace_t((intptr_t)0x4310D0);
 
 static bool setAnim = false;
+extern ModelInfo* SuperKlonoaMDL;
 
 static const std::unordered_map<uint16_t, uint16_t> AnimMotion_ids_map = {
 	{ 1, anm_std },
@@ -219,7 +222,7 @@ __declspec(naked) void SetAnimList()
 		mov dword ptr[ebp + 140h], offset KlonoaAnimList
 		jmp loc_49AB51
 		metal :
-		mov dword ptr[ebp + 140h], offset MetalAnimList
+		mov dword ptr[ebp + 140h], offset SonicAnimData
 			jmp loc_49AB51
 	}
 }
@@ -429,7 +432,6 @@ void SetKlonoaAnims()
 	KlonoaAnimList[61] = KlonoaAnimList[59];
 	KlonoaAnimList[61].NextAnim = 18;
 
-
 	//hold obj
 	KlonoaAnimList[62].Animation->motion = KlonoaANM[anmID_holdObj]->getmotion();
 	KlonoaAnimList[62].Property = 4;
@@ -578,6 +580,69 @@ void SetKlonoaAnims()
 	KlonoaAnimList[124].AnimationSpeed = 0.3f;
 	KlonoaAnimList[124].Property = 3;
 
+	//Super Klonoa anims (to do: use SS anim here maybe?)
+	
+	//standing SK
+	KlonoaAnimList[134].Animation->motion = KlonoaAnimList[0].Animation->motion;
+	KlonoaAnimList[134].AnimationSpeed = KlonoaAnimList[0].AnimationSpeed;
+	KlonoaAnimList[134].Property = KlonoaAnimList[0].Property;
+	KlonoaAnimList[134].TransitionSpeed = KlonoaAnimList[0].TransitionSpeed;
+	KlonoaAnimList[134].NextAnim = 134;
+
+	//standing -> moving SK
+	KlonoaAnimList[135].Animation->motion = KlonoaAnimList[9].Animation->motion;
+	KlonoaAnimList[135].AnimationSpeed = KlonoaAnimList[9].AnimationSpeed;
+	KlonoaAnimList[135].Property = KlonoaAnimList[9].Property;
+	KlonoaAnimList[135].TransitionSpeed = KlonoaAnimList[9].TransitionSpeed;
+	KlonoaAnimList[135].NextAnim = 135;
+
+	//moving 1
+	KlonoaAnimList[136].Animation->motion = KlonoaAnimList[11].Animation->motion;
+	KlonoaAnimList[136].AnimationSpeed = KlonoaAnimList[11].AnimationSpeed;
+	KlonoaAnimList[136].Property = KlonoaAnimList[11].Property;
+	KlonoaAnimList[136].TransitionSpeed = KlonoaAnimList[11].TransitionSpeed;
+	KlonoaAnimList[136].NextAnim = 136;
+
+	//moving 2
+	KlonoaAnimList[137].Animation->motion = KlonoaAnimList[12].Animation->motion;
+	KlonoaAnimList[137].AnimationSpeed = KlonoaAnimList[12].AnimationSpeed;
+	KlonoaAnimList[137].Property = KlonoaAnimList[12].Property;
+	KlonoaAnimList[137].TransitionSpeed = KlonoaAnimList[12].TransitionSpeed;
+	KlonoaAnimList[137].NextAnim = 137;
+
+	//moving 3
+	KlonoaAnimList[138].Animation->motion = KlonoaAnimList[13].Animation->motion;
+	KlonoaAnimList[138].AnimationSpeed = KlonoaAnimList[13].AnimationSpeed;
+	KlonoaAnimList[138].Property = KlonoaAnimList[13].Property;
+	KlonoaAnimList[138].TransitionSpeed = KlonoaAnimList[13].TransitionSpeed;
+	KlonoaAnimList[138].NextAnim = 138;
+
+	//landing SK
+	KlonoaAnimList[142].Animation->motion = KlonoaAnimList[19].Animation->motion;
+	KlonoaAnimList[142].AnimationSpeed = KlonoaAnimList[19].AnimationSpeed;
+	KlonoaAnimList[142].Property = KlonoaAnimList[19].Property;
+	KlonoaAnimList[142].TransitionSpeed = KlonoaAnimList[19].TransitionSpeed;
+	KlonoaAnimList[142].NextAnim = 134;
+
+	//victory SK
+	KlonoaAnimList[143].Animation->motion = KlonoaAnimList[75].Animation->motion;  
+	KlonoaAnimList[143].AnimationSpeed = KlonoaAnimList[75].AnimationSpeed;
+	KlonoaAnimList[143].Property = KlonoaAnimList[75].Property;
+	KlonoaAnimList[143].TransitionSpeed = KlonoaAnimList[75].TransitionSpeed;
+	KlonoaAnimList[143].NextAnim = 143;
+
+	KlonoaAnimList[144].Animation->motion = KlonoaAnimList[76].Animation->motion;
+	KlonoaAnimList[144].AnimationSpeed = KlonoaAnimList[76].AnimationSpeed;
+	KlonoaAnimList[144].Property = KlonoaAnimList[76].Property;
+	KlonoaAnimList[144].TransitionSpeed = KlonoaAnimList[76].TransitionSpeed;
+	KlonoaAnimList[144].NextAnim = 144;
+
+	KlonoaAnimList[145].Animation->motion = KlonoaAnimList[14].Animation->motion;
+	KlonoaAnimList[145].AnimationSpeed = KlonoaAnimList[14].AnimationSpeed;
+	KlonoaAnimList[145].Property = KlonoaAnimList[14].Property;
+	KlonoaAnimList[145].TransitionSpeed = KlonoaAnimList[14].TransitionSpeed;
+	KlonoaAnimList[145].NextAnim = 145;
+
 	//hover
 	KlonoaAnimList[anm_hover].Animation->motion = KlonoaANM[anmID_hover]->getmotion();
 	KlonoaAnimList[anm_hover].Property = 3;
@@ -642,6 +707,15 @@ void SetKlonoaAnims()
 	KlonoaAnimList[anm_throwStd].NextAnim = anm_std;
 	KlonoaAnimList[anm_throwStd].AnimationSpeed = 0.7f;
 	KlonoaAnimList[anm_throwStd].Property = 4;
+
+
+	for (int j = 134; j < 146; j++)
+	{
+		if (KlonoaAnimList[j].Animation->motion)
+		{
+			KlonoaAnimList[j].Animation->object = SuperKlonoaMDL->getmodel();
+		}
+	}
 }
 
 
@@ -744,6 +818,15 @@ void EV_Wait_r(task* tp)
 	EV_ClrFace(tp);
 }
 
+void InitSuperKlonoa(HMODULE h)
+{
+	unsigned int* pcount = reinterpret_cast<unsigned int*>(GetProcAddress(h, "SSAnimCount"));
+	*pcount = LengthOfArray<unsigned int>(KlonoaAnimList);
+
+	AnimData** pdata = reinterpret_cast<AnimData**>(GetProcAddress(h, "SSAnimData"));
+	*pdata = KlonoaAnimList;
+}
+
 void Init_KlonoaAnim()
 {
 	LoadKlonoa_AnimFiles();
@@ -755,9 +838,7 @@ void Init_KlonoaAnim()
 	LoadPlayerMotionDataAll_t.Hook(LoadPlayerMotionDataAll_r);
 
 	WriteJump((void*)0x49AB47, SetAnimList);
-	WriteData((short*)0x49ACD8, (short)0x9090);
-	WriteData<2>((void*)0x4916A5, 0x90u); // disable metal's weird tilting thing
-	WriteData((char*)0x49BE22, (char)0xEB);
+	WriteData((AnimData**)0x49AB4D, KlonoaAnimList);
 
 	WriteJump(InitSonicCharSelAnims, InitKlonoaCharSelAnim);
 

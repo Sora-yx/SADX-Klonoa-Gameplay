@@ -38,6 +38,16 @@ extern "C" {
 		srand((unsigned)time(&t));
 	}
 
+	__declspec(dllexport) void __cdecl OnInitEnd() {
+
+		auto BetterSuperSonicHandle = GetModuleHandle(L"better-super-sonic");
+
+		if (BetterSuperSonicHandle)
+		{
+			InitSuperKlonoa(BetterSuperSonicHandle);
+		}
+	}
+
 	__declspec(dllexport) void __cdecl OnFrame()
 	{
 		if (GameState >= 15)
@@ -45,6 +55,8 @@ extern "C" {
 
 		DrawKlonoaHUD();
 	}
+
+
 
 
 	__declspec(dllexport) ModInfo SADXModInfo = { ModLoaderVer };
