@@ -49,3 +49,4 @@ bool isBossLevel();
 void SetupChunkModelRender();
 void ResetChunkModelRender();
 bool isSuper(char pnum);
+AnimData_t* GetKlonoaAnimList();

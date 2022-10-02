@@ -99,6 +99,7 @@ AnimationFile* LoadEventAnim(const char* name) {
 }
 
 void DrawChunkModel(NJS_CNK_MODEL* model) {
+	//njCnkDrawModel(model);
 	DrawChunkModel_(model->vlist, model->plist);
 }
 

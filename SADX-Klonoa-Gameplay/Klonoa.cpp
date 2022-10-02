@@ -77,15 +77,6 @@ void DrawKlonoa(playerwk* co2, int animNum, NJS_ACTION* action)
 {
 	NJS_ACTION act2 = *action;
 
-	if (act2.object == SuperKlonoaMDL->getmodel())
-	{
-		PrintDebug("SUPER KLONOA MDL\n");
-	}
-	else
-	{
-		PrintDebug("KLONOA MDL\n");
-	}
-
 	if (QueueCharacterAnimations)
 	{
 		DrawQueueDepthBias = -5952.0f;
@@ -97,7 +88,6 @@ void DrawKlonoa(playerwk* co2, int animNum, NJS_ACTION* action)
 		njCnkAction(&act2, co2->mj.nframe);
 	}
 }
-
 
 void SpinDash_RotateModel(int curAnim, taskwk* data)
 {
@@ -280,7 +270,7 @@ void NodeCallback2(NJS_OBJECT* obj)
 		njCalcVector(v1, &v, &kl->ringVec); // ring vec
 		SetVectorDiff(&kl->ringPos);
 		SetVectorDiff(&kl->ringVec);
-	}	
+	}
 }
 
 void Klonoa_Delete_r(task* obj)
@@ -311,12 +301,7 @@ void __cdecl Klonoa_Display_r(task* obj)
 	Direct3D_SetZFunc(1u);
 	BackupConstantAttr();
 
-	AddConstantAttr(0, NJD_FLAG_IGNORE_SPECULAR);
-
-	if (SuperSonicFlag)
-		Direct3D_PerformLighting(4);
-	else
-		Direct3D_PerformLighting(2);
+	Direct3D_PerformLighting(2);
 
 	if (!MetalSonicFlag && SONIC_OBJECTS[6]->sibling != *(NJS_OBJECT**)0x3C55D40)
 	{
@@ -337,7 +322,7 @@ void __cdecl Klonoa_Display_r(task* obj)
 		njSetTexture(texture);
 
 		njPushMatrix(0);
-	
+
 		NJS_VECTOR pos = data->cwp->info->center;
 		pos.y -= kloGetPosYDiff(curAnim);
 		njTranslateV(0, &pos);
@@ -393,7 +378,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		return;
 	}
 
-	if (!isKlonoa(data->charIndex) || EV_MainThread_ptr || !IsIngame())
+	if (!isKlonoa(data->charIndex) || EV_MainThread_ptr || !IsIngame() || MetalSonicFlag)
 	{
 		return Sonic_RunsActions_t.Original(data, data2, co2);
 	}
@@ -742,8 +727,14 @@ void __cdecl Klonoa_Main_r(task* obj)
 	playerwk* co2 = (playerwk*)obj->mwp->work.l;
 	char pnum = data->counter.b[0];
 
-	if (!data->mode)
+
+	switch (data->mode)
 	{
+	case 0:
+
+		if (MetalSonicFlag)
+			break;
+
 		if (LoadKlonoa_Worker(obj)) {
 
 			for (int i = 0; i < LengthOfArray(klonoaTex_Entry); i++)
@@ -758,11 +749,24 @@ void __cdecl Klonoa_Main_r(task* obj)
 		{
 			PrintDebug("Klonoa Mod: Failed to load Klonoa worker; mod won't work...\n");
 			klonoa = false;
+			break;
 		}
-	}
 
-	switch (data->mode)
-	{
+		data->counter.b[1] = Characters_Sonic;
+		InitCharacterVars(pnum, (ObjectMaster*)obj);
+
+		co2 = (playerwk*)obj->mwp->work.l;
+
+		co2->mj.plactptr = (PL_ACTION*)GetKlonoaAnimList();
+		co2->mj.reqaction = 0;
+		CCL_Init(obj, (CCL_INFO*)&Sonic_Collision, 2, 0u);
+		PSetMotion(&co2->mj);
+		co2->mj.pljvptr = (PL_JOIN_VERTEX*)&SonicWeldInfo; //init welds to fix game crash although they are useless for Klonoa.
+		ProcessVertexWelds((EntityData1*)data, (EntityData2*)data2, (CharObj2*)co2);
+		obj->disp = Klonoa_Display_r;
+		obj->dest = Klonoa_Delete_r;
+		data->mode++;
+		break;
 	case act_hover:
 		hover_Physics(data, data2, co2);
 		break;

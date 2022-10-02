@@ -7,8 +7,6 @@ AnimationFile* KlonoaEvANM[50] = { 0 };
 
 AnimData_t KlonoaAnimList[AnimCount] = { 0 };
 
-AnimData_t MetalAnimList[AnimCount];
-
 static FunctionHook<void, taskwk*, int> DrawEventActionPL_t((intptr_t)0x417FB0);
 static FunctionHook<void, task*, NJS_ACTION*, NJS_TEXLIST*, float, char, char> EV_SetAction_t((intptr_t)EV_SetAction);
 static FunctionHook<void, task*, NJS_OBJECT*, NJS_MOTION*, NJS_TEXLIST*, float, int, int> EV_SetMotion_t((intptr_t)EV_SetMotion);
@@ -17,6 +15,11 @@ static FunctionHook<void, task*, char*> EV_SetFace_t((intptr_t)0x4310D0);
 
 static bool setAnim = false;
 extern ModelInfo* SuperKlonoaMDL;
+
+AnimData_t* GetKlonoaAnimList()
+{
+	return KlonoaAnimList;
+}
 
 static const std::unordered_map<uint16_t, uint16_t> AnimMotion_ids_map = {
 	{ 1, anm_std },
@@ -836,9 +839,6 @@ void Init_KlonoaAnim()
 	EV_SetAction_t.Hook(EV_SetAction_r);
 	EV_SetMotion_t.Hook(EV_SetMotion_r);
 	LoadPlayerMotionDataAll_t.Hook(LoadPlayerMotionDataAll_r);
-
-	WriteJump((void*)0x49AB47, SetAnimList);
-	WriteData((AnimData**)0x49AB4D, KlonoaAnimList);
 
 	WriteJump(InitSonicCharSelAnims, InitKlonoaCharSelAnim);
 
