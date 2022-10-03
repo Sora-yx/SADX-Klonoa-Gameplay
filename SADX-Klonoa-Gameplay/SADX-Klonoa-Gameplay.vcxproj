@@ -183,6 +183,7 @@
     <ClCompile Include="config.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="fly.cpp" />
     <ClCompile Include="hover.cpp" />
     <ClCompile Include="grab.cpp" />
     <ClCompile Include="hud.cpp" />

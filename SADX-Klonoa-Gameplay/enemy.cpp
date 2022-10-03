@@ -212,11 +212,10 @@ void ThrowEnemy_Action(task* tp)
 	{
 		auto task = data->cwp->hit_cwp->mytask;
 
-		if (task->twp && task->twp->cwp->id != 0)
+		if (task->twp && task->twp->cwp->id != 0) //if the enemy hit another col type that isn't a player
 		{
-			data->counter.f = 0.083333336f * 7;
+			data->counter.f = 0.083333336f * 7; //hard nerf timer to make the enemy die
 		}
-
 	}
 
 	EntryColliList(data);

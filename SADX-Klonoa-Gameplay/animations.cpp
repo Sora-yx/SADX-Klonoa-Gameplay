@@ -73,12 +73,20 @@ void __cdecl late_actionClipEx_r(NJS_ACTION* anim, float a2, QueuedModelFlagsB a
 	late_ActionEx(anim, a2, (LATE)a3);
 }
 
+//event head are not compatible obviously, we force standing animation when they happen
 void __cdecl late_ActionLinkEx_r(NJS_ACTION_LINK* action, float frame, int flag)
 {
 	if (action && action->object == KlonoaMDL->getmodel())
 	{
 		njSetTexture(&KlonoaTexList);
-		return njCnkActionLink(action, frame, flag);
+		auto anim = GetKlonoaAnimList();
+
+		if (anim && anim[0].Animation) 
+		{
+			return DrawKlonoa_Event(anim[0].Animation, frame, (QueuedModelFlagsB)flag);
+		}
+
+		return;
 	}
 
 	late_ActionLinkEx(action, frame, (LATE)flag);
@@ -710,6 +718,12 @@ void SetKlonoaAnims()
 	KlonoaAnimList[anm_throwStd].AnimationSpeed = 0.7f;
 	KlonoaAnimList[anm_throwStd].Property = 4;
 
+	//fly standing
+	KlonoaAnimList[anm_flyStd].Animation->motion = KlonoaANM[anmID_flyStd]->getmotion();
+	KlonoaAnimList[anm_flyStd].NextAnim = anm_flyStd;
+	KlonoaAnimList[anm_flyStd].AnimationSpeed = 0.7f;
+	KlonoaAnimList[anm_flyStd].Property = 3;
+
 
 	for (int j = 134; j < 146; j++)
 	{
@@ -747,7 +761,7 @@ void LoadKlonoa_AnimFiles()
 	KlonoaANM[21] = LoadObjectAnim("holdJump");
 	KlonoaANM[22] = LoadObjectAnim("holdFall");
 	KlonoaANM[23] = LoadObjectAnim("throw");
-	KlonoaANM[24] = LoadObjectAnim("throw"); //TO DO ADD THROW AIR
+	KlonoaANM[24] = LoadObjectAnim("airThrow"); //TO DO ADD THROW AIR
 	KlonoaANM[25] = LoadObjectAnim("Brake");
 	KlonoaANM[26] = LoadObjectAnim("Landing");
 	KlonoaANM[27] = LoadObjectAnim("Board");
@@ -759,6 +773,7 @@ void LoadKlonoa_AnimFiles()
 	KlonoaANM[33] = LoadObjectAnim("BoardLeft");
 	KlonoaANM[34] = LoadObjectAnim("BoardRight");
 	KlonoaANM[35] = LoadObjectAnim("BoardJump");
+	KlonoaANM[36] = LoadObjectAnim("flyStd");
 }
 
 void InitKlonoaCharSelAnim()

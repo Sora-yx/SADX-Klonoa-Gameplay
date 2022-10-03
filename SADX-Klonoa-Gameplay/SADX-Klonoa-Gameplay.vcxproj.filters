@@ -107,5 +107,8 @@
     <ClCompile Include="tornado.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="fly.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

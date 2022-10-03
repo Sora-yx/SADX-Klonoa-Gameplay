@@ -447,6 +447,9 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		break;
 	case act_jump:
 	case act_fall:
+	case 78:
+	case 82:
+
 		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2) || (data->flag & 3))
 		{
 			klwk->hoverUsed = false;
@@ -459,7 +462,12 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 				co2->mj.reqaction = anm_fall;
 			}
 
-			if (hover_CheckInput(data, co2, klwk) || KlonoaWBullet_CheckInput(data, co2, klwk))
+			if (Fly_CheckInput(data, co2))
+			{
+				return;
+			}
+
+			if ( hover_CheckInput(data, co2, klwk) || KlonoaWBullet_CheckInput(data, co2, klwk))
 			{
 				data->flag &= ~Status_Attack;
 				data->flag &= ~Status_Ball;
@@ -715,6 +723,34 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 			return;
 		}
 		return;
+	case act_flyStd:
+	case act_fly:
+
+		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2))
+		{
+			break;
+		}
+
+		if (!PauseEnabled && !TimeThing) //if level is about to finish, force klonoa to fall to avoid softlock
+		{
+			Klonoa_Fall(data, co2);
+			break;
+		}
+
+		if (data->flag & 3)
+		{
+			data->ang.x = data2->ang_aim.x;
+			data->ang.z = data2->ang_aim.z;
+
+			data->mode = 1;
+			co2->mj.reqaction = 0;
+			data->flag &= 0xFAu;
+			return;
+		}
+
+		Fly_ManageMotion(data, co2);
+
+		return;
 	}
 
 	Sonic_RunsActions_t.Original(data, data2, co2);
@@ -794,6 +830,16 @@ void __cdecl Klonoa_Main_r(task* obj)
 		{
 			PResetPosition(data, data2, co2);
 		}
+		break;
+	case act_flyStd:
+		PResetAngle(data, data2, co2);
+		RegularPhysicsFunctions(data, data2, co2);
+		co2->spd.y = 0.0f;
+		break;
+	case act_fly:
+		PResetAngle(data, data2, co2);
+		SuperKlonoa_Fly(co2, data, data2);
+		RegularPhysicsFunctions(data, data2, co2);
 		break;
 	}
 

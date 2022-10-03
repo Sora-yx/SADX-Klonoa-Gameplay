@@ -76,6 +76,7 @@ enum klonoaAnimDLL //dll is for the array on init
 	animID_BoardLeft,
 	animID_BoardRight,
 	animID_BoardJump,
+	anmID_flyStd
 };
 
 enum klonoaAnim //regular ID used to play anim on the character
@@ -92,6 +93,7 @@ enum klonoaAnim //regular ID used to play anim on the character
 	anm_fall = 18,
 	anm_brake = 20,
 	anm_turnAround = 30,
+	anm_fly = 64,
 	anm_board = 102,
 	anm_brakeBoard,
 	anm_brakeLeftBoard,
@@ -115,6 +117,7 @@ enum klonoaAnim //regular ID used to play anim on the character
 	anm_holdFall,
 	anm_throwStd,
 	anm_throwAir,
+	anm_flyStd,
 };
 
 enum klonoaAction
@@ -135,6 +138,8 @@ enum klonoaAction
 	act_holdFall,
 	act_throwStd,
 	act_throwAir,
+	act_flyStd,
+	act_fly
 };
 
 enum enemyState

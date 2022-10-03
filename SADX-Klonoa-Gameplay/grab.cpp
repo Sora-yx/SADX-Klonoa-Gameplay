@@ -123,7 +123,7 @@ signed int ThrowEnemy_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 		}
 		bool isOnGround = (data->flag & 3);
 		data->mode = isOnGround ? act_throwStd : act_throwAir;
-		co2->mj.reqaction = anm_throwStd; //todo find throw in the air
+		co2->mj.reqaction =  isOnGround ? anm_throwStd : anm_throwAir; 
 		ThrowEnemyCalcDirection(data, klwk);
 		PlayCustomSoundVolume(kl_throw, 1);
 		return 1;

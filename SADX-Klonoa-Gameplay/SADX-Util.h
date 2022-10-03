@@ -24,11 +24,13 @@ FunctionPointer(void*, AllocateCPData, (), 0x44EFC0);
 TaskFunc(Bubble_Child, 0x7A8260);
 DataArray(player_parameter, PhysicsArray_, 0x9154E8, 8);
 
-
 ObjectFunc(UnindusA_Exec, 0x4AF030);
 ObjectFunc(UnindusB_Exec, 0x4AF3D0);
 ObjectFunc(UnindusC_Exec, 0x4AF770);
 DataPointer(float, Life_Max, 0x03C58158);
+
+FunctionPointer(void, PGetAccelerationFly, (taskwk* a1, motionwk2* a2, playerwk* a3), 0x447E70);
+FunctionPointer(void, CL_ColPolCFPolygon, (zxsdwstr* a1, float a2), 0x454F60);
 
 DataPointer(NJS_SPRITE, AncientLightSprite, 0x981A28);
 DataPointer(NJS_SPRITE, AncientLightSprite2, 0x981A08);
