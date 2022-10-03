@@ -14,7 +14,6 @@ static FunctionHook<void> LoadPlayerMotionDataAll_t((intptr_t)0x5034A0);
 static FunctionHook<void, task*, char*> EV_SetFace_t((intptr_t)0x4310D0);
 
 static bool setAnim = false;
-extern ModelInfo* SuperKlonoaMDL;
 
 AnimData_t* GetKlonoaAnimList()
 {
@@ -828,6 +827,18 @@ void InitSuperKlonoa(HMODULE h)
 
 	AnimData** pdata = reinterpret_cast<AnimData**>(GetProcAddress(h, "SSAnimData"));
 	*pdata = KlonoaAnimList;
+}
+
+void ReplaceSonicAnimPtr()
+{
+	if (MetalSonicFlag)
+	{
+		WriteData((AnimData**)0x49AB4D, &SonicAnimData);
+	}
+	else
+	{
+		WriteData((AnimData**)0x49AB4D, KlonoaAnimList);
+	}
 }
 
 void Init_KlonoaAnim()

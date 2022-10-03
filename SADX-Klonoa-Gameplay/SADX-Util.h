@@ -6,6 +6,9 @@ FunctionPointer(void, PGetAccelerationGlik, (taskwk* a1, motionwk2* a2, playerwk
 FunctionPointer(void, PGetSpeedGlik, (taskwk* a1, motionwk2* a2, playerwk* a3), 0x0444580);
 FunctionPointer(void, PResetPosition, (taskwk* a1, motionwk2* a2, playerwk* a3), 0x43EE70);
 
+FunctionPointer(void, saCnkDrawMotionSA, (NJS_CNK_OBJECT* obj, NJS_MOTION* motion, float frame), 0x720A70);
+FunctionPointer(void, njCnkDrawMotion, (NJS_CNK_OBJECT* obj, NJS_MOTION* motion, float frame), 0x789690);
+
 
 DataArray(NJS_ACTION*, SonicCharSelAnim, 0x3C5FF94, 4);
 FunctionPointer(void, DrawEventAction, (taskwk* data), 0x4187D0);

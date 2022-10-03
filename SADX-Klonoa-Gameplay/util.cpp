@@ -99,7 +99,6 @@ AnimationFile* LoadEventAnim(const char* name) {
 }
 
 void DrawChunkModel(NJS_CNK_MODEL* model) {
-	//njCnkDrawModel(model);
 	DrawChunkModel_(model->vlist, model->plist);
 }
 
@@ -109,7 +108,6 @@ void njCnkAction_Queue(NJS_ACTION* action, float frame, QueuedModelFlagsB flags)
 
 void njCnkAction(NJS_ACTION* action, float frame) {
 	DisplayAnimationFrame(action, frame, (QueuedModelFlagsB)0, 0, (void(__cdecl*)(NJS_MODEL_SADX*, int, int))DrawChunkModel);
-
 }
 
 void NullModel(NJS_MODEL_SADX*, int, int)
@@ -120,13 +118,6 @@ void NullModel(NJS_MODEL_SADX*, int, int)
 void njNullAction(NJS_ACTION* action, float frame)
 {
 	DisplayAnimationFrame(action, frame, (QueuedModelFlagsB)0, 0, NullModel);
-}
-
-void SetupWorldMatrix() {
-	ProjectToWorldSpace();
-	WorldMatrixBackup = WorldMatrix;
-	Direct3D_SetWorldTransform();
-	memcpy(_nj_current_matrix_ptr_, &ViewMatrix, sizeof(NJS_MATRIX));
 }
 
 void LookAt(NJS_VECTOR* unit, Angle* outx, Angle* outy) {
@@ -293,6 +284,13 @@ bool isBossLevel()
 	return (CurrentLevel >= LevelIDs_Chaos0 && CurrentLevel <= LevelIDs_E101R);
 }
 
+void SetupWorldMatrix() {
+	WorldMatrixBackup = WorldMatrix;
+	ProjectToWorldSpace();
+	Direct3D_SetWorldTransform();
+	memcpy(_nj_current_matrix_ptr_, &ViewMatrix, sizeof(NJS_MATRIX));
+}
+
 void SetupChunkModelRender()
 {
 	SetupWorldMatrix();
@@ -301,6 +299,8 @@ void SetupChunkModelRender()
 
 void ResetChunkModelRender()
 {
+	WorldMatrix = WorldMatrixBackup;
+	Direct3D_ResetWorldTransform();
 	Direct3D_UnsetChunkModelRenderState();
 }
 

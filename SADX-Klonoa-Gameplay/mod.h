@@ -6,6 +6,7 @@ extern uint8_t klonoaPnum;
 extern std::string modpath;
 
 extern ModelInfo* KlonoaMDL;
+extern ModelInfo* SuperKlonoaMDL;
 
 #define TARGET_DYNAMIC(name) ((decltype(name##_r)*)name##_t->Target())
 #define charID counter.b[1]

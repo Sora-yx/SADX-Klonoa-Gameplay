@@ -727,13 +727,17 @@ void __cdecl Klonoa_Main_r(task* obj)
 	playerwk* co2 = (playerwk*)obj->mwp->work.l;
 	char pnum = data->counter.b[0];
 
-
 	switch (data->mode)
 	{
 	case 0:
 
+		ReplaceSonicAnimPtr();
+
 		if (MetalSonicFlag)
+		{
+			klonoa = false;
 			break;
+		}	
 
 		if (LoadKlonoa_Worker(obj)) {
 
@@ -752,20 +756,7 @@ void __cdecl Klonoa_Main_r(task* obj)
 			break;
 		}
 
-		data->counter.b[1] = Characters_Sonic;
-		InitCharacterVars(pnum, (ObjectMaster*)obj);
 
-		co2 = (playerwk*)obj->mwp->work.l;
-
-		co2->mj.plactptr = (PL_ACTION*)GetKlonoaAnimList();
-		co2->mj.reqaction = 0;
-		CCL_Init(obj, (CCL_INFO*)&Sonic_Collision, 2, 0u);
-		PSetMotion(&co2->mj);
-		co2->mj.pljvptr = (PL_JOIN_VERTEX*)&SonicWeldInfo; //init welds to fix game crash although they are useless for Klonoa.
-		ProcessVertexWelds((EntityData1*)data, (EntityData2*)data2, (CharObj2*)co2);
-		obj->disp = Klonoa_Display_r;
-		obj->dest = Klonoa_Delete_r;
-		data->mode++;
 		break;
 	case act_hover:
 		hover_Physics(data, data2, co2);
