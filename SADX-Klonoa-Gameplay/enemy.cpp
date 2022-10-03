@@ -205,11 +205,20 @@ void ThrowEnemy_Action(task* tp)
 
 	data->cwp->info->damage |= 3u;
 	data->cwp->info->damage |= 0xCu;
-
-	data->pos.x += des.x;
-	data->pos.y += des.y;
-	data->pos.z += des.z;
+	njAddVector(&data->pos, &des);
 	data->ang.x += 2048;
+
+	if (data->cwp && data->cwp->hit_cwp && data->cwp->hit_cwp->mytask)
+	{
+		auto task = data->cwp->hit_cwp->mytask;
+
+		if (task->twp && task->twp->cwp->id != 0)
+		{
+			data->counter.f = 0.083333336f * 7;
+		}
+
+	}
+
 	EntryColliList(data);
 }
 
@@ -449,6 +458,6 @@ void init_EnemiesHack()
 	UpdateSetAndDelete_t.Hook(UpdateSetAndDelete_r);
 
 	//change spinner col list so they can be grabbed
-	WriteCall((void*)0x4B0D17, EnemyCol_Fix);	
+	WriteCall((void*)0x4B0D17, EnemyCol_Fix);
 	WriteCall((void*)0x540684, EnemyCol_Fix);
 }
