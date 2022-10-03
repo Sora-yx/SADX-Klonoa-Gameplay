@@ -1,0 +1,2 @@
+10000032,../B_SONIC_e.png,512x64
+10000028,../b_supersonic_e.png,512x64
