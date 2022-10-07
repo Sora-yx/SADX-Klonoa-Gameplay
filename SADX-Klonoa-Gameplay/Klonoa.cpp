@@ -302,7 +302,7 @@ void __cdecl Klonoa_Display_r(task* obj)
 	BackupConstantAttr();
 
 	Direct3D_PerformLighting(2);
-
+	CnkDisableSpecular();
 	if (!MetalSonicFlag && SONIC_OBJECTS[6]->sibling != *(NJS_OBJECT**)0x3C55D40)
 	{
 		co2->mj.jvmode = 2;
@@ -348,7 +348,7 @@ void __cdecl Klonoa_Display_r(task* obj)
 			if (co2->mj.mtnmode == 2) {
 				action = co2->mj.actwkptr;
 			}
-
+	
 			DrawKlonoa(co2, curAnim, action);
 			*NodeCallbackFuncPtr = NodeCallback2;
 			njPushMatrix(_nj_unit_matrix_);
@@ -366,6 +366,7 @@ void __cdecl Klonoa_Display_r(task* obj)
 	ClampGlobalColorThing_Thing();
 	RestoreConstantAttr();
 	Direct3D_ResetZFunc();
+	CnkRestoreSpecular();
 
 	if (IsGamePaused())
 		DrawCharacterShadow((EntityData1*)data, (struct_a3*)&co2->shadow);

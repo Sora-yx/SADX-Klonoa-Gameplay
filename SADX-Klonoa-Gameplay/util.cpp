@@ -2,7 +2,7 @@
 
 D3DMATRIX WorldMatrixBackup;
 
-FastcallFunctionPointer(void, DrawChunkModel_, (Sint32* a1, Sint16* a2), 0x7917F0);
+FunctionPointer(void, _njCnkDrawModel, (NJS_CNK_MODEL* a3), 0x789750);
 
 ModelInfo* LoadBasicModel(const char* name) {
 	PrintDebug("Loading basic model: %s... ", name);
@@ -98,16 +98,14 @@ AnimationFile* LoadEventAnim(const char* name) {
 	return LoadANM("anims\\events", name);
 }
 
-void DrawChunkModel(NJS_CNK_MODEL* model) {
-	DrawChunkModel_(model->vlist, model->plist);
-}
 
 void njCnkAction_Queue(NJS_ACTION* action, float frame, QueuedModelFlagsB flags) {
-	DisplayAnimationFrame(action, frame, flags, 0, (void(__cdecl*)(NJS_MODEL_SADX*, int, int))DrawChunkModel);
+
+	DisplayAnimationFrame(action, frame, flags, 0, (void(__cdecl*)(NJS_MODEL_SADX*, int, int))_njCnkDrawModel);
 }
 
 void njCnkAction(NJS_ACTION* action, float frame) {
-	DisplayAnimationFrame(action, frame, (QueuedModelFlagsB)0, 0, (void(__cdecl*)(NJS_MODEL_SADX*, int, int))DrawChunkModel);
+	DisplayAnimationFrame(action, frame, (QueuedModelFlagsB)0, 0, (void(__cdecl*)(NJS_MODEL_SADX*, int, int))_njCnkDrawModel);
 }
 
 void NullModel(NJS_MODEL_SADX*, int, int)
@@ -202,7 +200,7 @@ static inline void late_ActionLinkEx_(NJS_ACTION_LINK* action, float frameNumber
 
 void njCnkActionLink(NJS_ACTION_LINK* action, float frame, int flag)
 {
-	late_ActionLinkEx_(action, frame, (QueuedModelFlagsB)flag, 0.0f, (void(__cdecl*)(NJS_MODEL_SADX*, int, int))DrawChunkModel);
+	late_ActionLinkEx_(action, frame, (QueuedModelFlagsB)flag, 0.0f, (void(__cdecl*)(NJS_MODEL_SADX*, int, int))_njCnkDrawModel);
 }
 
 float GetSquare(NJS_VECTOR* orig, NJS_VECTOR* dest) {

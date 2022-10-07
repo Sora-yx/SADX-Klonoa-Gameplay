@@ -21,9 +21,6 @@ void PlayerLookAt(NJS_VECTOR* from, NJS_VECTOR* to, Angle* outx, Angle* outy);
 int getKlonoaPlayer();
 int getKlonoaPlayer();
 bool isKlonoa(char pnum);
-
-void DrawChunkModel(NJS_CNK_MODEL* model);
-
 void njCnkAction_Queue(NJS_ACTION* action, float frame, QueuedModelFlagsB flags);
 void njCnkAction(NJS_ACTION* action, float frame);
 void SetupWorldMatrix();

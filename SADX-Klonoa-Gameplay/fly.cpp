@@ -3,7 +3,7 @@
 signed int Fly_CheckInput(taskwk* data, playerwk* co2)
 {
 	if ((JumpButtons & Controllers[data->charIndex].PressedButtons) == 0 || !allowKlonoaMoves || !isSuper(data->charIndex))
-	{
+	{	
 		return 0;
 	}
 
@@ -14,7 +14,6 @@ signed int Fly_CheckInput(taskwk* data, playerwk* co2)
 	return 1;
 }
 
-static bool kloAccelVoice[2] = { false };
 //inspired from tails fly code
 
 void SuperKlonoa_Fly(playerwk* co2, taskwk* data, motionwk2* data2)
@@ -84,27 +83,27 @@ LABEL_11:
 
 	if (!GetAnalog((EntityData1*)data, 0, nullptr) && co2->spd.x < 4.0f)
 	{
-		kloAccelVoice[0] = false;
-		kloAccelVoice[1] = false;
+		co2->free.sw[3] = 0;
+		co2->free.sw[4] = 0;
 	}
 
 	if (co2->spd.x >= 4.0f)
-	{
-		if (!kloAccelVoice[0])
+	{		
+		if (!co2->free.sw[3])
 		{
 			PlayCustomSoundVolume(kl_SuperJump0, 1.0f);
 			co2->spd.x += 1.0f;
-			kloAccelVoice[0] = true;
+			co2->free.sw[3] = 1;
 		}
 	}
 
 	if (co2->spd.x >= 7.0f)
 	{
-		if (!kloAccelVoice[1])
+		if (!co2->free.sw[4])
 		{
 			co2->spd.x += 2.0f;
 			PlayCustomSoundVolume(kl_bounce03, 1.0f);
-			kloAccelVoice[1] = true;
+			co2->free.sw[4] = 1;
 		}
 	}
 
