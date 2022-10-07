@@ -21,7 +21,7 @@ Ideally, the long-term goal of this mod would be to implement Klonoa as a new ex
 
 This is very different from regular characters replacement, the original Sonic model isn't edited at any point. What this mod does instead is it hacks the function that renders Sonic and tells the game to draw Klonoa instead.
 
-- This is done with custom code injected through the SADX Mod Loader.
+- This is done with custom code which is injected through the SADX Mod Loader.
 - Klonoa is loaded from an external model that got converted to the Sonic Adventure format with the [SA Blender addon](https://github.com/Justin113D/BlenderSASupport/wiki#how-to-create-model-mods-for-the-sonic-adventure-games) as well as his animations. 
 - This is similar to what the [SA2 Sonic Mod](https://gamebanana.com/mods/247991) does.
 
