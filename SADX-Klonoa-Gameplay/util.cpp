@@ -309,3 +309,14 @@ bool isSuper(char pnum)
 
 	return playerpwp[pnum]->item & Upgrades_SuperSonic || CurrentLevel == LevelIDs_PerfectChaos;
 }
+
+bool isTailsRace(char pnum)
+{
+	if (playertwp[1] && playertwp[1]->id == 2)
+	{
+		if (playertwp[pnum] == playertwp[1])
+			return true;
+	}
+
+	return false;
+}

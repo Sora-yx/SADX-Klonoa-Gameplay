@@ -379,7 +379,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		return;
 	}
 
-	if (!isKlonoa(data->charIndex) || EV_MainThread_ptr || !IsIngame() || MetalSonicFlag)
+	if (!isKlonoa(data->charIndex) || EV_MainThread_ptr || !IsIngame() || MetalSonicFlag || isTailsRace(data->charIndex))
 	{
 		return Sonic_RunsActions_t.Original(data, data2, co2);
 	}
@@ -844,9 +844,8 @@ void __cdecl Klonoa_Main_r(task* obj)
 		break;
 	}
 
-	Sonic_Main_t.Original(obj);
-
 	klonoaPnum = pnum;
+	Sonic_Main_t.Original(obj);
 }
 
 void __cdecl Sonic_Snowboard_Main_r(task* a1)
@@ -895,7 +894,7 @@ void initKlonoa()
 	init_Objects();
 
 	WriteJump(Sonic_Snowboard_Main, Sonic_Snowboard_Main_r);
-	PickDrop_Patches();
+	PickDrop_Patches(); //to do rework the whole function for mod compatibility
 
 	for (int i = 0; i < LengthOfArray(klonoaTex_Entry); i++) {
 		HelperFunctionsGlobal.RegisterCharacterPVM(Characters_Sonic, klonoaTex_Entry[i]);

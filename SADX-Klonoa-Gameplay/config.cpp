@@ -12,7 +12,7 @@ static UsercallFuncVoid(DoHomingAttack_t, (playerwk* a1, taskwk* a2, motionwk2* 
 
 BOOL Sonic_ChargeSpinDash_r(playerwk* co2, taskwk* data)
 {
-	if (isKlonoa(data->charIndex) && !EV_MainThread_ptr)
+	if (isKlonoa(data->charIndex) && !EV_MainThread_ptr && !isTailsRace(data->charIndex))
 	{
 		return false;
 	}
@@ -22,7 +22,7 @@ BOOL Sonic_ChargeSpinDash_r(playerwk* co2, taskwk* data)
 
 void DoHomingAttack_r(playerwk* a1, taskwk* data, motionwk2* a3)
 {
-	if (isKlonoa(data->charIndex) && !EV_MainThread_ptr)
+	if (isKlonoa(data->charIndex) && !EV_MainThread_ptr && !isTailsRace(data->charIndex))
 	{
 		data->mode = act_fall;
 		a1->mj.reqaction = anm_fall;
