@@ -4,6 +4,7 @@ signed int Fly_CheckInput(taskwk* data, playerwk* co2)
 {
 	if ((JumpButtons & Controllers[data->charIndex].PressedButtons) == 0 || !allowKlonoaMoves || !isSuper(data->charIndex))
 	{	
+		co2->equipment &= ~Upgrades_JetAnklet;
 		return 0;
 	}
 
@@ -11,6 +12,7 @@ signed int Fly_CheckInput(taskwk* data, playerwk* co2)
 	co2->mj.reqaction = 64;
 	co2->spd.y += 2.0f;
 	PlayCustomSoundVolume(kl_SuperJump1, 1);
+	co2->equipment |= Upgrades_JetAnklet;
 	return 1;
 }
 
