@@ -307,7 +307,7 @@ bool isSuper(char pnum)
 	if (!isKlonoa(pnum) || !playerpwp[pnum])
 		return false;
 
-	return playerpwp[pnum]->item & Upgrades_SuperSonic || CurrentLevel == LevelIDs_PerfectChaos;
+	return ( (playerpwp[pnum]->equipment & Upgrades_SuperSonic));
 }
 
 bool isTailsRace(char pnum)

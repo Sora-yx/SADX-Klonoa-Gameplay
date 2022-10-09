@@ -458,6 +458,13 @@ void SetKlonoaAnims()
 	KlonoaAnimList[64].AnimationSpeed = 1.0f;
 	KlonoaAnimList[64].Property = 3;
 
+	//cart
+	KlonoaAnimList[65].Animation->motion = KlonoaANM[anmID_holdObj]->getmotion();
+	KlonoaAnimList[65].NextAnim = 65;
+	KlonoaAnimList[65].TransitionSpeed = 0.125f;
+	KlonoaAnimList[65].AnimationSpeed = 1.0f;
+	KlonoaAnimList[65].Property = 5;
+
 
 	//shot from cannon
 	KlonoaAnimList[70].Animation->motion = KlonoaANM[anmID_fly]->getmotion();
@@ -469,8 +476,8 @@ void SetKlonoaAnims()
 
 	//victory.
 	KlonoaAnimList[75].Animation->motion = KlonoaANM[anmID_victory]->getmotion();
-	KlonoaAnimList[75].Property = 5;
-	KlonoaAnimList[75].NextAnim = 75;
+	KlonoaAnimList[75].Property = 4;
+	KlonoaAnimList[75].NextAnim = 76;
 	KlonoaAnimList[75].TransitionSpeed = 0.5f;
 	KlonoaAnimList[75].AnimationSpeed = 0.5f;
 
@@ -774,6 +781,7 @@ void LoadKlonoa_AnimFiles()
 	KlonoaANM[34] = LoadObjectAnim("BoardRight");
 	KlonoaANM[35] = LoadObjectAnim("BoardJump");
 	KlonoaANM[36] = LoadObjectAnim("flyStd");
+//	KlonoaANM[37] = LoadObjectAnim("cart"); //MEH
 }
 
 void InitKlonoaCharSelAnim()
