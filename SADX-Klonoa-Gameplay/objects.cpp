@@ -320,7 +320,7 @@ void AlarmClock_Main(task* tsk)
 			data->mode = 3;
 		}
 		else
-		{ 
+		{
 			CreateChildTask((LoadObj)(LoadObj_Data1), Bubble_ChildMain, tsk);
 		}
 		if (useHP)
@@ -394,6 +394,55 @@ void __cdecl LoadLevelObjTextures_r()
 	LoadLevelObjTextures_t.Original();
 }
 
+extern NJS_TEXLIST SuperKlonoaTexList;
+
+void klonoaDisp(task* obj)
+{
+	auto data = obj->twp;
+
+	NJS_TEXLIST* texture = &SuperKlonoaTexList;
+	njSetTexture(texture);
+	njPushMatrix(0);
+	NJS_VECTOR pos = data->pos;
+	njTranslateV(0, &pos);
+
+	njScaleV(0, &KLScaleDiff);
+
+	njRotateZ_(data->ang.z);
+	njRotateX_(data->ang.x);
+	njRotateY_(-0x8000 - LOWORD(data->ang.y));
+
+	auto anim = GetKlonoaAnimList();
+	NJS_ACTION* action = anim[134].Animation;
+
+	SetupChunkModelRender_();
+	njCnkDrawMotion(action->object, action->motion, FrameCounterUnpaused % action->motion->nbFrame);
+
+	njPopMatrix(1u);
+
+	ResetChunkModelRender();
+	ClampGlobalColorThing_Thing();
+	RestoreConstantAttr();
+}
+
+void KlonoaMdlTsk(task* obj)
+{
+	auto data = obj->twp;
+	if (!data->mode)
+	{
+		obj->disp = klonoaDisp;
+		data->mode++;
+	}
+
+	obj->disp(obj);
+}
+
+void LoadKlonoaTask()
+{
+	auto tsk = CreateElementalTask(2, 1, KlonoaMdlTsk);
+	tsk->twp->pos = playertwp[0]->pos;
+}
+
 void init_Objects()
 {
 	LoadLevelObjTextures_t.Hook(LoadLevelObjTextures_r);
@@ -413,16 +462,16 @@ void init_Objects()
 	CheckPoint_t.Hook(AlarmClock_Main);
 
 
-	WriteCall((void*)0x44FA79, DrawDreamStone);	
-	WriteCall((void*)0x614D61, DrawDreamStone);	
+	WriteCall((void*)0x44FA79, DrawDreamStone);
+	WriteCall((void*)0x614D61, DrawDreamStone);
 	WriteCall((void*)0x61F302, DrawDreamStoneClip);
 
 	//obj sound hack
 	//ring
 	WriteCall((void*)0x4504DA, PlayDreamStoneSound);
 	WriteCall((void*)0x450557, PlayDreamStoneSound);
-	WriteCall((void*)0x45051F, PlayDreamStoneSound);	
-	WriteCall((void*)0x614DE1, PlayDreamStoneSound);	
-	WriteCall((void*)0x61F598, PlayDreamStoneSound);	
+	WriteCall((void*)0x45051F, PlayDreamStoneSound);
+	WriteCall((void*)0x614DE1, PlayDreamStoneSound);
+	WriteCall((void*)0x61F598, PlayDreamStoneSound);
 	WriteCall((void*)0x44FE95, PlayDreamStoneSound);
 }

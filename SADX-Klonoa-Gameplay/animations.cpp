@@ -507,6 +507,14 @@ void SetKlonoaAnims()
 	KlonoaAnimList[87].AnimationSpeed = 1.0f;
 	KlonoaAnimList[87].Property = 5;
 
+	//Holding onto icicle
+	KlonoaAnimList[94].Animation->motion = KlonoaANM[anmID_holdIcicle]->getmotion();
+	KlonoaAnimList[94].NextAnim = 94;
+	KlonoaAnimList[94].TransitionSpeed = 0.125;
+	KlonoaAnimList[94].AnimationSpeed = 0.5f;
+	KlonoaAnimList[94].Property = 3;
+
+
 	//board
 	KlonoaAnimList[102].Animation->motion = KlonoaANM[animID_Board]->getmotion();
 	KlonoaAnimList[102].NextAnim = 102;
@@ -782,6 +790,7 @@ void LoadKlonoa_AnimFiles()
 	KlonoaANM[35] = LoadObjectAnim("BoardJump");
 	KlonoaANM[36] = LoadObjectAnim("flyStd");
 //	KlonoaANM[37] = LoadObjectAnim("cart"); //MEH
+	KlonoaANM[38] = LoadObjectAnim("icicleHold");
 }
 
 void InitKlonoaCharSelAnim()

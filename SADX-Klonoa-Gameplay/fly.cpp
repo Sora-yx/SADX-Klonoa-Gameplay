@@ -12,7 +12,7 @@ signed int Fly_CheckInput(taskwk* data, playerwk* co2)
 	co2->mj.reqaction = 64;
 	co2->spd.y += 2.0f;
 	PlayCustomSoundVolume(kl_SuperJump1, 1);
-	co2->equipment |= Upgrades_JetAnklet;
+	co2->equipment |= Upgrades_JetAnklet; //give the Jet Anklet upgrade to fly faster 
 	return 1;
 }
 
@@ -31,7 +31,7 @@ void SuperKlonoa_Fly(playerwk* co2, taskwk* data, motionwk2* data2)
 
 	CL_ColPolCFPolygon(&result, 20.0);
 
-	if (result.lower.findflag == 1) //seem to be never reached, but Tails fly code has it so... 
+	if (result.lower.findflag == 1) 
 	{
 		posResult = data->pos.y - result.lower.onpos;
 		if (co2->spd.y < -3.0f && posResult >= 25.0f && posResult < 50.0)

@@ -288,6 +288,7 @@ void __cdecl Klonoa_Display_r(task* obj)
 		return;
 
 	char pnum = data->charIndex;
+	klonoaPnum = pnum;
 
 	if (!isKlonoa(pnum))
 	{
@@ -303,15 +304,6 @@ void __cdecl Klonoa_Display_r(task* obj)
 
 	Direct3D_PerformLighting(2);
 	CnkDisableSpecular();
-	if (!MetalSonicFlag && SONIC_OBJECTS[6]->sibling != *(NJS_OBJECT**)0x3C55D40)
-	{
-		co2->mj.jvmode = 2;
-		PJoinVertexes(data, data2_pp, co2);
-		co2->mj.pljvptr[0xB].dstobj = SONIC_OBJECTS[6]->sibling;
-		co2->mj.jvmode = 0;
-		PJoinVertexes(data, data2_pp, co2);
-		*(NJS_OBJECT**)0x3C55D40 = SONIC_OBJECTS[6]->sibling;
-	}
 
 	if (co2->mj.mtnmode == 2)
 		curAnim = (unsigned __int16)co2->mj.action;
@@ -844,7 +836,7 @@ void __cdecl Klonoa_Main_r(task* obj)
 		break;
 	}
 
-	klonoaPnum = pnum;
+
 	Sonic_Main_t.Original(obj);
 }
 
@@ -878,6 +870,8 @@ void __cdecl Sonic_Snowboard_Main_r(task* a1)
 		data->flag &= 0xF7u;
 		Sonic_Snowboard_Display((ObjectMaster*)a1);
 	}
+
+	
 }
 
 void initKlonoa()

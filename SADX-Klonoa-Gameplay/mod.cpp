@@ -11,6 +11,7 @@ std::string modpath;
     static type *const name = (type *)address; static const int name##_Length = length
 
 DataArray_(playerwk*, playerpwp_, 0x3B3CDF0, 8);
+void LoadKlonoaTask();
 
 extern "C" {
 
@@ -55,9 +56,6 @@ extern "C" {
 
 		DrawKlonoaHUD();
 	}
-
-
-
 
 	__declspec(dllexport) ModInfo SADXModInfo = { ModLoaderVer };
 }

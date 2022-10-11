@@ -49,3 +49,6 @@ bool isSuper(char pnum);
 AnimData_t* GetKlonoaAnimList();
 void ReplaceSonicAnimPtr();
 bool isTailsRace(char pnum);
+
+
+void SetupChunkModelRender_();

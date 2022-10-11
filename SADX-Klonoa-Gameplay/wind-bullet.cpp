@@ -122,16 +122,20 @@ signed int WindBullet_CheckHitCharBoss(taskwk* bulletData, klonoawk* klwk, playe
 
 void deleteBullet(task* tp)
 {
-	auto player = playertp[tp->twp->counter.b[0]];
+	char pnum = tp->twp->smode;
+	auto player = playertp[pnum];
 
 	if (player) {
 		auto klwk = (klonoawk*)player->awp;
-		auto task = klwk->currentBulletPtr;
-		if (task) {
-			FreeTask(task);
-		}
 
-		klwk->currentBulletPtr = nullptr;
+		if (klwk) {
+			auto task = klwk->currentBulletPtr;
+			if (task) {
+				FreeTask(task);
+			}
+
+			klwk->currentBulletPtr = nullptr;
+		}
 	}
 }
 
@@ -162,9 +166,12 @@ void bulletTask(task* tp)
 	else
 	{
 		data->counter.f = 1.5f;
+
 		CCL_Init(tp, &bullet_col, 1, 3u);
-		data->mode = 1;
+
 		tp->disp = dispEffectKnuxHadoken;
+		tp->dest = deleteBullet;
+		data->mode = 1;
 	}
 
 	tp->disp(tp);
@@ -227,12 +234,12 @@ void BulletAction(taskwk* data, playerwk* co2, klonoawk* klwk)
 	njPopMatrix(1u);
 	njAddVector(&startPos, &data->cwp->info->center);
 
-	klwk->currentBulletPtr = CreateElementalTask(LoadObj_Data1, 6, bulletTask);
+	auto task = CreateElementalTask(LoadObj_Data1, 6, bulletTask);
 
-	if (klwk->currentBulletPtr)
+	if (task)
 	{
-		klwk->currentBulletPtr->twp->counter.b[0] = data->counter.b[0];
-		klwk->currentBulletPtr->dest = deleteBullet;
+		task->twp->smode = data->charIndex;
+		klwk->currentBulletPtr = task;
 		dest = { 3.0f, 0.0f, 0.0f };
 		PConvertVector_P2G(data, &dest);
 		klwk->currentBulletPtr->twp->pos = startPos;
