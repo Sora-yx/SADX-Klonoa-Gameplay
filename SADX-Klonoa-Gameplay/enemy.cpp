@@ -423,9 +423,12 @@ void OMonkeyCage_r(task* obj)
 
 void EnemyCol_Fix(ObjectMaster* obj, CollisionData* collisionArray, int count, unsigned __int8 list)
 {
-	if (getKlonoaPlayer() > -1)
+	for (int i = 0; i < PMax; i++) 
 	{
-		return Collision_Init(obj, collisionArray, count, 4u);
+		if (isKlonoa(i))
+		{
+			return Collision_Init(obj, collisionArray, count, 4u);
+		}
 	}
 
 	return Collision_Init(obj, collisionArray, count, list);

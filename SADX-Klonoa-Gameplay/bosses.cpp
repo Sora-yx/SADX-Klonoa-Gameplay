@@ -244,10 +244,18 @@ void chaos4_r(task* obj)
 
 	if (!data->mode)
 	{
-		if (getKlonoaPlayer() > -1)
-			WriteData((float**)Chaos4Damage, &two);
-		else
-			WriteData((float**)Chaos4Damage, &one);
+		for (int i = 0; i < PMax; i++) {
+
+			if (isKlonoa(i)) 
+			{
+				WriteData((float**)Chaos4Damage, &two);
+				break;
+			}
+			else
+			{
+				WriteData((float**)Chaos4Damage, &one);
+			}
+		}
 	}
 
 	SpawnEnemyCheck();
