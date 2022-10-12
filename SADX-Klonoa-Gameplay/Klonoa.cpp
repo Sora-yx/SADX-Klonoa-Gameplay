@@ -3,8 +3,8 @@
 #include "objects.h"
 #include "hp.h"
 
-bool klonoa = false;
-uint8_t klonoaPnum = 0;
+bool klonoa = false; //check if at least one player is Klonoa
+bool klonoaPnum[PMax] = { false }; //used to get pNum of a klonoa player
 
 const NJS_VECTOR KLScaleDiff = { 0.2f, 0.2f, 0.2f };
 const NJS_VECTOR orgScale = { 1.0f, 1.0f, 1.0f };
@@ -31,7 +31,7 @@ FunctionHook<void, taskwk*, motionwk2*, playerwk*> Sonic_RunsActions_t((intptr_t
 
 bool isKlonoa(char pnum)
 {
-	if (klonoa && playertwp[pnum] && playertwp[pnum]->charIndex == klonoaPnum)
+	if (klonoa && klonoaPnum[pnum])
 	{
 		return true;
 	}
@@ -41,9 +41,9 @@ bool isKlonoa(char pnum)
 
 int getKlonoaPlayer()
 {
-	for (uint8_t i = 0; i < 8; i++)
+	for (uint8_t i = 0; i < PMax; i++)
 	{
-		if (klonoa && playertwp[i] && playertwp[i]->charIndex == klonoaPnum)
+		if (klonoa && playertwp[i] && playertwp[i]->charIndex == klonoaPnum[i])
 		{
 			return i;
 		}
@@ -221,61 +221,71 @@ signed int KlonoaCheckBeInTheAir(playerwk* co2, taskwk* data, klonoawk* klwk)
 	return 1;
 }
 
-
-short twistamount[8] = {};
+short twistamount[PMax] = {};
 void(__cdecl** NodeCallbackFuncPtr)(NJS_OBJECT* obj) = (decltype(NodeCallbackFuncPtr))0x3AB9908;
 
 //Calc Klonoa hand and root Pos for objects position
 void NodeCallback2(NJS_OBJECT* obj)
 {
-	if (!playertwp[klonoaPnum])
-		return;
+	for (int i = 0; i < PMax; i++) {
 
-	char pnum = klonoaPnum;
-	auto co2 = playerpwp[pnum];
-	auto kl = (klonoawk*)playertp[pnum]->awp;
-	auto klMDL = isSuper(pnum) ? SuperKlonoaMDL->getmodel() : KlonoaMDL->getmodel();
+		if (!isKlonoa(i))
+			continue;
 
-	float* v1 = _nj_current_matrix_ptr_;
+		char pnum = i;
+		auto co2 = playerpwp[pnum];
 
-	if (obj == klMDL->child->child) //root 2
-	{
-		if (playertwp[klonoaPnum]->mode == 2)
-			njRotateX(v1, twistamount[pnum]);
-	}
-	else if (obj == klMDL->child->child->child->sibling->sibling->sibling->sibling->sibling->child->sibling->sibling->child->child->child)
-	{
-		NJS_VECTOR v = { 0.0f, -1.5f, 0.0f };
+		if (!co2)
+			continue;
 
-		njCalcPoint(v1, &v, &co2->righthand_pos); //right hand pos
-		v.z = 1;
-		njCalcVector(v1, &v, &co2->righthand_vec);  //right hand vec
-		SetVectorDiff(&co2->righthand_pos);
-		SetVectorDiff(&co2->righthand_vec);
-	}
-	else if (obj == klMDL->child->child->child->sibling->sibling->sibling->sibling->sibling->child->sibling->sibling->sibling->child->child->child)
-	{
-		NJS_VECTOR v = { 0, -1.5, 0 };
-		njCalcPoint(v1, &v, &co2->lefthand_pos); //left hand pos
-		v.z = 1;
-		njCalcVector(v1, &v, &co2->lefthand_vec); //left hand vec
-		SetVectorDiff(&co2->lefthand_pos);
-		SetVectorDiff(&co2->lefthand_vec);
-	}
-	else if (obj == klMDL->child->child->child->sibling->sibling->sibling->sibling->sibling->child->sibling->sibling->child->child->child->child)
-	{
-		NJS_VECTOR v = { 0, 1.0f, 0 };
-		njCalcPoint(v1, &v, &kl->ringPos); //ring pos
-		v.z = 1;
-		njCalcVector(v1, &v, &kl->ringVec); // ring vec
-		SetVectorDiff(&kl->ringPos);
-		SetVectorDiff(&kl->ringVec);
+		auto kl = (klonoawk*)playertp[pnum]->awp;
+		auto klMDL = isSuper(pnum) ? SuperKlonoaMDL->getmodel() : KlonoaMDL->getmodel();
+
+		float* v1 = _nj_current_matrix_ptr_;
+
+		if (obj == klMDL->child->child) //root 2
+		{
+			if (playertwp[pnum]->mode == 2)
+				njRotateX(v1, twistamount[pnum]);
+		}
+		else if (obj == klMDL->child->child->child->sibling->sibling->sibling->sibling->sibling->child->sibling->sibling->child->child->child)
+		{
+			NJS_VECTOR v = { 0.0f, -1.5f, 0.0f };
+
+			njCalcPoint(v1, &v, &co2->righthand_pos); //right hand pos
+			v.z = 1;
+			njCalcVector(v1, &v, &co2->righthand_vec);  //right hand vec
+			SetVectorDiff(&co2->righthand_pos);
+			SetVectorDiff(&co2->righthand_vec);
+		}
+		else if (obj == klMDL->child->child->child->sibling->sibling->sibling->sibling->sibling->child->sibling->sibling->sibling->child->child->child)
+		{
+			NJS_VECTOR v = { 0, -1.5, 0 };
+			njCalcPoint(v1, &v, &co2->lefthand_pos); //left hand pos
+			v.z = 1;
+			njCalcVector(v1, &v, &co2->lefthand_vec); //left hand vec
+			SetVectorDiff(&co2->lefthand_pos);
+			SetVectorDiff(&co2->lefthand_vec);
+		}
+		else if (obj == klMDL->child->child->child->sibling->sibling->sibling->sibling->sibling->child->sibling->sibling->child->child->child->child)
+		{
+			NJS_VECTOR v = { 0, 1.0f, 0 };
+			njCalcPoint(v1, &v, &kl->ringPos); //ring pos
+			v.z = 1;
+			njCalcVector(v1, &v, &kl->ringVec); // ring vec
+			SetVectorDiff(&kl->ringPos);
+			SetVectorDiff(&kl->ringVec);
+		}
 	}
 }
 
 void Klonoa_Delete_r(task* obj)
 {
 	klonoa = false;
+
+	if (obj->twp)
+		klonoaPnum[obj->twp->counter.b[0]] = false;
+
 	FreeAllCustomSounds();
 	Sonic_Delete_t.Original(obj);
 }
@@ -288,7 +298,6 @@ void __cdecl Klonoa_Display_r(task* obj)
 		return;
 
 	char pnum = data->charIndex;
-	klonoaPnum = pnum;
 
 	if (!isKlonoa(pnum))
 	{
@@ -366,19 +375,19 @@ void __cdecl Klonoa_Display_r(task* obj)
 
 void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 {
-	if (!co2)
+	if (!co2 || !data)
 	{
 		return;
-	}
-
-	if (!isKlonoa(data->charIndex) || EV_MainThread_ptr || !IsIngame() || MetalSonicFlag || isTailsRace(data->charIndex))
-	{
-		return Sonic_RunsActions_t.Original(data, data2, co2);
 	}
 
 	auto data1 = (EntityData1*)data;
 	char pnum = data->charIndex;
 	auto klwk = (klonoawk*)playertp[pnum]->awp;
+
+	if (!isKlonoa(pnum) || EV_MainThread_ptr || !IsIngame() || MetalSonicFlag || isTailsRace(pnum))
+	{
+		return Sonic_RunsActions_t.Original(data, data2, co2);
+	}
 
 	if (co2->item < 0)
 	{
@@ -765,6 +774,7 @@ void __cdecl Klonoa_Main_r(task* obj)
 		if (MetalSonicFlag)
 		{
 			klonoa = false;
+			klonoaPnum[pnum] = false;
 			break;
 		}	
 
@@ -777,11 +787,13 @@ void __cdecl Klonoa_Main_r(task* obj)
 
 			ResetKlonoaHP();
 			klonoa = true;
+			klonoaPnum[pnum] = true;
 		}
 		else
 		{
 			PrintDebug("Klonoa Mod: Failed to load Klonoa worker; mod won't work...\n");
 			klonoa = false;
+			klonoaPnum[pnum] = false;
 			break;
 		}
 

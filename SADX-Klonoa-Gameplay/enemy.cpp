@@ -106,7 +106,7 @@ void RingLine_r(task* obj)
 	auto data = obj->twp;
 	auto child = obj->ctp;
 
-	if (hasLightShoes(klonoaPnum) && child && data->mode == 1)
+	if (hasLightShoes(getKlonoaPlayer()) && child && data->mode == 1)
 	{
 		if (child->next && child->next->next && child->next->next->next)
 		{
@@ -128,7 +128,7 @@ void RingLineV_r(task* obj)
 	auto data = obj->twp;
 	auto child = obj->ctp;
 
-	if (hasLightShoes(klonoaPnum) && child)
+	if (hasLightShoes(getKlonoaPlayer()) && child)
 	{
 		if (child->next && child->next->next && child->next->next->next)
 		{
@@ -231,7 +231,7 @@ static bool EnemyCapturedHandle(task* obj)
 
 		if (Enabled)
 		{
-			auto pnum = getKlonoaPlayer();
+			auto pnum = data->smode;
 
 			if (pnum < 0)
 				return false;
@@ -243,7 +243,6 @@ static bool EnemyCapturedHandle(task* obj)
 				return false;
 
 			data->ang.y += 1024;
-
 
 			switch (data->mode)
 			{
@@ -424,7 +423,7 @@ void OMonkeyCage_r(task* obj)
 
 void EnemyCol_Fix(ObjectMaster* obj, CollisionData* collisionArray, int count, unsigned __int8 list)
 {
-	if (isKlonoa(klonoaPnum))
+	if (getKlonoaPlayer() > -1)
 	{
 		return Collision_Init(obj, collisionArray, count, 4u);
 	}

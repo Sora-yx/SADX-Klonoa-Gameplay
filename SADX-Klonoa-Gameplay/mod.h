@@ -1,7 +1,7 @@
 #pragma once
 
 extern HelperFunctions HelperFunctionsGlobal;
-extern uint8_t klonoaPnum;
+extern bool klonoaPnum[];
 
 extern std::string modpath;
 
@@ -12,6 +12,7 @@ extern ModelInfo* SuperKlonoaMDL;
 #define charID counter.b[1]
 #define charIndex counter.b[0]
 #define TaskHook FunctionHook<void, task*>
+constexpr char PMax = 8;
 
 extern bool allowKlonoaMoves;
 extern bool hud;

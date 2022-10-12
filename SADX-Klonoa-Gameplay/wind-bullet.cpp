@@ -58,6 +58,7 @@ signed int WindBullet_CheckHitEnemy(taskwk* bulletData, klonoawk* klwk, playerwk
 					if (target->cwp->mytask->exec != (TaskFuncPtr)OMonkeyCage)
 					{
 						target->mode = captured; //set the enemy to a new custom state, see "enemy.cpp"
+						target->smode = bulletData->smode; //store pNum
 						klwk->enemyGrabPtr = target->cwp->mytask; //we copy the task of the enemy for external use with Klonoa.
 						return 1;
 					}
@@ -66,6 +67,7 @@ signed int WindBullet_CheckHitEnemy(taskwk* bulletData, klonoawk* klwk, playerwk
 						if ((co2->equipment & Upgrades_AncientLight)) //can only destroy monkey cage with the ancien light
 						{
 							target->mode = captured;
+							target->smode = bulletData->smode; //store pNum
 							return 1;
 						}
 					}
@@ -109,6 +111,7 @@ signed int WindBullet_CheckHitCharBoss(taskwk* bulletData, klonoawk* klwk, playe
 				{
 					if (!target->wtimer) {
 						target->mode = Bcaptured; //set the enemy to a new custom state, see "bosses.cpp"
+						target->smode = bulletData->smode; //store pNum
 						klwk->enemyGrabPtr = target->cwp->mytask; //we copy the task of the boss for external use with Klonoa.
 						return 1;
 					}

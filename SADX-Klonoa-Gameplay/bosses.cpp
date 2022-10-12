@@ -178,7 +178,7 @@ static void CreateEnemy(char id)
 
 static void SpawnEnemyCheck()
 {
-	if (!IsIngame() || !isKlonoa(klonoaPnum) || EV_MainThread_ptr)
+	if (!IsIngame() || getKlonoaPlayer() < 0 || EV_MainThread_ptr)
 		return;
 
 	if (Life_Max <= 0.0f)
@@ -244,7 +244,7 @@ void chaos4_r(task* obj)
 
 	if (!data->mode)
 	{
-		if (isKlonoa(klonoaPnum))
+		if (getKlonoaPlayer() > -1)
 			WriteData((float**)Chaos4Damage, &two);
 		else
 			WriteData((float**)Chaos4Damage, &one);
@@ -351,7 +351,7 @@ static bool CharacterCapturedHandle(task* obj)
 
 		if (Enabled)
 		{
-			auto pnum = getKlonoaPlayer();
+			auto pnum = data->smode;
 
 			if (pnum < 0)
 				return false;

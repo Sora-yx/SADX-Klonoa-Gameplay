@@ -115,7 +115,7 @@ void DrawHeartHUD()
 
 void DrawKlonoaHUD()
 {
-	if (!isKlonoa(klonoaPnum) || !isHudAllowed())
+	if (getKlonoaPlayer() < 0 || !isHudAllowed())
 		return;
 
 	HelperFunctionsGlobal.PushScaleUI(uiscale::Align_Automatic, false, 1.0f, 1.0f);
