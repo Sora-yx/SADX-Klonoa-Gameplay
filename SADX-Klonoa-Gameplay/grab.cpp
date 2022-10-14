@@ -2,7 +2,7 @@
 
 void ResetKlonoaGrab(klonoawk* klwk)
 {
-	if (CharacterBossActive)
+	if (CharacterBossActive || !klwk)
 		return;
 
 	auto task = klwk->enemyGrabPtr;

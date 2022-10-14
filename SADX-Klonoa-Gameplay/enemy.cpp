@@ -3,7 +3,7 @@
 
 
 ObjectFuncPtr enemyList[] = { Kiki_Main, RhinoTank_Main, Sweep_Main, SpinnerA_Main, SpinnerB_Main, SpinnerC_Main, EPolice_Main, EBuyon,
-ESman, UnindusA_Exec, UnindusB_Exec, UnindusC_Exec, (ObjectFuncPtr)0x5B03B0, (ObjectFuncPtr)0x4A6420, Leon_Main, OMonkeyCage };
+ESman, UnindusA_Exec, UnindusB_Exec, UnindusC_Exec, (ObjectFuncPtr)0x5B03B0, (ObjectFuncPtr)0x4A6420, OMonkeyCage };
 
 const char enemyArraySize = LengthOfArray(enemyList);
 
@@ -21,7 +21,7 @@ TaskHook UnidusB_t((intptr_t)UnindusB_Exec);
 TaskHook UnidusC_t((intptr_t)UnindusC_Exec); //lava mob RM
 TaskHook EGacha_t((intptr_t)0x5B03B0);
 TaskHook ERobo_t((intptr_t)0x4A6420);
-TaskHook Leon_t((intptr_t)Leon_Main);
+//TaskHook Leon_t((intptr_t)Leon_Main);
 TaskHook OMonkeyCage_t((intptr_t)OMonkeyCage);
 
 static FunctionHook<void, int> IncrementAct_t((intptr_t)IncrementAct);
@@ -404,7 +404,7 @@ void ESman_r(task* obj)
 void OMonkeyCage_r(task* obj)
 {
 	auto data = obj->twp;
-	auto pnum = getKlonoaPlayer();
+	auto pnum = data->smode;
 	bool Enabled = data->mode >= captured;
 
 	if (data->mode == captured) {

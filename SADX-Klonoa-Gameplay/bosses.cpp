@@ -246,7 +246,7 @@ void chaos4_r(task* obj)
 	{
 		for (int i = 0; i < PMax; i++) {
 
-			if (isKlonoa(i)) 
+			if (isKlonoa(i))
 			{
 				WriteData((float**)Chaos4Damage, &two);
 				break;
@@ -312,43 +312,6 @@ void BThrowEnemy_Action(task* tp)
 	}
 }
 
-struct EVBOSS_WORK
-{
-	char mode;
-	char smode;
-	char type;
-	char attackmode;
-	__int16 timer;
-	__int16 count;
-	char* attackmodetbl;
-	int flag;
-	void(__cdecl* exec)(task*);
-	void(__cdecl* exit)(task*);
-	NJS_POINT3 targetpos;
-	unsigned int old_ang;
-	float homing_dist;
-	int ana_ang;
-	float ana_str;
-	float dist;
-	float distxz;
-	unsigned int btn_on;
-	unsigned int btn_press;
-	task* stp;
-	taskwk* stwp;
-	motionwk2* smwp;
-	CharObj2* spwp;
-	task* dtp;
-	taskwk* dtwp;
-	motionwk2* dmwp;
-	CharObj2* dpwp;
-	task* ltp;
-	task* ring_tp;
-	task* wall_tp;
-	float fpara[4];
-	__int16 spara[8];
-	NJS_POINT3 init_pos;
-};
-
 static bool CharacterCapturedHandle(task* obj)
 {
 	auto data = obj->twp;
@@ -359,11 +322,7 @@ static bool CharacterCapturedHandle(task* obj)
 
 		if (Enabled)
 		{
-			auto pnum = data->smode;
-
-			if (pnum < 0)
-				return false;
-
+			auto pnum = 0;
 			auto player = playertwp[pnum];
 			auto klwk = (klonoawk*)playertp[pnum]->awp;
 
@@ -375,6 +334,8 @@ static bool CharacterCapturedHandle(task* obj)
 			switch (data->mode)
 			{
 			case Bcaptured:
+				pnum = data->btimer;
+
 				if (obj->exec == (TaskFuncPtr)Knuckles_Main)
 				{
 					PlayVoice(1011);
@@ -393,7 +354,6 @@ static bool CharacterCapturedHandle(task* obj)
 				data->ang.y = player->ang.y;
 				if (player && isKlonoa(pnum))
 				{
-			
 					data->pos = { player->pos.x, player->pos.y + 16.0f, player->pos.z };
 				}
 				break;
@@ -414,7 +374,7 @@ static bool CharacterCapturedHandle(task* obj)
 			default:
 				EV_ClrAction(obj);
 				player->mode = 1;
-				data->mode = 1;
+
 				data->pos = player->pos;
 				if ((player->flag & 3) == 0)
 				{
@@ -422,6 +382,8 @@ static bool CharacterCapturedHandle(task* obj)
 				}
 				data->pos.x += 15.0f;
 				data->pos.z += 10.0f;
+
+				data->mode = 1;
 				data->flag |= Status_Hurt;
 				break;
 			}
@@ -437,14 +399,15 @@ void Knuckles_Main_r(task* obj)
 {
 	if (CharacterBossActive)
 	{
-		int pnum = getKlonoaPlayer();
-
-		if (pnum >= 0)
+		int isKlo = getKlonoaPlayer();
+		if (isKlo >= 0)
 		{
 			if (CharacterCapturedHandle(obj))
 			{
+				obj->disp(obj);
 				return;
 			}
+
 		}
 	}
 
@@ -455,9 +418,7 @@ void Gamma_Main_r(task* obj)
 {
 	if (CharacterBossActive)
 	{
-		int pnum = getKlonoaPlayer();
-
-		if (pnum >= 0)
+		if (getKlonoaPlayer() >= 0)
 		{
 			CharacterCapturedHandle(obj);
 		}

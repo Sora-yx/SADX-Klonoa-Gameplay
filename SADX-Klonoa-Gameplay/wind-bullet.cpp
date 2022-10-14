@@ -111,7 +111,7 @@ signed int WindBullet_CheckHitCharBoss(taskwk* bulletData, klonoawk* klwk, playe
 				{
 					if (!target->wtimer) {
 						target->mode = Bcaptured; //set the enemy to a new custom state, see "bosses.cpp"
-						target->smode = bulletData->smode; //store pNum
+						target->btimer = bulletData->smode; //store pnum
 						klwk->enemyGrabPtr = target->cwp->mytask; //we copy the task of the boss for external use with Klonoa.
 						return 1;
 					}
@@ -203,6 +203,7 @@ void BulletLookForTarget(klonoawk* klwk, taskwk* data)
 
 			//grab enemy
 			data->mode = act_holdStd;
+			co2->mj.reqaction = anm_holdStd;
 			PlayCustomSoundVolume(se_pickEnemy, 1);
 			return;
 		}
@@ -211,10 +212,13 @@ void BulletLookForTarget(klonoawk* klwk, taskwk* data)
 
 void BulletEnd(taskwk* data, playerwk* co2, klonoawk* klwk)
 {
-	if (co2->mj.reqaction < anm_windBullet || co2->mj.reqaction > anm_windBulletEnd)
+	if (!klwk->enemyGrabPtr)
 	{
-		bool isOnGround = (data->flag & 3);
-		data->mode = isOnGround ? act_stnd : act_fall;
+		if (co2->mj.reqaction < anm_windBullet || co2->mj.reqaction > anm_windBulletEnd)
+		{
+			bool isOnGround = (data->flag & 3);
+			data->mode = isOnGround ? act_stnd : act_fall;
+		}
 	}
 }
 

@@ -43,7 +43,7 @@ int getKlonoaPlayer()
 {
 	for (uint8_t i = 0; i < PMax; i++)
 	{
-		if (klonoa && playertwp[i] && playertwp[i]->charIndex == klonoaPnum[i])
+		if (klonoa && playertwp[i] && klonoaPnum[i])
 		{
 			return i;
 		}
@@ -383,6 +383,8 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 	auto data1 = (EntityData1*)data;
 	char pnum = data->charIndex;
 	auto klwk = (klonoawk*)playertp[pnum]->awp;
+	char action = data->mode;
+
 
 	if (!isKlonoa(pnum) || EV_MainThread_ptr || !IsIngame() || MetalSonicFlag || isTailsRace(pnum))
 	{
@@ -610,7 +612,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2) || !klwk->enemyGrabPtr)
 		{
 			DropEnemy(klwk);
-			return;
+			break;
 		}
 
 		if (HoldEnemy_CheckJump(data, co2) || ThrowEnemy_CheckInput(data, co2, klwk) || KlonoaCheckBeInTheAir(co2, data, klwk))
@@ -625,12 +627,12 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 			return;
 		}
 
-		break;
+		return;
 	case act_holdRun:
 		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2) || !klwk->enemyGrabPtr)
 		{
 			DropEnemy(klwk);
-			return;
+			break;
 		}
 
 		if (HoldEnemy_CheckJump(data, co2) || ThrowEnemy_CheckInput(data, co2, klwk) || KlonoaCheckBeInTheAir(co2, data, klwk))
@@ -661,7 +663,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 			return;
 		}
 
-		break;
+		return;
 	case act_holdJump:
 	case act_holdFall:
 		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2) || !klwk->enemyGrabPtr)
