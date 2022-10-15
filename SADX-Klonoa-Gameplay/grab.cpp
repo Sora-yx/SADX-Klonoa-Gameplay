@@ -73,7 +73,11 @@ void ThrowEnemyCalcDirection(taskwk* data, klonoawk* klwk)
 
 	if (!CharacterBossActive) {
 		auto wk = (enemywk*)klwk->enemyGrabPtr->mwp;
-		wk->home = dirspd;
+
+		if (wk)
+		{
+			wk->home = dirspd;
+		}
 	}
 	else
 	{
