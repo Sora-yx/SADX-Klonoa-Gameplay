@@ -1,0 +1,2 @@
+348968,chara_s.png,64x64
+4341381,type_spd.png,128x128
