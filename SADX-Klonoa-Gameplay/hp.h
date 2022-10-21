@@ -1,7 +1,8 @@
 #pragma once
 
-void DamageKlonoa(char dmg);
-void ResetKlonoaHP();
-void AddKlonoaHP(char hp);
-extern char HP;
+void DamageKlonoa(char pnum, char dmg);
+void AddKlonoaHP(char pnum, char hp);
+void ResetKlonoaHP(char pnum);
+
+extern char HP[PMax];
 

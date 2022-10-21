@@ -102,15 +102,37 @@ void DrawDreamStoneHUD(bool bosslevel)
 	ResetMaterial();
 }
 
-void DrawHeartHUD()
+void DrawBGHeartHUD()
 {
 	static const float y = HudPlus ? 0.0f : 12.0f;
 	Heart_SPRITE.p.x = 10;
 	Heart_SPRITE.p.y = ringPos + 50.0f -y;
 	Hud_BGSprite.p.x = -5;
 	Hud_BGSprite.p.y = ringPos + 13.0f -y;
+	
+	auto saveScl = Hud_BGSprite.sx;
+	auto saveAng = Hud_BGSprite.ang;
 
-	late_DrawSprite2D(&Hud_BGSprite, bgHeart, 22045.498f, NJD_SPRITE_ALPHA | NJD_SPRITE_COLOR, LATE_LIG);
+	//adjust hud size and pos depending on the number of the difficulty
+	if (difficulty == hard)
+	{
+		Hud_BGSprite.sx /= 3.0f;
+		Hud_BGSprite.p.x += 15.0f;
+	}
+
+	if (difficulty == easy)
+	{
+		Hud_BGSprite.p.y += 15.0f;
+		Heart_SPRITE.p.y += 10.0f;
+		Hud_BGSprite.sx *= 2.0f;
+		Hud_BGSprite.p.x -= 15.0f;
+		Hud_BGSprite.ang = -1000;
+	}
+
+	late_DrawSprite2D(&Hud_BGSprite, bgHeart, 22045.498f, NJD_SPRITE_ALPHA | NJD_SPRITE_COLOR | NJD_SPRITE_ANGLE, LATE_LIG);
+
+	Hud_BGSprite.sx = saveScl;
+	Hud_BGSprite.ang = saveAng;
 }
 
 void DrawKlonoaHUD()
@@ -127,8 +149,8 @@ void DrawKlonoaHUD()
 
 	if (useHP)
 	{
-		DrawHeartHUD();
-		DrawKlonoaHP();
+		DrawBGHeartHUD();
+		DrawKlonoaHP(0);
 	}
 
 	static bool boss = isBossLevel();

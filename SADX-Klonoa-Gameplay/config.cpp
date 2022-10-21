@@ -7,6 +7,8 @@ bool obj = true;
 bool useHP = true;
 bool infiniteHover = false;
 
+uint8_t difficulty = normal;
+
 static UsercallFunc(signed int, Sonic_ChargeSpinDash_t, (playerwk* a1, taskwk* a2), (a1, a2), 0x496EE0, rEAX, rEAX, rEDI);
 static UsercallFuncVoid(DoHomingAttack_t, (playerwk* a1, taskwk* a2, motionwk2* a3), (a1, a2, a3), 0x494B80, rEAX, rECX, stack4);
 
@@ -38,6 +40,7 @@ void ReadConfig(const char* path, const HelperFunctions& helperFunctions) {
 	allowKlonoaMoves = config->getBool("gameplay", "allowKlonoaMoves", true);
 	nerfPhysics = config->getBool("gameplay", "nerfPhysics", true);
 	useHP = config->getBool("gameplay", "useHP", true);
+	difficulty = config->getInt("gameplay", "difficulty", normal);
 	infiniteHover = config->getBool("gameplay", "infiniteHover", false);
 
 	hud = config->getBool("visual", "hud", true);

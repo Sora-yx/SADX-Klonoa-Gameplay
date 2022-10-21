@@ -178,7 +178,7 @@ signed int KlonoaCheckDamage(taskwk* data, playerwk* mwp)
 	if (useHP || Rings > 0)
 		PlayCustomSoundVolume(rng ? kl_pain : kl_pain2, 1.0f);
 
-	DamageKlonoa(1);
+	DamageKlonoa(charid, 1);
 	return 1;
 }
 
@@ -787,7 +787,7 @@ void __cdecl Klonoa_Main_r(task* obj)
 				LoadPVM(klonoaTex_Entry[i].Name, klonoaTex_Entry[i].TexList);
 			}
 
-			ResetKlonoaHP();
+			ResetKlonoaHP(pnum);
 			klonoa = true;
 			klonoaPnum[pnum] = true;
 		}

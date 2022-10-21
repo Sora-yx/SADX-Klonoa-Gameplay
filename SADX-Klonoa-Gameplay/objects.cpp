@@ -151,21 +151,24 @@ void Heart_Exec(task* obj)
 		data->mode++;
 		break;
 	case 1:
+	{
 		data->ang.y += 400;
-		if (GetCollidingEntityA((EntityData1*)data))
+		auto player = GetCollidingEntityA((EntityData1*)data);
+		if (player)
 		{
 			if (data->scl.z == 2.0f) {
 				PlayCustomSoundVolume(se_heartLarge, 0.5f);
-				ResetKlonoaHP();
+				ResetKlonoaHP(player->CharID);
 			}
 			else
 			{
 				PlayCustomSoundVolume(se_heart, 0.5f);
-				AddKlonoaHP(1);
+				AddKlonoaHP(player->CharID, 1);
 			}
 
 			data->mode++;
 		}
+	}
 		break;
 	default:
 		FreeTask(obj);
@@ -323,7 +326,7 @@ void AlarmClock_Main(task* tsk)
 		{
 			CreateChildTask((LoadObj)(LoadObj_Data1), Bubble_ChildMain, tsk);
 		}
-		if (useHP)
+		if (useHP && difficulty != hard)
 		{
 			task* heart = CreateElementalTask(2, 2, Heart_Exec);
 			if (heart)
@@ -460,7 +463,6 @@ void init_Objects()
 	//obj display hack
 	Ring_Display_t.Hook(DreamStone_Display);
 	CheckPoint_t.Hook(AlarmClock_Main);
-
 
 	WriteCall((void*)0x44FA79, DrawDreamStone);
 	WriteCall((void*)0x614D61, DrawDreamStone);

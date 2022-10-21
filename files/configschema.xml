@@ -17,6 +17,10 @@
 	  	  	<Property name="infiniteHover" display="Infinite Hover" type="bool" defaultvalue="False">
         <HelpText>Have no fear, Klonoa is here!</HelpText>
       </Property>
+	  
+	  	  	  	<Property name="difficulty" display="Difficulty" type="difficultyE" defaultvalue="1">
+        <HelpText>Select the difficulty. Easy: 6 hearts, normal: 3, hard: one hit ko. (No effect if "Use HP" is disabled.)</HelpText>
+      </Property>
 		</Group>
 		
 			<Group name="visual" display="2. Visuals">
@@ -31,5 +35,13 @@
 		
 		</Group>
 		</Groups>
+		
+		<Enums>
+				    <Enum name="difficultyE">
+      <EnumMember name="0" display="Easy" />
+      <EnumMember name="1" display="Normal" />
+      <EnumMember name="2" display="Hard" />
+    </Enum>
+	</Enums>
 
 </ConfigSchema>

@@ -11,6 +11,6 @@ enum HudE
 
 void DrawKlonoaHUD();
 void loadKLHudTex();
-void DrawKlonoaHP();
+void DrawKlonoaHP(char pnum);
 
 extern NJS_SPRITE Heart_SPRITE;

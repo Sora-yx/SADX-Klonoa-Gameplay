@@ -1,18 +1,18 @@
 #include "pch.h"
 #include "hud.h"
 
-const char HpMax = 3;
-char HP = 3;
+char HpMax = 3;
+char HP[PMax] = { HpMax };
 
 static FunctionHook <void, char> HurtCharacter_t(HurtCharacter);
 
-void DrawKlonoaHP()
+void DrawKlonoaHP(char pnum)
 {
 	for (char i = 0; i < HpMax; i++) {
 
-		char hit = HpMax - HP;
+		char hit = HpMax - HP[pnum];
 
-		if (hit > 0 && i >= HP)
+		if (hit > 0 && i >= HP[pnum])
 			late_DrawSprite2D(&Heart_SPRITE, heartEmpty, 22046.498f, NJD_SPRITE_ANGLE | NJD_SPRITE_ALPHA | NJD_SPRITE_COLOR, LATE_LIG);
 		else
 			late_DrawSprite2D(&Heart_SPRITE, heart, 22046.498f, NJD_SPRITE_ANGLE | NJD_SPRITE_ALPHA | NJD_SPRITE_COLOR, LATE_LIG);
@@ -22,32 +22,32 @@ void DrawKlonoaHP()
 	}
 }
 
-void DamageKlonoa(char dmg)
+void DamageKlonoa(char pnum, char dmg)
 {
-	if (HP > dmg)
-		HP -= dmg;
+	if (HP[pnum] > dmg)
+		HP[pnum] -= dmg;
 	else
-		HP = 0;
+		HP[pnum] = 0;
 }
 
-void AddKlonoaHP(char hp)
+void AddKlonoaHP(char pnum, char hp)
 {
-	if (HP < HpMax)
-		HP += hp;
+	if (HP[pnum] < HpMax)
+		HP[pnum] += hp;
 }
 
-void ResetKlonoaHP()
+void ResetKlonoaHP(char pnum)
 {
-	HP = HpMax;
+	HP[pnum] = HpMax;
 }
 
 void HurtCharacter_r(char a1)
 {
 	if (isKlonoa(a1))
 	{
-		if (HP <= 0)
+		if (HP[a1] <= 0)
 		{
-			HP = 0;
+			HP[a1] = 0;
 			KillHimP(a1);
 			return;
 		}
@@ -60,6 +60,18 @@ void HurtCharacter_r(char a1)
 
 void initKlonoaHP()
 {
-	if (useHP)
+	if (useHP) 
+	{	
 		HurtCharacter_t.Hook(HurtCharacter_r);
+
+		if (difficulty == easy)
+		{
+			HpMax = 6;
+		}
+
+		if (difficulty == hard)
+		{
+			HpMax = 1;
+		}
+	}
 }
