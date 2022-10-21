@@ -147,12 +147,16 @@ void RingLineV_r(task* obj)
 //reset grab pointer when changing act
 void IncrementAct_r(int amount)
 {
-	auto pnum = getKlonoaPlayer();
-	if (pnum > -1) {
-		auto player = playertwp[pnum];
-		auto klwk = (klonoawk*)playertp[pnum]->awp;
-		ResetKlonoaGrab(klwk);
+	for (uint8_t i = 0; i < PMax; i++)
+	{
+		if (isKlonoa(i))
+		{
+			auto player = playertwp[i];
+			auto klwk = (klonoawk*)playertp[i]->awp;
+			ResetKlonoaGrab(klwk);
+		}
 	}
+
 	FreeAllCustomSounds();
 
 	return IncrementAct_t.Original(amount);
@@ -237,9 +241,13 @@ static bool EnemyCapturedHandle(task* obj)
 				return false;
 
 			auto player = playertwp[pnum];
+
+			if (!player)
+				return false;
+
 			auto klwk = (klonoawk*)playertp[pnum]->awp;
 
-			if (!player || !klwk)
+			if (!klwk)
 				return false;
 
 			data->ang.y += 1024;
@@ -423,7 +431,7 @@ void OMonkeyCage_r(task* obj)
 
 void EnemyCol_Fix(ObjectMaster* obj, CollisionData* collisionArray, int count, unsigned __int8 list)
 {
-	for (int i = 0; i < PMax; i++) 
+	for (int i = 0; i < PMax; i++)
 	{
 		if (isKlonoa(i))
 		{
