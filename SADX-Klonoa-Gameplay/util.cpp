@@ -283,7 +283,6 @@ bool isBossLevel()
 }
 
 void SetupWorldMatrix() {
-	WorldMatrixBackup = WorldMatrix;
 	ProjectToWorldSpace();
 	Direct3D_SetWorldTransform();
 	memcpy(_nj_current_matrix_ptr_, &ViewMatrix, sizeof(NJS_MATRIX));
@@ -297,23 +296,10 @@ void SetupChunkModelRender()
 
 void ResetChunkModelRender()
 {
-	WorldMatrix = WorldMatrixBackup;
 	Direct3D_ResetWorldTransform();
 	Direct3D_UnsetChunkModelRenderState();
 }
 
-void SetupWorldMatrix_() {
-	WorldMatrixBackup = WorldMatrix;
-	ProjectToWorldSpace();
-	Direct3D_SetWorldTransform();
-//	memcpy(_nj_current_matrix_ptr_, &ViewMatrix, sizeof(NJS_MATRIX));
-}
-
-void SetupChunkModelRender_()
-{
-	SetupWorldMatrix_();
-	Direct3D_SetChunkModelRenderState();
-}
 
 bool isSuper(char pnum)
 {

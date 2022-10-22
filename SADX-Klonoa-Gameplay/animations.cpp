@@ -396,6 +396,30 @@ void SetKlonoaAnims()
 	KlonoaAnimList[39].TransitionSpeed = 0.25f;
 	KlonoaAnimList[39].AnimationSpeed = 0.5f;
 
+	KlonoaAnimList[40].Animation->motion = KlonoaANM[anmID_spinning]->getmotion();
+	KlonoaAnimList[40].Property = 4;
+	KlonoaAnimList[40].NextAnim = 18;
+	KlonoaAnimList[40].TransitionSpeed = 0.25f;
+	KlonoaAnimList[40].AnimationSpeed = 0.5f;
+
+	KlonoaAnimList[41].Animation->motion = KlonoaANM[anmID_jump]->getmotion();
+	KlonoaAnimList[41].Property = 3;
+	KlonoaAnimList[41].NextAnim = 16;
+	KlonoaAnimList[41].TransitionSpeed = 0.25f;
+	KlonoaAnimList[41].AnimationSpeed = 0.5f;
+
+	KlonoaAnimList[42].Animation->motion = KlonoaANM[anmID_spinning]->getmotion();
+	KlonoaAnimList[42].Property = 4;
+	KlonoaAnimList[42].NextAnim = 18;
+	KlonoaAnimList[42].TransitionSpeed = 0.25f;
+	KlonoaAnimList[42].AnimationSpeed = 0.7f;
+
+	KlonoaAnimList[43].Animation->motion = KlonoaANM[anmID_spinning]->getmotion();
+	KlonoaAnimList[43].Property = 3;
+	KlonoaAnimList[43].NextAnim = 16;
+	KlonoaAnimList[43].TransitionSpeed = 0.25f;
+	KlonoaAnimList[43].AnimationSpeed = 1.0f;
+
 	//hang pulley / heli
 	KlonoaAnimList[47].Animation->motion = KlonoaANM[anmID_holdOne]->getmotion();
 	KlonoaAnimList[47].Property = 3;
@@ -417,7 +441,6 @@ void SetKlonoaAnims()
 	KlonoaAnimList[55].NextAnim = 55;
 	KlonoaAnimList[55].AnimationSpeed = 0.5f;
 	KlonoaAnimList[55].Property = 3;
-
 
 	//object fall
 
@@ -464,6 +487,13 @@ void SetKlonoaAnims()
 	KlonoaAnimList[65].TransitionSpeed = 0.125f;
 	KlonoaAnimList[65].AnimationSpeed = 1.0f;
 	KlonoaAnimList[65].Property = 5;
+
+	//climbing ladder
+	KlonoaAnimList[69].Animation->motion = KlonoaANM[anmID_Climbing]->getmotion();
+	KlonoaAnimList[69].AnimationSpeed = 0.5f;
+	KlonoaAnimList[69].NextAnim = 69;
+	KlonoaAnimList[69].Property = 12;
+	KlonoaAnimList[69].TransitionSpeed = 1.0f;
 
 
 	//shot from cannon
@@ -790,7 +820,9 @@ void LoadKlonoa_AnimFiles()
 	KlonoaANM[35] = LoadObjectAnim("BoardJump");
 	KlonoaANM[36] = LoadObjectAnim("flyStd");
 //	KlonoaANM[37] = LoadObjectAnim("cart"); //MEH
-	KlonoaANM[38] = LoadObjectAnim("icicleHold");
+	KlonoaANM[38] = LoadObjectAnim("icicleHold");	
+	KlonoaANM[39] = LoadObjectAnim("climb");	
+	KlonoaANM[40] = LoadObjectAnim("spin");
 }
 
 void InitKlonoaCharSelAnim()

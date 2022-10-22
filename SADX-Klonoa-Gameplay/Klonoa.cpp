@@ -883,10 +883,10 @@ void __cdecl Sonic_Snowboard_Main_r(task* a1)
 		objMtn->spd = data2->spd;
 		data->flag &= 0xF7u;
 		Sonic_Snowboard_Display((ObjectMaster*)a1);
-	}
-
-	
+	}	
 }
+
+
 
 void initKlonoa()
 {
@@ -907,4 +907,7 @@ void initKlonoa()
 	for (int i = 0; i < LengthOfArray(klonoaTex_Entry); i++) {
 		HelperFunctionsGlobal.RegisterCharacterPVM(Characters_Sonic, klonoaTex_Entry[i]);
 	}
+
+	WriteJump((void*)0x78BB50, Direct3D_EnvironmentMap);
+	WriteJump((void*)0x78BB80, Direct3D_ResetTextureTransform);
 }

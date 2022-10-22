@@ -418,7 +418,7 @@ void klonoaDisp(task* obj)
 	auto anim = GetKlonoaAnimList();
 	NJS_ACTION* action = anim[134].Animation;
 
-	SetupChunkModelRender_();
+	SetupChunkModelRender();
 	njCnkDrawMotion(action->object, action->motion, FrameCounterUnpaused % action->motion->nbFrame);
 
 	njPopMatrix(1u);
