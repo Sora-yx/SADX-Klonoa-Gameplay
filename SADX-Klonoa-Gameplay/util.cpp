@@ -311,10 +311,12 @@ bool isSuper(char pnum)
 
 bool isTailsRace(char pnum)
 {
-	if (playertwp[1] && playertwp[1]->id == 2)
+	for (char i = 0; i < PMax; i++) 
 	{
-		if (playertwp[pnum] == playertwp[1])
+		if (CurrentCharacter == Characters_Tails && playertwp[i] && playertwp[i]->id == 2)
+		{
 			return true;
+		}
 	}
 
 	return false;
