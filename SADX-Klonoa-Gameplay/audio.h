@@ -28,6 +28,8 @@ enum klonoaVoice
 	kl_bounce01,
 	kl_bounce02,
 	kl_bounce03,
+	kl_charge,
+	kl_release,
 };
 
 enum soundEffect

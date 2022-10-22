@@ -224,7 +224,4 @@ void init_Audio()
 	WriteCall((void*)0x4413CD, PlayReboundVoice);
 
 	Sounds_Init();
-	WriteData<5>((int*)0x495376, 0x90); //remove grab obj voice	
-	//WriteData<5>((int*)0x498A44, 0x90); //remove throw obj voice
-
 }
