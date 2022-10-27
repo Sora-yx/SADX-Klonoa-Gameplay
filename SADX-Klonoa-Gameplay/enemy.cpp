@@ -444,6 +444,11 @@ void EnemyCol_Fix(ObjectMaster* obj, CollisionData* collisionArray, int count, u
 
 void init_EnemiesHack()
 {
+	IncrementAct_t.Hook(IncrementAct_r);
+
+	if (!allowKlonoaMoves)
+		return;
+
 	Kiki_Main_t.Hook(kiki_r);
 	RhinoTank_t.Hook(rhino_r);
 	Sweep_t.Hook(Sweep_r);
@@ -458,8 +463,6 @@ void init_EnemiesHack()
 	UnidusC_t.Hook(UnidusC_r);
 	EGacha_t.Hook(EGacha_r);
 	ERobo_t.Hook(ERobo_r);
-
-	IncrementAct_t.Hook(IncrementAct_r);
 
 	RingLineV_t.Hook(RingLineV_r);
 	RingLine_t.Hook(RingLine_r);

@@ -60,7 +60,7 @@ void ThrowEnemyCalcDirection(taskwk* data, klonoawk* klwk)
 	njPopMatrix(1u);
 	njAddVector(&startPos, &data->cwp->info->center);
 
-	dirspd = { 5.0f, 0.0f, 0.0f };
+	dirspd = { 4.0f, 0.0f, 0.0f };
 
 	PConvertVector_P2G(data, &dirspd);
 

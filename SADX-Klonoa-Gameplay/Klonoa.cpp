@@ -328,7 +328,8 @@ void __cdecl Klonoa_Display_r(task* obj)
 		pos.y -= kloGetPosYDiff(curAnim);
 		njTranslateV(0, &pos);
 
-		njScaleV(0, &KLScaleDiff);
+		if (!isSuper(pnum))
+			njScaleV(0, &KLScaleDiff);
 
 		njRotateZ_(data->ang.z);
 		njRotateX_(data->ang.x);
@@ -340,6 +341,10 @@ void __cdecl Klonoa_Display_r(task* obj)
 
 		SetupChunkModelRender();
 
+		NJS_MATRIX m;
+		njSetMatrix(m, (NJS_MATRIX_PTR)&EnvironmentMapMatrix);
+		njScale((NJS_MATRIX_PTR)&EnvironmentMapMatrix, 0.25f, 0.25f, 0.25f);
+
 		if (data->ewp->action.list) //cutscene / charsel
 		{
 			DrawEventAction(data);
@@ -349,6 +354,7 @@ void __cdecl Klonoa_Display_r(task* obj)
 			if (co2->mj.mtnmode == 2) {
 				action = co2->mj.actwkptr;
 			}
+
 	
 			DrawKlonoa(co2, curAnim, action);
 			*NodeCallbackFuncPtr = NodeCallback2;
@@ -359,7 +365,7 @@ void __cdecl Klonoa_Display_r(task* obj)
 		}
 
 		ResetChunkModelRender();
-
+		njSetMatrix((NJS_MATRIX_PTR)&EnvironmentMapMatrix, m);
 		njPopMatrix(1u);
 	}
 
@@ -908,6 +914,4 @@ void initKlonoa()
 		HelperFunctionsGlobal.RegisterCharacterPVM(Characters_Sonic, klonoaTex_Entry[i]);
 	}
 
-	WriteJump((void*)0x78BB50, Direct3D_EnvironmentMap);
-	WriteJump((void*)0x78BB80, Direct3D_ResetTextureTransform);
 }
