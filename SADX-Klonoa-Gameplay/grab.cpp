@@ -97,7 +97,7 @@ void DropEnemy(klonoawk* klwk)
 		if (!CharacterBossActive) {
 			FreeColliWork(data);
 			data->wtimer = 40;
-			data->mode = drop;
+			data->mode = dropSetup;
 		}
 		else
 		{

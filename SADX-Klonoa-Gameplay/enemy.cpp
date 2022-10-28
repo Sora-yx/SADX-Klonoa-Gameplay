@@ -1,11 +1,11 @@
 ﻿#include "pch.h"
 #include "abilities.h"
 
-
 ObjectFuncPtr enemyList[] = { Kiki_Main, RhinoTank_Main, Sweep_Main, SpinnerA_Main, SpinnerB_Main, SpinnerC_Main, EPolice_Main, EBuyon,
-ESman, UnindusA_Exec, UnindusB_Exec, UnindusC_Exec, (ObjectFuncPtr)0x5B03B0, (ObjectFuncPtr)0x4A6420, OMonkeyCage, (ObjectFuncPtr)ESman_Exec};
+ESman, UnindusA_Exec, UnindusB_Exec, UnindusC_Exec, (ObjectFuncPtr)0x5B03B0, (ObjectFuncPtr)0x4A6420, OMonkeyCage, (ObjectFuncPtr)ESman_Exec, Leon_Main };
 
 const char enemyArraySize = LengthOfArray(enemyList);
+static const float ColCrashThrowTimer = 0.083333336f * 7; //small timer to make the enemy die almost instantly when they hit each other
 
 TaskHook Kiki_Main_t((intptr_t)Kiki_Main);
 TaskHook RhinoTank_t((intptr_t)RhinoTank_Main);
@@ -21,7 +21,7 @@ TaskHook UnidusB_t((intptr_t)UnindusB_Exec);
 TaskHook UnidusC_t((intptr_t)UnindusC_Exec); //lava mob RM
 TaskHook EGacha_t((intptr_t)0x5B03B0);
 TaskHook ERobo_t((intptr_t)0x4A6420);
-//TaskHook Leon_t((intptr_t)Leon_Main);
+TaskHook ELeon_t((intptr_t)Leon_Main);
 TaskHook OMonkeyCage_t((intptr_t)OMonkeyCage);
 
 static FunctionHook<void, int> IncrementAct_t((intptr_t)IncrementAct);
@@ -33,6 +33,8 @@ TaskHook UpdateSetAndDelete_t(UpdateSetDataAndDelete);
 task* EnemyLineV = nullptr;
 task* EnemyLine = nullptr;
 
+DataPointer(CCL_INFO, stru_981D10, 0x981D10);
+
 //a collision can only hit another one depending on the list they are using, so we change the one used when we throw an enemy so it can hit another one.
 char GetColListIDForThrowEnemy()
 {
@@ -40,6 +42,64 @@ char GetColListIDForThrowEnemy()
 		return 0;
 
 	return 4;
+}
+
+static void SetDamageCol(taskwk* twp)
+{
+	if (CurrentLevel != LevelIDs_Chaos4)
+		twp->cwp->info->a = 13.0f;
+	else
+		twp->cwp->info->a = 30.0f;
+
+	twp->cwp->info->damage |= 3u;
+	twp->cwp->info->damage |= 0xCu;
+}
+
+static void ChildDamageCol(task* obj);
+static bool SetCrashCol(taskwk* data)
+{
+	if (data->cwp && data->cwp->hit_cwp && data->cwp->hit_cwp->mytask)
+	{
+		auto task = data->cwp->hit_cwp->mytask;
+
+		if (task->exec == ChildDamageCol || task->ctp && task->ctp->exec == ChildDamageCol)
+			return false;
+
+		if (task->twp && task->twp->cwp->id != 0) //if the enemy hit another col type that isn't a player
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+//used to add an extra col to damage other enemies with throw
+static void ChildDamageCol(task* obj)
+{
+	auto twp = obj->twp;
+	twp->pos = obj->ptp->twp->pos;
+
+	if (!twp->mode)
+	{
+		CCL_Init(obj, &stru_981D10, 1, 1u);
+		twp->mode++;
+	}
+
+	if (twp->cwp)
+	{
+		SetDamageCol(twp);
+
+		if (SetCrashCol(twp))
+		{
+			auto timer = obj->ptp->twp->counter.f;
+
+			if (timer > ColCrashThrowTimer)
+				obj->ptp->twp->counter.f = ColCrashThrowTimer;
+		}
+
+		EntryColliList(twp);
+	}
 }
 
 void UpdateSetAndDelete_r(task* obj)
@@ -198,28 +258,19 @@ void ThrowEnemy_Action(task* tp)
 
 	if (timer <= 0.0f)
 	{
+		FreeTaskC(tp);
 		data->mode = dead;
 		return;
 	}
 
-	if (CurrentLevel != LevelIDs_Chaos4)
-		data->cwp->info->a = 13.0f;
-	else
-		data->cwp->info->a = 30.0f;
-
-	data->cwp->info->damage |= 3u;
-	data->cwp->info->damage |= 0xCu;
+	SetDamageCol(data);
 	njAddVector(&data->pos, &des);
 	data->ang.x += 2048;
 
-	if (data->cwp && data->cwp->hit_cwp && data->cwp->hit_cwp->mytask)
+	if (SetCrashCol(data))
 	{
-		auto task = data->cwp->hit_cwp->mytask;
-
-		if (task->twp && task->twp->cwp->id != 0) //if the enemy hit another col type that isn't a player
-		{
-			data->counter.f = 0.083333336f * 7; //hard nerf timer to make the enemy die
-		}
+		if (data->counter.f > ColCrashThrowTimer)
+			data->counter.f = ColCrashThrowTimer;
 	}
 
 	EntryColliList(data);
@@ -263,6 +314,11 @@ static bool EnemyCapturedHandle(task* obj)
 					data->ang.z = player->ang.z;
 				}
 				break;
+			case dropSetup:
+				CCL_Init(obj, &stru_981D10, 1, GetColListIDForThrowEnemy());
+				CreateChildTask(2, ChildDamageCol, obj);
+				data->mode = drop;
+				break;
 			case drop:
 				if (!TimingEnemyHurt(data))
 				{
@@ -271,7 +327,8 @@ static bool EnemyCapturedHandle(task* obj)
 				break;
 			case throwSetup:
 				data->counter.f = 5.0f; //timer
-				CCL_Init(obj, (CCL_INFO*)0x981D10, 1, GetColListIDForThrowEnemy());
+				CCL_Init(obj, &stru_981D10, 1, GetColListIDForThrowEnemy());
+				CreateChildTask(2, ChildDamageCol, obj);
 				data->mode++;
 				break;
 			case threw:
@@ -289,6 +346,7 @@ static bool EnemyCapturedHandle(task* obj)
 				obj->disp(obj);
 			}
 
+			LoopTaskC(obj);
 			return true;
 		}
 	}
@@ -408,6 +466,13 @@ void ESman_r(task* obj)
 	}
 }
 
+void ELeon_r(task* obj)
+{
+	if (!EnemyCapturedHandle(obj))
+	{
+		ELeon_t.Original(obj);
+	}
+}
 
 void OMonkeyCage_r(task* obj)
 {
@@ -426,21 +491,8 @@ void OMonkeyCage_r(task* obj)
 	{
 		return OMonkeyCage_t.Original(obj);
 	}
-
 }
 
-void EnemyCol_Fix(ObjectMaster* obj, CollisionData* collisionArray, int count, unsigned __int8 list)
-{
-	for (int i = 0; i < PMax; i++)
-	{
-		if (isKlonoa(i))
-		{
-			return Collision_Init(obj, collisionArray, count, 4u);
-		}
-	}
-
-	return Collision_Init(obj, collisionArray, count, list);
-}
 
 void init_EnemiesHack()
 {
@@ -463,13 +515,10 @@ void init_EnemiesHack()
 	UnidusC_t.Hook(UnidusC_r);
 	EGacha_t.Hook(EGacha_r);
 	ERobo_t.Hook(ERobo_r);
+	ELeon_t.Hook(ELeon_r);
 
 	RingLineV_t.Hook(RingLineV_r);
 	RingLine_t.Hook(RingLine_r);
 	OMonkeyCage_t.Hook(OMonkeyCage_r);
 	UpdateSetAndDelete_t.Hook(UpdateSetAndDelete_r);
-
-	//change spinner col list so they can be grabbed
-	WriteCall((void*)0x4B0D17, EnemyCol_Fix);
-	WriteCall((void*)0x540684, EnemyCol_Fix);
 }

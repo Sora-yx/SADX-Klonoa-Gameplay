@@ -156,6 +156,7 @@ enum klonoaAction
 enum enemyState
 {
 	captured = 15,
+	dropSetup,
 	drop,
 	throwSetup,
 	threw,

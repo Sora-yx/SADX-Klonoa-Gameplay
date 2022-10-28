@@ -2,7 +2,6 @@
 
 CCL_INFO bullet_col = { 0, 0, 0x70, 0x40, 0x400, { 0 }, 12.0f, 0.0, 0.0, 0.0, 0, 0, 0 };
 
-
 extern ObjectFuncPtr enemyList[];
 
 signed int KlonoaWBullet_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
@@ -142,6 +141,24 @@ void deleteBullet(task* tp)
 	}
 }
 
+//used to add an extra col to get other enemies with bullet
+static void ChildCol(task* obj)
+{
+	auto twp = obj->twp;
+	twp->pos = obj->ptp->twp->pos;
+
+	if (!twp->mode)
+	{
+		CCL_Init(obj, &bullet_col, 1, 1u);
+		twp->mode++;
+	}
+
+	if (twp->cwp)
+	{
+		EntryColliList(twp);
+	}
+}
+
 void bulletTask(task* tp)
 {
 	float timer = 0.0f;
@@ -174,10 +191,12 @@ void bulletTask(task* tp)
 
 		tp->disp = dispEffectKnuxHadoken;
 		tp->dest = deleteBullet;
+		CreateChildTask(2, ChildCol, tp);
 		data->mode = 1;
 	}
 
 	tp->disp(tp);
+	LoopTaskC(tp);
 	CheckRangeOut(tp);
 }
 
@@ -188,12 +207,14 @@ void BulletLookForTarget(klonoawk* klwk, taskwk* data)
 	if (klwk->currentBulletPtr) {
 
 		auto co2 = playerpwp[data->counter.b[0]];
+		auto child = klwk->currentBulletPtr->ctp;
 
 		//if bullet hit an enemy
-		if (WindBullet_CheckHitEnemy(klwk->currentBulletPtr->twp, klwk, co2) || WindBullet_CheckHitCharBoss(klwk->currentBulletPtr->twp, klwk, co2))
+		if (WindBullet_CheckHitEnemy(klwk->currentBulletPtr->twp, klwk, co2) || WindBullet_CheckHitCharBoss(klwk->currentBulletPtr->twp, klwk, co2)
+			|| (child && WindBullet_CheckHitEnemy(child->twp, klwk, co2)))
 		{
 			//if target is monkey in cage, don't grab it, destroy instead.
-			if (klwk->currentBulletPtr->exec == (TaskFuncPtr)OMonkeyCage)
+			if (klwk->currentBulletPtr->exec == (TaskFuncPtr)OMonkeyCage || child && child->exec == (TaskFuncPtr)OMonkeyCage)
 			{
 				data->mode = act_stnd;
 				co2->mj.reqaction = 0;
