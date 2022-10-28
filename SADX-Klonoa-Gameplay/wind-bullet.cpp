@@ -2,8 +2,8 @@
 
 CCL_INFO bullet_col = { 0, 0, 0x70, 0x40, 0x400, { 0 }, 12.0f, 0.0, 0.0, 0.0, 0, 0, 0 };
 
-#define size 16 
-extern ObjectFuncPtr enemyList[size];
+
+extern ObjectFuncPtr enemyList[];
 
 signed int KlonoaWBullet_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 {
@@ -27,7 +27,7 @@ signed int KlonoaWBullet_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 
 bool isTargetAnEnemy(task* enemy) {
 
-	for (int i = 0; i < size; ++i) {
+	for (int i = 0; i < enemyArraySize; ++i) {
 
 		if (enemyList[i] == (ObjectFuncPtr)enemy->exec) {
 			return true;

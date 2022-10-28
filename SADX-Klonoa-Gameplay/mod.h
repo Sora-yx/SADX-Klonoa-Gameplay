@@ -24,6 +24,7 @@ extern uint8_t difficulty;
 extern const NJS_VECTOR KLScaleDiff;
 
 extern NJS_TEXLIST KlonoaTexList;
+extern const char enemyArraySize;
 
 
 struct klonoawk

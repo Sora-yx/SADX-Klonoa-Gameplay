@@ -32,6 +32,7 @@ DataPointer(float, Life_Max, 0x03C58158);
 FunctionPointer(void, PGetAccelerationFly, (taskwk* a1, motionwk2* a2, playerwk* a3), 0x447E70);
 FunctionPointer(void, CL_ColPolCFPolygon, (zxsdwstr* a1, float a2), 0x454F60);
 ThiscallFunctionPointer(void, njCnkPushPopMotion, (NJS_CNK_OBJECT* a1), 0x792F70);
+TaskFunc(ESman_Exec, 0x4C8DD0);
 
 DataPointer(NJS_SPRITE, AncientLightSprite, 0x981A28);
 DataPointer(NJS_SPRITE, AncientLightSprite2, 0x981A08);

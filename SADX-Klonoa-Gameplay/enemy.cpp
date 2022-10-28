@@ -3,7 +3,7 @@
 
 
 ObjectFuncPtr enemyList[] = { Kiki_Main, RhinoTank_Main, Sweep_Main, SpinnerA_Main, SpinnerB_Main, SpinnerC_Main, EPolice_Main, EBuyon,
-ESman, UnindusA_Exec, UnindusB_Exec, UnindusC_Exec, (ObjectFuncPtr)0x5B03B0, (ObjectFuncPtr)0x4A6420, OMonkeyCage };
+ESman, UnindusA_Exec, UnindusB_Exec, UnindusC_Exec, (ObjectFuncPtr)0x5B03B0, (ObjectFuncPtr)0x4A6420, OMonkeyCage, (ObjectFuncPtr)ESman_Exec};
 
 const char enemyArraySize = LengthOfArray(enemyList);
 
@@ -15,7 +15,7 @@ TaskHook SpinnerB_t((intptr_t)SpinnerB_Main);
 TaskHook SpinnerC_t((intptr_t)SpinnerC_Main);
 TaskHook EPolice_t((intptr_t)EPolice_Main);
 TaskHook EBuyon_t((intptr_t)EBuyon);
-TaskHook ESman_t((intptr_t)0x4C8DD0); //ESman
+TaskHook ESman_t((intptr_t)ESman_Exec);
 TaskHook UnidusA_t((intptr_t)UnindusA_Exec);
 TaskHook UnidusB_t((intptr_t)UnindusB_Exec);
 TaskHook UnidusC_t((intptr_t)UnindusC_Exec); //lava mob RM
