@@ -218,7 +218,7 @@ bool IsPointInsideSphere(NJS_VECTOR* center, NJS_VECTOR* pos, float radius) {
 
 int IsPlayerInsideSphere_(NJS_VECTOR* center, float radius) {
 	for (uint8_t player = 0; player < PMax; ++player) {
-		if (!EntityData1Ptrs[player]) 
+		if (!EntityData1Ptrs[player])
 			continue;
 
 		if (IsPointInsideSphere(center, &EntityData1Ptrs[player]->Position, radius)) {
@@ -306,17 +306,14 @@ bool isSuper(char pnum)
 	if (!isKlonoa(pnum) || !playerpwp[pnum])
 		return false;
 
-	return ( (playerpwp[pnum]->equipment & Upgrades_SuperSonic));
+	return ((playerpwp[pnum]->equipment & Upgrades_SuperSonic));
 }
 
 bool isTailsRace(char pnum)
 {
-	for (char i = 0; i < PMax; i++) 
+	if (CurrentCharacter == Characters_Tails && playertwp[pnum] && playertwp[pnum]->id == 2)
 	{
-		if (CurrentCharacter == Characters_Tails && playertwp[i] && playertwp[i]->id == 2)
-		{
-			return true;
-		}
+		return true;
 	}
 
 	return false;
