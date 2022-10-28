@@ -1,6 +1,5 @@
 #include "pch.h"
 
-
 signed int KlonoaSJump_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 {
 	if ((JumpButtons & Controllers[data->charIndex].PressedButtons) == 0 || klwk->enemyGrabPtr == nullptr)
@@ -8,6 +7,7 @@ signed int KlonoaSJump_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 		return 0;
 	}
 
+    klwk->hoverUsed = false;
 	data->mode = act_super_jump;
 	co2->mj.reqaction = anm_jump;
 
@@ -19,10 +19,8 @@ signed int KlonoaSJump_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 	else
 		PlayCustomSoundVolume(kl_SuperJump1, 0.7f);
 
-
 	return 1;
 }
-
 
 signed int HoldEnemy_CheckJump(taskwk* data, playerwk* co2)
 {
