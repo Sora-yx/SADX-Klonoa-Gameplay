@@ -319,7 +319,8 @@ void __cdecl Klonoa_Display_r(task* obj)
 
 	if (!(data->wtimer & 2))
 	{
-		NJS_TEXLIST* texture = isSuper(pnum) ? &SuperKlonoaTexList : &KlonoaTexList;
+		bool super = isSuper(pnum);
+		NJS_TEXLIST* texture = super ? &SuperKlonoaTexList : &KlonoaTexList;
 		njSetTexture(texture);
 
 		njPushMatrix(0);
@@ -327,9 +328,6 @@ void __cdecl Klonoa_Display_r(task* obj)
 		NJS_VECTOR pos = data->cwp->info->center;
 		pos.y -= kloGetPosYDiff(curAnim);
 		njTranslateV(0, &pos);
-
-		if (!isSuper(pnum))
-			njScaleV(0, &KLScaleDiff);
 
 		njRotateZ_(data->ang.z);
 		njRotateX_(data->ang.x);
@@ -355,7 +353,7 @@ void __cdecl Klonoa_Display_r(task* obj)
 				action = co2->mj.actwkptr;
 			}
 
-	
+			njScaleV(0, &KLScaleDiff);
 			DrawKlonoa(co2, curAnim, action);
 			*NodeCallbackFuncPtr = NodeCallback2;
 			njPushMatrix(_nj_unit_matrix_);
@@ -391,53 +389,43 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 	auto klwk = (klonoawk*)playertp[pnum]->awp;
 	char action = data->mode;
 
-
 	if (!isKlonoa(pnum) || EV_MainThread_ptr || !IsIngame() || MetalSonicFlag || isTailsRace(pnum))
 	{
 		return Sonic_RunsActions_t.Original(data, data2, co2);
 	}
 
-	if (co2->item < 0)
+	if (co2 && (co2->item & 0x8000) != 0)
 	{
-		data->flag |= 0x8000u;
 		data->wtimer = 0;
+		data->flag |= 0x8000u;
+	}
+	else if (data->wtimer)
+	{
+		if (data->wtimer != 32752)
+		{
+			auto v13 = data->flag & 0xFFFB;
+			data->wtimer--;
+			data->flag = v13;
+		}
+	}
+	else if (KlonoaCheckDamage(data, co2))
+	{
+		data->flag |= 0x8000;
+
+		if ((data->flag & 0x800) != 0)
+			Character_Grab(data1, (CharObj2*)co2); //throw object out
+
+		data->flag &= 0xC6FFu;
+		auto v10 = co2->item;
+
+		if ((v10 & 3) != 0)
+			co2->item = v10 & 0xFFFC;
+		else
+			DamegeRingScatter(data->counter.b[0]);
 	}
 	else
 	{
-		int timer = data->wtimer;
-
-		if (timer)
-		{
-			if (timer != 32752)
-			{
-				data->flag &= 0xFBu;
-				data->wtimer = timer - 1;
-			}
-		}
-		else if (KlonoaCheckDamage(data, co2))
-		{
-			data->flag |= 0x8000;
-
-			if ((data->flag & Status_HoldObject) != 0)
-			{
-				Character_Grab((EntityData1*)data1, (CharObj2*)co2);
-			}
-
-			data->flag &= 0xC6FFu;
-
-			if ((co2->item & (Powerups_MagneticBarrier | Powerups_Barrier)) != 0)
-			{
-				co2->item = co2->item & 0xFFFC;
-			}
-			else
-			{
-				HurtCharacter(pnum);
-			}
-		}
-		else
-		{
-			data->flag &= 0x7FFFu;
-		}
+		data->flag &= 0x7FFFu;
 	}
 
 	CheckKlonoaEnemyPtr(klwk, data, co2);
@@ -467,6 +455,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		}
 		else
 		{
+
 			if (co2->spd.y < 0.0f)
 			{
 				co2->mj.reqaction = anm_fall;
@@ -477,7 +466,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 				return;
 			}
 
-			if ( hover_CheckInput(data, co2, klwk) || KlonoaWBullet_CheckInput(data, co2, klwk))
+			if (hover_CheckInput(data, co2, klwk) || KlonoaWBullet_CheckInput(data, co2, klwk))
 			{
 				data->flag &= ~Status_Attack;
 				data->flag &= ~Status_Ball;
@@ -487,7 +476,12 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		break;
 	case act_hurt:
 
-		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2) || data->wtimer == 120)
+		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2))
+		{
+			break;
+		}
+
+		if (data->wtimer == 120)
 		{
 			return;
 		}
@@ -784,7 +778,7 @@ void __cdecl Klonoa_Main_r(task* obj)
 			klonoa = false;
 			klonoaPnum[pnum] = false;
 			break;
-		}	
+		}
 
 		if (LoadKlonoa_Worker(obj)) {
 
@@ -889,9 +883,8 @@ void __cdecl Sonic_Snowboard_Main_r(task* a1)
 		objMtn->spd = data2->spd;
 		data->flag &= 0xF7u;
 		Sonic_Snowboard_Display((ObjectMaster*)a1);
-	}	
+	}
 }
-
 
 
 void initKlonoa()
@@ -913,5 +906,4 @@ void initKlonoa()
 	for (int i = 0; i < LengthOfArray(klonoaTex_Entry); i++) {
 		HelperFunctionsGlobal.RegisterCharacterPVM(Characters_Sonic, klonoaTex_Entry[i]);
 	}
-
 }
