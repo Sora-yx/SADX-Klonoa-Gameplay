@@ -523,16 +523,10 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 			break;
 		}
 
-		if ((JumpButtons & Controllers[data->charIndex].HeldButtons) == 0)
+		if ((JumpButtons & Controllers[data->charIndex].HeldButtons) == 0 || (data->flag & 3))
 		{
 			Klonoa_Fall(data, co2);
-			break;
-		}
-
-		if (data->flag & 3)
-		{
-			klwk->hoverUsed = false;
-			break;
+			return;
 		}
 
 		if (klwk->hoverTimer > 0)
@@ -542,7 +536,6 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		else if (!infiniteHover)
 		{
 			Klonoa_Fall(data, co2);
-			break;
 		}
 		return;
 	case act_windBullet:
