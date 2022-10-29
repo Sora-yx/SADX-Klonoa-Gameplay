@@ -176,7 +176,9 @@ signed int KlonoaCheckDamage(taskwk* data, playerwk* mwp)
 	if (useHP || Rings > 0)
 		PlayCustomSoundVolume(rng ? kl_pain : kl_pain2, 1.0f);
 
-	DamageKlonoa(charid, 1);
+	if ( (mwp->item & 3) ==0)
+		DamageKlonoa(charid, 1);
+
 	return 1;
 }
 
