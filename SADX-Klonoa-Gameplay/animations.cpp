@@ -370,9 +370,18 @@ void SetKlonoaAnims()
 	KlonoaAnimList[22].TransitionSpeed = 0.25f;
 	KlonoaAnimList[22].AnimationSpeed = 0.5f;
 
+	//hurt
+	KlonoaAnimList[23].Animation->motion = KlonoaANM[anmID_hurt]->getmotion();
+	KlonoaAnimList[23].NextAnim = 23;
+	KlonoaAnimList[23].Property = 5;
+	KlonoaAnimList[23].TransitionSpeed = 0.25f;
+	KlonoaAnimList[23].AnimationSpeed = 0.4f;
+
+	//turn around
+	KlonoaAnimList[30] = KlonoaAnimList[20];
+
 	//pick obj (bullet for now)
 	KlonoaAnimList[33].Animation->motion = KlonoaANM[anmID_bulletStart]->getmotion();
-	KlonoaAnimList[33].Property = 4;
 	KlonoaAnimList[33].NextAnim = 37;
 	KlonoaAnimList[33].TransitionSpeed = 0.25f;
 	KlonoaAnimList[33].AnimationSpeed = 0.4f;
@@ -533,17 +542,17 @@ void SetKlonoaAnims()
 	KlonoaAnimList[79] = KlonoaAnimList[78];
 	KlonoaAnimList[79].NextAnim = 79;
 
-	//hold rocket
-	KlonoaAnimList[80].Animation->motion = KlonoaANM[anmID_holdObj]->getmotion();
+	//hold rocket vertical
+	KlonoaAnimList[80].Animation->motion = KlonoaANM[anmID_holdRocketV]->getmotion();
 	KlonoaAnimList[80].NextAnim = 80;
 	KlonoaAnimList[80].TransitionSpeed = 0.125;
 	KlonoaAnimList[80].AnimationSpeed = 1.0f;
+	KlonoaAnimList[80].Property = 3;
 
 	//begin death
 	KlonoaAnimList[86].Animation->motion = KlonoaANM[anmID_death]->getmotion();
 	KlonoaAnimList[86].TransitionSpeed = 0.125;
 	KlonoaAnimList[86].AnimationSpeed = 1.0f;
-	KlonoaAnimList[86].Property = 4;
 
 	//death
 	KlonoaAnimList[87].Animation->motion = KlonoaANM[anmID_death]->getmotion();
@@ -580,8 +589,6 @@ void SetKlonoaAnims()
 	KlonoaAnimList[104].AnimationSpeed = 0.5f;
 	KlonoaAnimList[104].Property = 5;
 
-	KlonoaAnimList[114] = KlonoaAnimList[102];
-
 	//falling board
 	KlonoaAnimList[105].Animation->motion = KlonoaANM[animID_FallBoard]->getmotion();
 	KlonoaAnimList[105].NextAnim = 111;
@@ -613,6 +620,8 @@ void SetKlonoaAnims()
 	KlonoaAnimList[111] = KlonoaAnimList[105];
 	KlonoaAnimList[112] = KlonoaAnimList[105];
 
+
+	KlonoaAnimList[114] = KlonoaAnimList[102];
 	//losing balance, don't have a counterpart so stick to neutral
 	KlonoaAnimList[115] = KlonoaAnimList[102];
 
@@ -621,25 +630,23 @@ void SetKlonoaAnims()
 	KlonoaAnimList[116].NextAnim = 112;
 	KlonoaAnimList[116].TransitionSpeed = 0.125;
 	KlonoaAnimList[116].AnimationSpeed = 0.5f;
-	KlonoaAnimList[116].Property = 4;
 
 	//trick 2
 	KlonoaAnimList[117].Animation->motion = KlonoaANM[animID_trick2]->getmotion();
 	KlonoaAnimList[117].NextAnim = 112;
 	KlonoaAnimList[117].TransitionSpeed = 0.125;
 	KlonoaAnimList[117].AnimationSpeed = 0.5f;
-	KlonoaAnimList[117].Property = 4;
 
 	//trick 3
 	KlonoaAnimList[118].Animation->motion = KlonoaANM[animID_trick3]->getmotion();
 	KlonoaAnimList[118].NextAnim = 112;
 	KlonoaAnimList[118].TransitionSpeed = 0.125;
 	KlonoaAnimList[118].AnimationSpeed = 0.5f;
-	KlonoaAnimList[118].Property = 4;
 
 	KlonoaAnimList[119] = KlonoaAnimList[118];
 	KlonoaAnimList[120] = KlonoaAnimList[118];
 	KlonoaAnimList[121] = KlonoaAnimList[117];
+	KlonoaAnimList[122] = KlonoaAnimList[116];
 
 	//crouch
 	KlonoaAnimList[124].Animation->motion = KlonoaANM[animID_Crouch]->getmotion();
@@ -647,6 +654,20 @@ void SetKlonoaAnims()
 	KlonoaAnimList[124].TransitionSpeed = 0.125;
 	KlonoaAnimList[124].AnimationSpeed = 0.3f;
 	KlonoaAnimList[124].Property = 3;
+
+	//showers
+	KlonoaAnimList[126].Animation->motion = KlonoaANM[anmID_shower]->getmotion();
+	KlonoaAnimList[126].NextAnim = 127;
+	KlonoaAnimList[126].TransitionSpeed = 0.125;
+	KlonoaAnimList[126].AnimationSpeed = 0.25f;
+
+	KlonoaAnimList[127].Animation->motion = KlonoaANM[anmID_shower2]->getmotion();
+	KlonoaAnimList[127].NextAnim = 128;
+	KlonoaAnimList[127].TransitionSpeed = 0.125;
+	KlonoaAnimList[127].AnimationSpeed = 0.25f;
+
+	KlonoaAnimList[128] = KlonoaAnimList[127];
+	KlonoaAnimList[128].NextAnim = 0;
 
 	//Super Klonoa anims (to do: use SS anim here maybe?)
 
@@ -836,6 +857,10 @@ void LoadKlonoa_AnimFiles()
 	KlonoaANM[40] = LoadObjectAnim("spin");
 	KlonoaANM[41] = LoadObjectAnim("jmpPanel");
 	KlonoaANM[42] = LoadObjectAnim("push");
+	KlonoaANM[43] = LoadObjectAnim("hurt");
+	KlonoaANM[44] = LoadObjectAnim("holdRocketV");
+	KlonoaANM[45] = LoadObjectAnim("shower");
+	KlonoaANM[46] = LoadObjectAnim("shower2");
 }
 
 void InitKlonoaCharSelAnim()

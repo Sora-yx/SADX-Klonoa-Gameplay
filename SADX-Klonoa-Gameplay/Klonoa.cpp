@@ -166,7 +166,7 @@ signed int KlonoaCheckDamage(taskwk* data, playerwk* mwp)
 	dsPlay_oneshot(1233, 0, 0, 0);
 
 	data->mode = act_hurt;
-	mwp->mj.reqaction = 23;
+	mwp->mj.reqaction = anm_hurt;
 	data->flag &= 0xFFFBu;
 	mwp->spd.x = -mwp->p.run_speed;
 	mwp->spd.y = mwp->p.jmp_y_spd;
@@ -309,7 +309,6 @@ void __cdecl Klonoa_Display_r(task* obj)
 	BackupConstantAttr();
 
 	Direct3D_PerformLighting(2);
-	CnkDisableSpecular();
 
 	if (co2->mj.mtnmode == 2)
 		curAnim = (unsigned __int16)co2->mj.action;
@@ -335,8 +334,9 @@ void __cdecl Klonoa_Display_r(task* obj)
 		NJS_ACTION* action = co2->mj.plactptr[curAnim].actptr;
 
 		SetupChunkModelRender();
+		njScaleV(0, &KLScaleDiff);
 
-		NJS_MATRIX m;
+		NJS_MATRIX m = { 0 };
 		njSetMatrix(m, (NJS_MATRIX_PTR)&EnvironmentMapMatrix);
 		njScale((NJS_MATRIX_PTR)&EnvironmentMapMatrix, 0.25f, 0.25f, 0.25f);
 
@@ -350,7 +350,6 @@ void __cdecl Klonoa_Display_r(task* obj)
 				action = co2->mj.actwkptr;
 			}
 
-			njScaleV(0, &KLScaleDiff);
 			DrawKlonoa(co2, curAnim, action);
 			*NodeCallbackFuncPtr = NodeCallback2;
 			njPushMatrix(_nj_unit_matrix_);
@@ -368,7 +367,6 @@ void __cdecl Klonoa_Display_r(task* obj)
 	ClampGlobalColorThing_Thing();
 	RestoreConstantAttr();
 	Direct3D_ResetZFunc();
-	CnkRestoreSpecular();
 
 	if (IsGamePaused())
 		DrawCharacterShadow((EntityData1*)data, (struct_a3*)&co2->shadow);
@@ -472,12 +470,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		break;
 	case act_hurt:
 
-		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2))
-		{
-			break;
-		}
-
-		if (data->wtimer == 120)
+		if (Sonic_NAct((CharObj2*)co2, data1, (EntityData2*)data2) || (data->wtimer == 120 * 2))
 		{
 			return;
 		}
@@ -868,7 +861,6 @@ void __cdecl Sonic_Snowboard_Main_r(task* a1)
 	else
 	{
 		data->pos = pData->cwp->info->center;
-
 		data->ang = pData->ang;
 		data->ang.y = 0x8000 - pData->ang.y;
 		objMtn->spd = data2->spd;
@@ -890,7 +882,7 @@ void initKlonoa()
 
 	init_Objects();
 
-	WriteJump(Sonic_Snowboard_Main, Sonic_Snowboard_Main_r);
+	//WriteJump(Sonic_Snowboard_Main, Sonic_Snowboard_Main_r);
 	PickDrop_Patches(); //to do rework the whole function for mod compatibility
 
 	for (int i = 0; i < LengthOfArray(klonoaTex_Entry); i++) {
