@@ -25,9 +25,7 @@ signed int KlonoaWBullet_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 }
 
 bool isTargetAnEnemy(task* enemy) {
-
 	for (int i = 0; i < enemyArraySize; ++i) {
-
 		if (enemyList[i] == (ObjectFuncPtr)enemy->exec) {
 			return true;
 		}
@@ -78,9 +76,7 @@ signed int WindBullet_CheckHitEnemy(taskwk* bulletData, klonoawk* klwk, playerwk
 	return 0;
 }
 
-
 bool isTargetCharBoss(task* enemy) {
-
 	if (CharacterBossActive) {
 		if ((ObjectFuncPtr)enemy->exec == Knuckles_Main || (ObjectFuncPtr)enemy->exec == Gamma_Main) {
 			return true;
@@ -200,12 +196,10 @@ void bulletTask(task* tp)
 	CheckRangeOut(tp);
 }
 
-
 void BulletLookForTarget(klonoawk* klwk, taskwk* data)
 {
 	//if bullet exist, look for an enemy
 	if (klwk->currentBulletPtr) {
-
 		auto co2 = playerpwp[data->counter.b[0]];
 		auto child = klwk->currentBulletPtr->ctp;
 

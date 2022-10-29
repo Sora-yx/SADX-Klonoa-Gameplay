@@ -3,7 +3,7 @@
 signed int Fly_CheckInput(taskwk* data, playerwk* co2)
 {
 	if ((JumpButtons & Controllers[data->charIndex].PressedButtons) == 0 || !allowKlonoaMoves || !isSuper(data->charIndex))
-	{	
+	{
 		co2->equipment &= ~Upgrades_JetAnklet;
 		return 0;
 	}
@@ -12,7 +12,7 @@ signed int Fly_CheckInput(taskwk* data, playerwk* co2)
 	co2->mj.reqaction = 64;
 	co2->spd.y += 2.0f;
 	PlayCustomSoundVolume(kl_SuperJump1, 1);
-	co2->equipment |= Upgrades_JetAnklet; //give the Jet Anklet upgrade to fly faster 
+	co2->equipment |= Upgrades_JetAnklet; //give the Jet Anklet upgrade to fly faster
 	return 1;
 }
 
@@ -31,7 +31,7 @@ void SuperKlonoa_Fly(playerwk* co2, taskwk* data, motionwk2* data2)
 
 	CL_ColPolCFPolygon(&result, 20.0);
 
-	if (result.lower.findflag == 1) 
+	if (result.lower.findflag == 1)
 	{
 		posResult = data->pos.y - result.lower.onpos;
 		if (co2->spd.y < -3.0f && posResult >= 25.0f && posResult < 50.0)
@@ -90,7 +90,7 @@ LABEL_11:
 	}
 
 	if (co2->spd.x >= 4.0f)
-	{		
+	{
 		if (!co2->free.sw[3])
 		{
 			PlayCustomSoundVolume(kl_SuperJump0, 1.0f);
@@ -123,7 +123,6 @@ void Fly_ManageMotion(taskwk* data, playerwk* co2)
 	auto pnum = data->charIndex;
 
 	if (!GetAnalog((EntityData1*)data, 0, nullptr)) {
-
 		if (Controllers[pnum].HeldButtons & AttackButtons)
 		{
 			Fly_ChangeMotion(act_fly, anm_fall, pnum);
@@ -134,14 +133,12 @@ void Fly_ManageMotion(taskwk* data, playerwk* co2)
 			Fly_ChangeMotion(act_fly, anm_jump, pnum);
 			return;
 		}
-		
+
 		if (co2->spd.x < 1.0f)
 			Fly_ChangeMotion(act_flyStd, anm_flyStd, pnum);
-		
 	}
 	else
 	{
 		Fly_ChangeMotion(act_fly, anm_fly, pnum);
 	}
-
 }

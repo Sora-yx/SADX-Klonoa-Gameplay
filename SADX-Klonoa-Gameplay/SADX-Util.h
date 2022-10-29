@@ -9,7 +9,6 @@ FunctionPointer(void, PResetPosition, (taskwk* a1, motionwk2* a2, playerwk* a3),
 FunctionPointer(void, saCnkDrawMotionSA, (NJS_CNK_OBJECT* obj, NJS_MOTION* motion, float frame), 0x720A70);
 FunctionPointer(void, njCnkDrawMotion, (NJS_CNK_OBJECT* obj, NJS_MOTION* motion, float frame), 0x789690);
 
-
 DataArray(NJS_ACTION*, SonicCharSelAnim, 0x3C5FF94, 4);
 FunctionPointer(void, DrawEventAction, (taskwk* data), 0x4187D0);
 
@@ -106,7 +105,6 @@ DataPointer(NJS_ACTION, action_s_s0071_sonic, 0x3C85218);
 DataPointer(NJS_ACTION, action_s_s0070_sonic, 0x3C85220);
 DataPointer(NJS_ACTION, action_s_s0068_sonic, 0x3C85228);
 
-
 //E08
 DataPointer(NJS_ACTION, action_s_s0036_sonic, 0x3C85190);
 DataPointer(NJS_ACTION, action_s_s0035_sonic, 0x3C851A0);
@@ -140,7 +138,6 @@ DataPointer(NJS_ACTION, action_s_s0064_sonic, 0x03C84A10);
 DataPointer(NJS_ACTION, action_s_s0065_sonic, 0x03C84A18);
 DataPointer(NJS_ACTION, action_s_s0066_sonic, 0x03C84A20);
 
-
 //upgrades item
 DataPointer(NJS_ACTION, action_s_item_r0, 0x3C847E8);
 DataPointer(NJS_ACTION, action_s_item_r2, 0x3C847E0);
@@ -151,7 +148,6 @@ DataPointer(NJS_ACTION, action_s_item_s2, 0x3C847D0);
 DataPointer(NJS_ACTION, action_s_item_l0, 0x3C84758);
 DataPointer(NJS_ACTION, action_s_item_l1, 0x3C84760);
 DataPointer(NJS_ACTION, action_s_item_l2, 0x3C84768);
-
 
 // BOOL __usercall@<eax>(CharObj2 *Data2@<eax>, EntityData1 *Data1@<edi>)
 static const void* const SonicCheckStopPtr = (void*)0x494FF0;
@@ -178,7 +174,6 @@ static inline void initCollidata(taskwk* a1)
 		call initCPDataPtr
 	}
 }
-
 
 // void __usercall SonicHoldObject(playerwk *a1@<eax>, taskwk *a2@<ecx>)
 static const void* const sHoldObjPtr = (void*)0x4955E0;

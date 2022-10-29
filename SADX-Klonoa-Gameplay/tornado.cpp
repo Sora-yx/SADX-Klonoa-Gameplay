@@ -8,7 +8,6 @@ DataPointer(NJS_OBJECT, Tornado2Before_Object, 0x27EB198);
 DataPointer(NJS_OBJECT, Tornado2Transfo_Object, 0x2863E20);
 DataPointer(NJS_OBJECT, Tornado2Change_Object, 0x280C158);
 
-
 void Tornado_init()
 {
 	TornadoPlaneMDL = LoadBasicModel("Klonoa_Tornado");

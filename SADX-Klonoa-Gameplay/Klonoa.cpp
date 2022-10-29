@@ -53,7 +53,6 @@ int getKlonoaPlayer()
 }
 
 bool LoadKlonoa_Worker(task* obj) {
-
 	if (obj->twp->mode == 0 && !obj->awp) {
 		void* mem = AllocateMemory(sizeof(klonoawk));
 		memset(mem, 0, sizeof(klonoawk));
@@ -174,7 +173,6 @@ signed int KlonoaCheckDamage(taskwk* data, playerwk* mwp)
 	data->flag &= 0xFAFFu;
 	char rng = rand() % 2;
 
-
 	if (useHP || Rings > 0)
 		PlayCustomSoundVolume(rng ? kl_pain : kl_pain2, 1.0f);
 
@@ -228,7 +226,6 @@ void(__cdecl** NodeCallbackFuncPtr)(NJS_OBJECT* obj) = (decltype(NodeCallbackFun
 void NodeCallback2(NJS_OBJECT* obj)
 {
 	for (int i = 0; i < PMax; i++) {
-
 		if (!isKlonoa(i))
 			continue;
 
@@ -455,7 +452,6 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		}
 		else
 		{
-
 			if (co2->spd.y < 0.0f)
 			{
 				co2->mj.reqaction = anm_fall;
@@ -503,7 +499,6 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 					data->mode = 1;
 					co2->mj.reqaction = 2;
 				}
-
 			}
 			else
 			{
@@ -528,9 +523,15 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 			break;
 		}
 
-		if ((JumpButtons & Controllers[data->charIndex].HeldButtons) == 0 || data->flag & 3)
+		if ((JumpButtons & Controllers[data->charIndex].HeldButtons) == 0)
 		{
 			Klonoa_Fall(data, co2);
+			break;
+		}
+
+		if (data->flag & 3)
+		{
+			klwk->hoverUsed = false;
 			break;
 		}
 
@@ -781,7 +782,6 @@ void __cdecl Klonoa_Main_r(task* obj)
 		}
 
 		if (LoadKlonoa_Worker(obj)) {
-
 			for (int i = 0; i < LengthOfArray(klonoaTex_Entry); i++)
 			{
 				LoadPVM(klonoaTex_Entry[i].Name, klonoaTex_Entry[i].TexList);
@@ -798,7 +798,6 @@ void __cdecl Klonoa_Main_r(task* obj)
 			klonoaPnum[pnum] = false;
 			break;
 		}
-
 
 		break;
 	case act_hover:
@@ -850,7 +849,6 @@ void __cdecl Klonoa_Main_r(task* obj)
 		break;
 	}
 
-
 	Sonic_Main_t.Original(obj);
 }
 
@@ -885,7 +883,6 @@ void __cdecl Sonic_Snowboard_Main_r(task* a1)
 		Sonic_Snowboard_Display((ObjectMaster*)a1);
 	}
 }
-
 
 void initKlonoa()
 {

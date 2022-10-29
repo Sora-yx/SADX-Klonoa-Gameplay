@@ -19,7 +19,7 @@ void CheckKlonoaEnemyPtr(klonoawk* klwk, taskwk* data, playerwk* co2)
 {
 	if (!data || !klwk)
 		return;
-		
+
 	if (klwk->enemyGrabPtr)
 	{
 		if (!isKlonoaHold(data->counter.b[0]) && data->mode > act_fall && data->mode != act_hurt)
@@ -127,7 +127,7 @@ signed int ThrowEnemy_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 		}
 		bool isOnGround = (data->flag & 3);
 		data->mode = isOnGround ? act_throwStd : act_throwAir;
-		co2->mj.reqaction =  isOnGround ? anm_throwStd : anm_throwAir; 
+		co2->mj.reqaction = isOnGround ? anm_throwStd : anm_throwAir;
 		ThrowEnemyCalcDirection(data, klwk);
 		PlayCustomSoundVolume(kl_throw, 1);
 		return 1;
@@ -135,7 +135,6 @@ signed int ThrowEnemy_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 
 	return 0;
 }
-
 
 //patch regular obj pick /drop anim frames check BS
 

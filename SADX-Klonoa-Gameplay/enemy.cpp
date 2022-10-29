@@ -173,7 +173,6 @@ void RingLine_r(task* obj)
 			auto task = child->next->next->next;
 
 			if (task && task->twp) {
-
 				CreateEnemyLineSpawn(obj);
 			}
 		}
@@ -181,7 +180,6 @@ void RingLine_r(task* obj)
 
 	RingLine_t.Original(obj);
 }
-
 
 void RingLineV_r(task* obj)
 {
@@ -195,7 +193,6 @@ void RingLineV_r(task* obj)
 			auto task = child->next->next->next;
 
 			if (task && task->twp && data->mode == 3) {
-
 				CreateEnemyLineVSpawn(obj);
 			}
 		}
@@ -288,14 +285,12 @@ static bool EnemyCapturedHandle(task* obj)
 		{
 			auto pnum = data->smode;
 
-			if (pnum < 0)
+			if (!isKlonoa(pnum))
+			{
 				return false;
+			}
 
 			auto player = playertwp[pnum];
-
-			if (!player)
-				return false;
-
 			auto klwk = (klonoawk*)playertp[pnum]->awp;
 
 			if (!klwk)
@@ -306,7 +301,7 @@ static bool EnemyCapturedHandle(task* obj)
 			switch (data->mode)
 			{
 			case captured:
-				if (player && isKlonoa(pnum))
+				if (player)
 				{
 					data->pos = player->pos;
 					data->pos.y += 16.0f;
@@ -492,7 +487,6 @@ void OMonkeyCage_r(task* obj)
 		return OMonkeyCage_t.Original(obj);
 	}
 }
-
 
 void init_EnemiesHack()
 {

@@ -32,7 +32,6 @@ bool isHudAllowed()
 static Uint32 StoneTimer = 0;
 
 void DrawDreamStoneCounter(float posY, bool boss) {
-
 	static const auto backup = Hud_RingTimeLife;
 	Hud_RingTimeLife.ang = -1000;
 
@@ -71,7 +70,6 @@ void DrawDreamStoneCounter(float posY, bool boss) {
 			else {
 				njDrawSprite2D_ForcePriority(&Hud_RingTimeLife, rings % 10, -1.501f, NJD_SPRITE_ALPHA | NJD_SPRITE_ANGLE);
 				rings /= 10;
-
 			}
 
 			Hud_RingTimeLife.p.x -= 16;
@@ -106,10 +104,10 @@ void DrawBGHeartHUD()
 {
 	static const float y = HudPlus ? 0.0f : 12.0f;
 	Heart_SPRITE.p.x = 10;
-	Heart_SPRITE.p.y = ringPos + 50.0f -y;
+	Heart_SPRITE.p.y = ringPos + 50.0f - y;
 	Hud_BGSprite.p.x = -5;
-	Hud_BGSprite.p.y = ringPos + 13.0f -y;
-	
+	Hud_BGSprite.p.y = ringPos + 13.0f - y;
+
 	auto saveScl = Hud_BGSprite.sx;
 	auto saveAng = Hud_BGSprite.ang;
 
@@ -164,7 +162,6 @@ void DrawKlonoaHUD()
 	HelperFunctionsGlobal.PopScaleUI();
 }
 
-
 void loadKLHudTex()
 {
 	if (!hud)
@@ -178,7 +175,5 @@ void init_Hud()
 	if (hud) {
 		HMODULE hud = GetModuleHandle(L"sadx-hud-plus");
 		HudPlus = hud != NULL;
-
-
 	}
 }

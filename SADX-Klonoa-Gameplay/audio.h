@@ -51,7 +51,6 @@ void RunCustomSounds();
 
 #define Status_KillSound 0x4000
 
-
 void RunCustomSounds();
 DWORD LoadSoundSteam_LoadFromFile(std::string path);
 void ResumeCustomSounds();
@@ -65,5 +64,3 @@ void PlayCustomSound_Entity(int ID, task* obj, float dist, bool loop);
 void PlayCustomSound_EntityAndPos(int ID, task* obj, NJS_VECTOR* pos, float dist, float volume, bool loop);
 void PlayCustomSound_EntityAndVolume(int ID, task* obj, float dist, float volume, bool loop);
 void PlayCustomSound_Pos(int ID, NJS_VECTOR* pos, float dist, float volume, bool loop);
-
-

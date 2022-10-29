@@ -18,7 +18,6 @@ signed int hover_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 	return 1;
 }
 
-
 void hover_Physics(taskwk* data, motionwk2* data2, playerwk* co2)
 {
 	PResetAngle(data, data2, co2);

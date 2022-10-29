@@ -62,7 +62,6 @@ void __cdecl DreamStone_Display(task* obj)
 		}
 
 		njPopMatrix(1u);
-
 	}
 }
 
@@ -169,7 +168,7 @@ void Heart_Exec(task* obj)
 			data->mode++;
 		}
 	}
-		break;
+	break;
 	default:
 		FreeTask(obj);
 		return;
@@ -275,7 +274,6 @@ void AlarmClock_Display(task* tsk)
 	njPopMatrixEx();
 }
 
-
 void AlarmClock_Main(task* tsk)
 {
 	if (CheckRangeOut(tsk))
@@ -308,7 +306,6 @@ void AlarmClock_Main(task* tsk)
 			LoadObj_Data1, (TaskFuncPtr)nullsub, tsk);
 		savepoint_data->tp[1] = CreateChildTask(
 			LoadObj_Data1, (TaskFuncPtr)nullsub, tsk);
-
 
 		initCollidata(data);
 

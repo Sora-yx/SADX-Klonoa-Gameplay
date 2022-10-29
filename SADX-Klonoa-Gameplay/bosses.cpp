@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "abilities.h"
 
-//series of hacks to make bosses spawn enemy so we can defeat them Klonoa style! 
+//series of hacks to make bosses spawn enemy so we can defeat them Klonoa style!
 
 TaskHook Chaos0_t((intptr_t)Chaos0_Main);
 TaskHook Chaos2_t((intptr_t)Chaos2_Main);
@@ -147,7 +147,6 @@ static void CreateEnemyPortal(char id)
 		if (CurrentLevel == EnemyBossSpawnPos[i].currentLevel)
 		{
 			if (EnemyBossSpawnPos[i].id == id && !enemyBossTask[id]) {
-
 				auto pos = EnemyBossSpawnPos[i].pos;
 				pos.y += 3.0f;
 				DrawPortalEffect(&pos);
@@ -163,7 +162,6 @@ static void CreateEnemy(char id)
 		if (CurrentLevel == EnemyBossSpawnPos[i].currentLevel)
 		{
 			if (EnemyBossSpawnPos[i].id == id && !enemyBossTask[id]) {
-
 				enemyBossTask[id] = CreateElementalTask(2, 3, (TaskFuncPtr)EnemyBossSpawnPos[i].enemy);
 
 				if (enemyBossTask[id]) {
@@ -245,7 +243,6 @@ void chaos4_r(task* obj)
 	if (!data->mode)
 	{
 		for (int i = 0; i < PMax; i++) {
-
 			if (isKlonoa(i))
 			{
 				WriteData((float**)Chaos4Damage, &two);
@@ -279,7 +276,6 @@ void eggViper_r(task* obj)
 	SpawnEnemyCheck();
 	EggViper_t.Original(obj);
 }
-
 
 static float dropSpd = 5.0f;
 
@@ -407,7 +403,6 @@ void Knuckles_Main_r(task* obj)
 				obj->disp(obj);
 				return;
 			}
-
 		}
 	}
 
@@ -494,11 +489,9 @@ void init_BossesHacks()
 	WriteCall((void*)0x571D36, RemoveEnemyBounceThing);	 //chaos 0
 	WriteCall((void*)0x54A401, RemoveEnemyBounceThing); //egg hornet
 	WriteCall((void*)0x54C98E, RemoveEnemyBounceThing); //chaos 2
-	WriteCall((void*)0x551FD2, RemoveEnemyBounceThing); //chaos 4	
-	WriteCall((void*)0x559399, RemoveEnemyBounceThing); //chaos 6	
+	WriteCall((void*)0x551FD2, RemoveEnemyBounceThing); //chaos 4
+	WriteCall((void*)0x559399, RemoveEnemyBounceThing); //chaos 6
 	WriteCall((void*)0x580C7E, RemoveEnemyBounceThing); //egg viper
-	WriteCall((void*)0x580BED, RemoveEnemyBounceThing); //egg viper	
+	WriteCall((void*)0x580BED, RemoveEnemyBounceThing); //egg viper
 	WriteCall((void*)0x580D2C, RemoveEnemyBounceThing); //egg viper
-
-
 }

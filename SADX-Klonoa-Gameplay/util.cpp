@@ -98,9 +98,7 @@ AnimationFile* LoadEventAnim(const char* name) {
 	return LoadANM("anims\\events", name);
 }
 
-
 void njCnkAction_Queue(NJS_ACTION* action, float frame, QueuedModelFlagsB flags) {
-
 	DisplayAnimationFrame(action, frame, flags, 0, (void(__cdecl*)(NJS_MODEL_SADX*, int, int))_njCnkDrawModel);
 }
 
@@ -110,7 +108,6 @@ void njCnkAction(NJS_ACTION* action, float frame) {
 
 void NullModel(NJS_MODEL_SADX*, int, int)
 {
-
 }
 
 void njNullAction(NJS_ACTION* action, float frame)
@@ -130,7 +127,6 @@ void LookAt(NJS_VECTOR* unit, Angle* outx, Angle* outy) {
 			- (acos(-(len * unit->y)) * 65536.0f * 0.1591549762031479f));
 	}
 }
-
 
 void LookAt(NJS_VECTOR* from, NJS_VECTOR* to, Angle* outx, Angle* outy) {
 	if (!from || !to)
@@ -210,7 +206,6 @@ float GetSquare(NJS_VECTOR* orig, NJS_VECTOR* dest) {
 float GetDistance(NJS_VECTOR* orig, NJS_VECTOR* dest) {
 	return sqrtf(GetSquare(orig, dest));
 }
-
 
 bool IsPointInsideSphere(NJS_VECTOR* center, NJS_VECTOR* pos, float radius) {
 	return GetDistance(center, pos) <= radius;
@@ -299,7 +294,6 @@ void ResetChunkModelRender()
 	Direct3D_ResetWorldTransform();
 	Direct3D_UnsetChunkModelRenderState();
 }
-
 
 bool isSuper(char pnum)
 {

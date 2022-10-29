@@ -26,7 +26,6 @@ extern const NJS_VECTOR KLScaleDiff;
 extern NJS_TEXLIST KlonoaTexList;
 extern const char enemyArraySize;
 
-
 struct klonoawk
 {
 	int generalTimer;
@@ -39,7 +38,6 @@ struct klonoawk
 	NJS_VECTOR ringPos;
 	NJS_VECTOR ringVec;
 };
-
 
 enum klonoaAnimDLL //dll is for the array on init
 {
@@ -161,9 +159,7 @@ enum enemyState
 	throwSetup,
 	threw,
 	dead
-
 };
-
 
 enum charBossState
 {
@@ -175,14 +171,12 @@ enum charBossState
 	bDone,
 };
 
-
 enum difficultyE
 {
 	easy,
 	normal,
 	hard
 };
-
 
 void ReadConfig(const char* path, const HelperFunctions& helperFunctions);
 void init_Audio();

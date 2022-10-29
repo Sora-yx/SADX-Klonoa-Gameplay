@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "bass_vgmstream.h"
 
-
 typedef struct {
 	int           id;
 	int           flags;
@@ -137,10 +136,10 @@ DWORD LoadSoundSteam_LoadFromFile(std::string path)
 	return channel;
 }
 
-DWORD LoadSoundStream(int ID) 
-{	
+DWORD LoadSoundStream(int ID)
+{
 	std::string filename = modpath + "\\sounds\\";
-	
+
 	std::string str = filename + std::to_string(ID) + ".wav";
 
 	DWORD channel = LoadSoundSteam_LoadFromFile(str);
@@ -192,7 +191,7 @@ void PlayCustomSound(int ID) {
 	{
 		if (entry->volumeA == 0.0 && entry->volumeB == 0.0)
 			entry->volumeA = 0.400000006f;
-	
+
 		PlaySoundChannelQueue(ID, entry, 0);
 	}
 }
@@ -246,9 +245,7 @@ void PlayCustomSound_Pos(int ID, NJS_VECTOR* pos, float dist, float volume, bool
 	PlayCustomSoundQueue(ID, nullptr, pos, dist, loop, volume, 0.0f);
 }
 
-
 void DelayedCustomSound(task* obj) {
-
 	auto data = obj->twp;
 
 	if (--data->scl.y <= 0) {
@@ -271,7 +268,6 @@ void PlayDelayedCustomSound(int ID, int time, float volumeoverride) {
 }
 
 void RunCustomSounds() {
-
 	for (auto& entry : SoundListEntries)
 	{
 		if (entry.stream != NULL)
@@ -293,7 +289,6 @@ void RunCustomSounds() {
 				FreeSoundEntry(entry);
 				continue;
 			}
-
 
 			// Get the volume of the sound based on the distance from the entity or the static position
 			if (entry.dist > 0) {
@@ -332,7 +327,6 @@ void RunCustomSounds() {
 }
 
 void Sounds_Init() {
-
 	PauseSound_t.Hook(PauseSound_j);
 	ResumeSound_t.Hook(ResumeSound_j);
 }

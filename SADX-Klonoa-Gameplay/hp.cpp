@@ -9,7 +9,6 @@ static FunctionHook <void, char> HurtCharacter_t(HurtCharacter);
 void DrawKlonoaHP(char pnum)
 {
 	for (char i = 0; i < HpMax; i++) {
-
 		char hit = HpMax - HP[pnum];
 
 		if (hit > 0 && i >= HP[pnum])
@@ -60,8 +59,8 @@ void HurtCharacter_r(char a1)
 
 void initKlonoaHP()
 {
-	if (useHP) 
-	{	
+	if (useHP)
+	{
 		HurtCharacter_t.Hook(HurtCharacter_r);
 
 		if (difficulty == easy)

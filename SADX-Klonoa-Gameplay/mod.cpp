@@ -14,7 +14,6 @@ DataArray_(playerwk*, playerpwp_, 0x3B3CDF0, 8);
 void LoadKlonoaTask();
 
 extern "C" {
-
 	__declspec(dllexport) void __cdecl Init(const char* path, const HelperFunctions& helperFunctions)
 	{
 		if (helperFunctions.Version < 13)
@@ -23,7 +22,6 @@ extern "C" {
 				L"Error, your version of the mod loader does not support API version 13. Some functionality will not be available.\nPlease exit the game and update the mod loader for the best experience.",
 				L"Mod Name Error: Mod Loader out of date", MB_OK | MB_ICONERROR);
 		}
-
 
 		HelperFunctionsGlobal = helperFunctions; // Save the helper pointer for external use
 		modpath = path;
@@ -40,7 +38,6 @@ extern "C" {
 	}
 
 	__declspec(dllexport) void __cdecl OnInitEnd() {
-
 		auto BetterSuperSonicHandle = GetModuleHandle(L"better-super-sonic");
 
 		if (BetterSuperSonicHandle)

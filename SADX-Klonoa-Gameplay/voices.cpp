@@ -79,7 +79,7 @@ void PlayRandomKlonoaVoice()
 }
 
 static void __cdecl PlayVoice_r(int a1)
-{	
+{
 	std::unordered_map<int16_t, int16_t>::const_iterator it = Sonicvoice_ids_map.begin();
 
 	while (it != Sonicvoice_ids_map.end())
@@ -213,9 +213,9 @@ void init_Audio()
 {
 	WriteCall((void*)0x491701, PlayIdleVoice_r);
 	WriteCall((void*)0x446BDA, PlayDrownVoice);
-	WriteCall((void*)0x4D6DAF, PlayInvncibMagneticVoice);		
+	WriteCall((void*)0x4D6DAF, PlayInvncibMagneticVoice);
 	WriteCall((void*)0x4D6E6F, PlayInvncibMagneticVoice);
-	WriteCall((void*)0x4D6C39, PlaySpeedBarrierVoice);	
+	WriteCall((void*)0x4D6C39, PlaySpeedBarrierVoice);
 	WriteCall((void*)0x4D6DEF, PlaySpeedBarrierVoice);
 	PlayVoice_t.Hook(PlayVoice_r);
 	DoExplosionRockThing_t.Hook(PlayBlowPlayerVoice);
