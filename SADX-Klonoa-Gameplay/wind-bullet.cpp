@@ -187,7 +187,9 @@ void bulletTask(task* tp)
 
 		tp->disp = dispEffectKnuxHadoken;
 		tp->dest = deleteBullet;
-		CreateChildTask(2, ChildCol, tp);
+		auto task = CreateChildTask(2, ChildCol, tp);
+		if (task)
+			task->twp->smode = data->smode;
 		data->mode = 1;
 	}
 

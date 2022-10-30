@@ -333,10 +333,13 @@ void __cdecl Klonoa_Display_r(task* obj)
 
 		SpinDash_RotateModel(curAnim, (taskwk*)data);
 
-		NJS_ACTION* action = co2->mj.plactptr[curAnim].actptr;
+		if (!super)
+			njScaleV(0, &KLScaleDiff); //scale order fix lighting 
 
 		SetupChunkModelRender();
-		njScaleV(0, &KLScaleDiff);
+
+		if (super)
+			njScaleV(0, &KLScaleDiff); 
 
 		NJS_MATRIX m = { 0 };
 		njSetMatrix(m, (NJS_MATRIX_PTR)&EnvironmentMapMatrix);
@@ -348,6 +351,7 @@ void __cdecl Klonoa_Display_r(task* obj)
 		}
 		else //regular gameplay
 		{
+			NJS_ACTION* action = co2->mj.plactptr[curAnim].actptr;
 			if (co2->mj.mtnmode == 2) {
 				action = co2->mj.actwkptr;
 			}
