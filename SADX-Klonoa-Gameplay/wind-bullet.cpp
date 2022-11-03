@@ -1,7 +1,5 @@
 #include "pch.h"
 
-CCL_INFO bullet_col = { 0, 0, 0x70, 0x40, 0x400, { 0 }, 12.0f, 0.0, 0.0, 0.0, 0, 0, 0 };
-
 extern ObjectFuncPtr enemyList[];
 
 signed int KlonoaWBullet_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
@@ -18,6 +16,7 @@ signed int KlonoaWBullet_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 
 	if (co2->spd.x > 0.5f && isOnGround)
 		co2->spd.x = 0.5f;
+
 	co2->spd.y = 0.0f;
 
 	PlayCustomSound(se_shot);
@@ -25,6 +24,7 @@ signed int KlonoaWBullet_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 }
 
 bool isTargetAnEnemy(task* enemy) {
+
 	for (int i = 0; i < enemyArraySize; ++i) {
 		if (enemyList[i] == (ObjectFuncPtr)enemy->exec) {
 			return true;
@@ -36,38 +36,30 @@ bool isTargetAnEnemy(task* enemy) {
 
 signed int WindBullet_CheckHitEnemy(taskwk* bulletData, klonoawk* klwk, playerwk* co2)
 {
-	if (!bulletData || !bulletData->cwp)
+	if (!bulletData)
 		return 0;
 
-	auto cwp = bulletData->cwp;
+	auto target = GetClosestEnemy(&bulletData->pos);
+	auto data = target.twp;
 
-	//Loop the collision array of the bullet...
-	for (int i = 0; i < 16; i++)
+	if (data && data->cwp && target.dist <= 20.0f)
 	{
-		auto target = cwp->hit_info[i].hit_twp;
-
-		if (target != nullptr) //if the collision hit something, start looking for more data.
+		if (isTargetAnEnemy(data->cwp->mytask)) //check if it's an enemy...
 		{
-			if (target->cwp->mytask && target->cwp->mytask->twp) // if the target has an exec and twp data
+			if (data->cwp->mytask->exec != (TaskFuncPtr)OMonkeyCage)
 			{
-				if (isTargetAnEnemy(target->cwp->mytask)) //check if it's an enemy...
+				data->mode = captured; //set the enemy to a new custom state, see "enemy.cpp"
+				data->smode = bulletData->smode; //store pNum
+				klwk->enemyGrabPtr = data->cwp->mytask; //we copy the task of the enemy for external use with Klonoa.
+				return 1;
+			}
+			else
+			{
+				if ((co2->equipment & Upgrades_AncientLight)) //can only destroy monkey cage with the ancien light
 				{
-					if (target->cwp->mytask->exec != (TaskFuncPtr)OMonkeyCage)
-					{
-						target->mode = captured; //set the enemy to a new custom state, see "enemy.cpp"
-						target->smode = bulletData->smode; //store pNum
-						klwk->enemyGrabPtr = target->cwp->mytask; //we copy the task of the enemy for external use with Klonoa.
-						return 1;
-					}
-					else
-					{
-						if ((co2->equipment & Upgrades_AncientLight)) //can only destroy monkey cage with the ancien light
-						{
-							target->mode = captured;
-							target->smode = bulletData->smode; //store pNum
-							return 1;
-						}
-					}
+					data->mode = captured;
+					data->smode = bulletData->smode; //store pNum
+					return 1;
 				}
 			}
 		}
@@ -86,31 +78,23 @@ bool isTargetCharBoss(task* enemy) {
 	return false;
 }
 
-signed int WindBullet_CheckHitCharBoss(taskwk* bulletData, klonoawk* klwk, playerwk* co2)
+signed int WindBullet_CheckHitCharBoss(taskwk* bulletData, klonoawk* klwk)
 {
-	if (!bulletData || !bulletData->cwp || !CharacterBossActive)
+	if (!bulletData || !CharacterBossActive)
 		return 0;
 
-	auto cwp = bulletData->cwp;
+	auto target = GetClosestEnemy(&bulletData->pos);
+	auto data = target.twp;
 
-	//Loop the collision array of the bullet...
-	for (int i = 0; i < 16; i++)
+	if (data && data->cwp && target.dist <= 15.0f)
 	{
-		auto target = cwp->hit_info[i].hit_twp;
-
-		if (target != nullptr) //if the collision hit something, start looking for more data.
+		if (isTargetCharBoss(data->cwp->mytask)) //check if it's a char fight...
 		{
-			if (target->cwp->mytask && target->cwp->mytask->twp) // if the target has an exec and twp data
-			{
-				if (isTargetCharBoss(target->cwp->mytask)) //check if it's a char fight...
-				{
-					if (!target->wtimer) {
-						target->mode = Bcaptured; //set the enemy to a new custom state, see "bosses.cpp"
-						target->btimer = bulletData->smode; //store pnum
-						klwk->enemyGrabPtr = target->cwp->mytask; //we copy the task of the boss for external use with Klonoa.
-						return 1;
-					}
-				}
+			if (!data->wtimer) {
+				data->mode = Bcaptured; //set the enemy to a new custom state, see "bosses.cpp"
+				data->btimer = bulletData->smode; //store pnum
+				klwk->enemyGrabPtr = data->cwp->mytask; //we copy the task of the boss for external use with Klonoa.
+				return 1;
 			}
 		}
 	}
@@ -137,24 +121,6 @@ void deleteBullet(task* tp)
 	}
 }
 
-//used to add an extra col to get other enemies with bullet
-static void ChildCol(task* obj)
-{
-	auto twp = obj->twp;
-	twp->pos = obj->ptp->twp->pos;
-
-	if (!twp->mode)
-	{
-		CCL_Init(obj, &bullet_col, 1, 1u);
-		twp->mode++;
-	}
-
-	if (twp->cwp)
-	{
-		EntryColliList(twp);
-	}
-}
-
 void bulletTask(task* tp)
 {
 	float timer = 0.0f;
@@ -175,42 +141,32 @@ void bulletTask(task* tp)
 			data->pos.x += data->scl.x;
 			data->pos.y += data->scl.y;
 			data->pos.z += data->scl.z;
-
-			EntryColliList(data);
 		}
 	}
 	else
 	{
 		data->counter.f = 1.5f;
-
-		CCL_Init(tp, &bullet_col, 1, 3u);
-
 		tp->disp = dispEffectKnuxHadoken;
 		tp->dest = deleteBullet;
-		auto task = CreateChildTask(2, ChildCol, tp);
-		if (task)
-			task->twp->smode = data->smode;
+
 		data->mode = 1;
 	}
 
 	tp->disp(tp);
-	LoopTaskC(tp);
 	CheckRangeOut(tp);
 }
 
 void BulletLookForTarget(klonoawk* klwk, taskwk* data)
 {
-	//if bullet exist, look for an enemy
+	//if bullet exists, look for an enemy
 	if (klwk->currentBulletPtr) {
 		auto co2 = playerpwp[data->counter.b[0]];
-		auto child = klwk->currentBulletPtr->ctp;
 
 		//if bullet hit an enemy
-		if (WindBullet_CheckHitEnemy(klwk->currentBulletPtr->twp, klwk, co2) || WindBullet_CheckHitCharBoss(klwk->currentBulletPtr->twp, klwk, co2)
-			|| (child && WindBullet_CheckHitEnemy(child->twp, klwk, co2)))
+		if (WindBullet_CheckHitEnemy(klwk->currentBulletPtr->twp, klwk, co2) || WindBullet_CheckHitCharBoss(klwk->currentBulletPtr->twp, klwk))
 		{
 			//if target is monkey in cage, don't grab it, destroy instead.
-			if (klwk->currentBulletPtr->exec == (TaskFuncPtr)OMonkeyCage || child && child->exec == (TaskFuncPtr)OMonkeyCage)
+			if (klwk->currentBulletPtr->exec == (TaskFuncPtr)OMonkeyCage)
 			{
 				data->mode = act_stnd;
 				co2->mj.reqaction = 0;
@@ -227,6 +183,7 @@ void BulletLookForTarget(klonoawk* klwk, taskwk* data)
 	}
 }
 
+//reset klonoa action when the bullet despawn
 void BulletEnd(taskwk* data, playerwk* co2, klonoawk* klwk)
 {
 	if (!klwk->enemyGrabPtr)
@@ -239,9 +196,9 @@ void BulletEnd(taskwk* data, playerwk* co2, klonoawk* klwk)
 	}
 }
 
+//create and move bullet
 void BulletAction(taskwk* data, playerwk* co2, klonoawk* klwk)
 {
-	//create and move bullet
 	if (co2->mj.reqaction != anm_windBullet && co2->mj.reqaction != anm_windBulletAir || klwk->bulletShot)
 		return;
 

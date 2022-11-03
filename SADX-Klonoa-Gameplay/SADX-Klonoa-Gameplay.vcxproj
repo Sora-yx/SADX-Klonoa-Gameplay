@@ -199,6 +199,7 @@
     </ClCompile>
     <ClCompile Include="sounds.cpp" />
     <ClCompile Include="super-jump.cpp" />
+    <ClCompile Include="throw.cpp" />
     <ClCompile Include="tornado.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="voices.cpp" />

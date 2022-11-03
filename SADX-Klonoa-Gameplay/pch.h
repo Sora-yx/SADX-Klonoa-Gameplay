@@ -18,9 +18,9 @@
 #include "AnimationFile.h"
 #include "IniFile.hpp"
 
+#include "SADX-Util.h"
 #include "mod.h"
 #include "util.h"
 #include "audio.h"
-#include "SADX-Util.h"
 
 #endif //PCH_H

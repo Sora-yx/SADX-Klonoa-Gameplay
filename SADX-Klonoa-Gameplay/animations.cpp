@@ -539,15 +539,16 @@ void SetKlonoaAnims()
 	KlonoaAnimList[78].NextAnim = 78;
 	KlonoaAnimList[78].Property = 3;
 
-	KlonoaAnimList[79] = KlonoaAnimList[78];
+	//hold rocket h
+	KlonoaAnimList[79].Animation->motion = KlonoaANM[anmID_holdRocketV]->getmotion();
 	KlonoaAnimList[79].NextAnim = 79;
+	KlonoaAnimList[79].TransitionSpeed = 0.125;
+	KlonoaAnimList[79].AnimationSpeed = 1.0f;
+	KlonoaAnimList[79].Property = 3;
 
 	//hold rocket vertical
-	KlonoaAnimList[80].Animation->motion = KlonoaANM[anmID_holdRocketV]->getmotion();
+	KlonoaAnimList[80] = KlonoaAnimList[79];
 	KlonoaAnimList[80].NextAnim = 80;
-	KlonoaAnimList[80].TransitionSpeed = 0.125;
-	KlonoaAnimList[80].AnimationSpeed = 1.0f;
-	KlonoaAnimList[80].Property = 3;
 
 	//begin death
 	KlonoaAnimList[86].Animation->motion = KlonoaANM[anmID_death]->getmotion();

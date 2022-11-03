@@ -39,6 +39,8 @@ struct klonoawk
 	NJS_VECTOR ringVec;
 };
 
+
+
 enum klonoaAnimDLL //dll is for the array on init
 {
 	anmID_stand,

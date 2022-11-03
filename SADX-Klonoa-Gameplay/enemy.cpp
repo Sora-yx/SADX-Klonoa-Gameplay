@@ -233,18 +233,88 @@ static bool TimingEnemyHurt(taskwk* data)
 	return false;
 }
 
-void DestroyEnemy(taskwk* a1)
+void KillLeon(taskwk* data1)
 {
-	auto a2 = a1->pos.y + 5.0f;
-	CreateFlash2(a1->pos.x, a2, a1->pos.z, 1.4);
-	CreateExpSpring(a1, 8u);
-	auto a3 = a1->pos.y + 14.0f;
-
-	if (CurrentLevel < LevelIDs_Chaos0)
-		CreateAnimal(rand() % 15, a1->pos.x, a3, a1->pos.z);
+	if (data1->mode > 5)
+	{
+		data1->flag &= 0xFBu;
+		data1->mode = 5;
+		data1->counter.b[1] = 0;
+		data1->counter.b[2] = 1;
+		data1->scl.z = 0.34999999;
+	}
 }
 
-void ThrowEnemy_Action(task* tp)
+void KillKiki(taskwk* data1)
+{
+	if (data1->mode > 12)
+	{
+		data1->mode = 12;
+		data1->counter.b[1] = 0;
+		data1->counter.b[2] = 1;
+	}
+}
+
+void KillSpinner(taskwk* data1)
+{
+	if (data1->mode > 5)
+	{
+		auto a2 = data1->pos.y + 5.0f;
+		CreateFlash2(data1->pos.x, a2, data1->pos.z, 1.4);
+		CreateExpSpring(data1, 8u);
+		data1->mode = 5;
+	}
+}
+
+void KillEPolice(taskwk* data1)
+{
+	if (data1->mode > 6)
+	{
+		data1->mode = 6;
+	}
+}
+
+void DestroyEnemy(task* tp, taskwk* data)
+{
+	auto target = (intptr_t)tp->exec;
+	if (CurrentLevel < LevelIDs_Chaos0)
+	{
+		if (target == (intptr_t)Leon_Main)
+		{
+			KillLeon(data);
+			return;
+		}
+
+		if (target == (intptr_t)Kiki_Main)
+		{
+			KillKiki(data);
+			return;
+		}
+
+		if (target == (intptr_t)SpinnerA_Main || target == (intptr_t)SpinnerB_Main || target == (intptr_t)SpinnerC_Main)
+		{
+			KillSpinner(data);
+			return;
+		}
+
+		if (target == (intptr_t)&EPolice_Main)
+		{
+			KillEPolice(data);
+			return;
+		}
+	}
+
+	auto a2 = data->pos.y + 5.0f;
+	CreateFlash2(data->pos.x, a2, data->pos.z, 1.4);
+	CreateExpSpring(data, 8u);
+	auto a3 = data->pos.y + 14.0f;
+
+	if (CurrentLevel < LevelIDs_Chaos0)
+		CreateAnimal(rand() % 15, data->pos.x, a3, data->pos.z);
+}
+
+
+void ThrowEnemyToBoss_Action(task* tp)
 {
 	float timer = 0.0f;
 	auto data = tp->twp;
@@ -255,7 +325,6 @@ void ThrowEnemy_Action(task* tp)
 
 	if (timer <= 0.0f)
 	{
-		FreeTaskC(tp);
 		data->mode = dead;
 		return;
 	}
@@ -271,6 +340,37 @@ void ThrowEnemy_Action(task* tp)
 	}
 
 	EntryColliList(data);
+}
+
+
+void ThrowEnemy_Action(task* tp)
+{
+	float timer = 0.0f;
+	auto data = tp->twp;
+	auto wk = (enemywk*)tp->mwp;
+	auto des = wk->home;
+	timer = (data->counter.f - 0.083333336f);
+	data->counter.f = data->counter.f - 0.083333336f;
+
+	if (timer <= 0.0f)
+	{
+		data->mode = dead;
+		return;
+	}
+
+	njAddVector(&data->pos, &des);
+	data->ang.x += 2048;
+
+	auto target = GetClosestEnemy(&data->pos);
+	auto dataT = target.twp;
+
+	if (dataT && dataT->cwp && target.dist <= 15.0f)
+	{
+		if (data->counter.f > ColCrashThrowTimer)
+			data->counter.f = ColCrashThrowTimer;
+
+		dataT->flag |= Status_Hurt;
+	}
 }
 
 static bool EnemyCapturedHandle(task* obj)
@@ -310,8 +410,11 @@ static bool EnemyCapturedHandle(task* obj)
 				}
 				break;
 			case dropSetup:
-				CCL_Init(obj, &stru_981D10, 1, GetColListIDForThrowEnemy());
-				CreateChildTask(2, ChildDamageCol, obj);
+				data->counter.f = 5.0f; //timer
+
+				if (isBossLevel())
+					CCL_Init(obj, &stru_981D10, 1, GetColListIDForThrowEnemy());
+
 				data->mode = drop;
 				break;
 			case drop:
@@ -322,16 +425,20 @@ static bool EnemyCapturedHandle(task* obj)
 				break;
 			case throwSetup:
 				data->counter.f = 5.0f; //timer
-				CCL_Init(obj, &stru_981D10, 1, GetColListIDForThrowEnemy());
-				CreateChildTask(2, ChildDamageCol, obj);
+				if (isBossLevel())
+					CCL_Init(obj, &stru_981D10, 1, GetColListIDForThrowEnemy());
 				data->mode++;
 				break;
 			case threw:
-				ThrowEnemy_Action(obj);
+				if (isBossLevel())
+					ThrowEnemyToBoss_Action(obj);
+				else
+					ThrowEnemy_Action(obj);
+
 				break;
 			case dead:
+				DestroyEnemy(obj, data);
 				ResetKlonoaGrab(klwk);
-				DestroyEnemy(data);
 				UpdateSetDataAndDelete(obj);
 				break;
 			}
@@ -341,7 +448,6 @@ static bool EnemyCapturedHandle(task* obj)
 				obj->disp(obj);
 			}
 
-			LoopTaskC(obj);
 			return true;
 		}
 	}
