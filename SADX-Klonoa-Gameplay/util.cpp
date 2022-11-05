@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "multiapi.h"
 
 D3DMATRIX WorldMatrixBackup;
 
@@ -277,6 +278,7 @@ bool isBossLevel()
 	return (CurrentLevel >= LevelIDs_Chaos0 && CurrentLevel <= LevelIDs_E101R);
 }
 
+
 void SetupWorldMatrix() {
 	ProjectToWorldSpace();
 	Direct3D_SetWorldTransform();
@@ -313,6 +315,16 @@ bool isTailsRace(char pnum)
 	return false;
 }
 
+bool isMultiActive()
+{
+	if (MultiModEnabled)
+	{
+		return multi_is_active();
+	}
+
+	return false;
+}
+
 colaround GetClosestEnemy(NJS_VECTOR* pos) {
 
 	colaround target = { 0, 1000000.0f };
@@ -332,6 +344,52 @@ colaround GetClosestEnemy(NJS_VECTOR* pos) {
 			}
 		}
 	}
+
+	return target;
+}
+
+colaround GetClosestEnemyFromP(NJS_VECTOR* pos, char pnum) {
+
+	colaround target = { 0, 1000000.0f };
+
+	bool multi = isMultiActive();
+
+	auto size = HomingAttackTarget_Sonic_Index;
+
+	if (pnum == 1)
+		size = HomingAttackTarget_NonSonic_Index;
+	else if (pnum > 1 && multi)
+	{
+		size = *multi_get_enemy_list_index(pnum);
+	}
+
+	for (int i = 0; i < size; ++i) {
+
+		colaround* target_ = &HomingAttackTarget_Sonic_[i];
+
+		if (pnum == 1)
+			target_ = &HomingAttackTarget_NonSonic_[i];
+		else if (pnum > 1 && multi)
+		{
+			target_ = multi_get_enemy_list(pnum);
+		}
+
+		if (!target_)
+			continue;
+
+		float dist = GetDistance(pos, &target_->twp->pos);
+
+		if (dist < target.dist && target_->twp &&
+			target_->twp->cwp && target_->twp->cwp->mytask && target_->twp->cwp->mytask->mwp)
+		{
+			if (target_->twp->cwp->id == 3 || target_->twp->cwp->id == 2)
+			{
+				target.dist = dist;
+				target.twp = target_->twp;
+			}
+		}
+	}
+
 
 	return target;
 }

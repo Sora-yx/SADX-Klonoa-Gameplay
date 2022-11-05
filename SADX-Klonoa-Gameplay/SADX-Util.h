@@ -8,6 +8,7 @@ struct colaround
 
 
 DataArray(colaround, HomingAttackTarget_Sonic_, 0x3B259C0, 657);
+DataArray(colaround, HomingAttackTarget_NonSonic_, 0x3B242F8, 657);
 FunctionPointer(void, PlayIdleVoice, (taskwk* a1), 0x442360);
 FunctionPointer(void, DrawCharacterShadow, (EntityData1* a1, struct_a3* a2), 0x49F0B0);
 FunctionPointer(void, PGetAccelerationGlik, (taskwk* a1, motionwk2* a2, playerwk* a3), 0x448000);

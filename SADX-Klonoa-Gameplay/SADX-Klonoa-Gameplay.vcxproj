@@ -101,7 +101,8 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>$(SolutionDir)bin\ModLoaderCommon.lib;$(SolutionDir)bin\libmodutils.lib;$(SolutionDir)sadx-mod-loader\extlib\bass\bass.lib;$(SolutionDir)sadx-mod-loader\extlib\bass\bass_vgmstream.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)bin\sadx-multiplayer.lib;$(SolutionDir)bin\ModLoaderCommon.lib;$(SolutionDir)bin\libmodutils.lib;$(SolutionDir)sadx-mod-loader\extlib\bass\bass.lib;$(SolutionDir)sadx-mod-loader\extlib\bass\bass_vgmstream.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <DelayLoadDLLs>sadx-multiplayer.dll</DelayLoadDLLs>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -172,6 +173,7 @@
     <ClInclude Include="hp.h" />
     <ClInclude Include="hud.h" />
     <ClInclude Include="mod.h" />
+    <ClInclude Include="multiapi.h" />
     <ClInclude Include="objects.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="SADX-Util.h" />

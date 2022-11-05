@@ -2,7 +2,7 @@
 
 extern HelperFunctions HelperFunctionsGlobal;
 extern bool klonoaPnum[];
-
+extern bool MultiModEnabled;
 extern std::string modpath;
 
 extern ModelInfo* KlonoaMDL;

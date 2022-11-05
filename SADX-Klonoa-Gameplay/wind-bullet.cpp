@@ -34,12 +34,12 @@ bool isTargetAnEnemy(task* enemy) {
 	return false;
 }
 
-signed int WindBullet_CheckHitEnemy(taskwk* bulletData, klonoawk* klwk, playerwk* co2)
+signed int WindBullet_CheckHitEnemy(taskwk* bulletData, klonoawk* klwk, playerwk* co2, char pnum)
 {
 	if (!bulletData)
 		return 0;
 
-	auto target = GetClosestEnemy(&bulletData->pos);
+	auto target = GetClosestEnemyFromP(&bulletData->pos, pnum);
 	auto data = target.twp;
 
 	if (data && data->cwp && target.dist <= 20.0f)
@@ -78,15 +78,15 @@ bool isTargetCharBoss(task* enemy) {
 	return false;
 }
 
-signed int WindBullet_CheckHitCharBoss(taskwk* bulletData, klonoawk* klwk)
+signed int WindBullet_CheckHitCharBoss(taskwk* bulletData, klonoawk* klwk, char pnum)
 {
 	if (!bulletData || !CharacterBossActive)
 		return 0;
 
-	auto target = GetClosestEnemy(&bulletData->pos);
+	auto target = GetClosestEnemyFromP(&bulletData->pos, pnum);
 	auto data = target.twp;
 
-	if (data && data->cwp && target.dist <= 15.0f)
+	if (data && data->cwp && target.dist <= 20.0f)
 	{
 		if (isTargetCharBoss(data->cwp->mytask)) //check if it's a char fight...
 		{
@@ -158,12 +158,13 @@ void bulletTask(task* tp)
 
 void BulletLookForTarget(klonoawk* klwk, taskwk* data)
 {
+	auto pnum = data->counter.b[0];
 	//if bullet exists, look for an enemy
 	if (klwk->currentBulletPtr) {
-		auto co2 = playerpwp[data->counter.b[0]];
+		auto co2 = playerpwp[pnum];
 
 		//if bullet hit an enemy
-		if (WindBullet_CheckHitEnemy(klwk->currentBulletPtr->twp, klwk, co2) || WindBullet_CheckHitCharBoss(klwk->currentBulletPtr->twp, klwk))
+		if (WindBullet_CheckHitEnemy(klwk->currentBulletPtr->twp, klwk, co2, pnum) || WindBullet_CheckHitCharBoss(klwk->currentBulletPtr->twp, klwk, pnum))
 		{
 			//if target is monkey in cage, don't grab it, destroy instead.
 			if (klwk->currentBulletPtr->exec == (TaskFuncPtr)OMonkeyCage)
