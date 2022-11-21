@@ -7,6 +7,18 @@ struct colaround
 };
 
 
+struct ModelAnimationThing_r
+{
+	NJS_VECTOR* Vectors;
+	NJS_VECTOR* VectorsB;
+	Rotation3* Rotations;
+	void(__cdecl* Function)(NJS_CNK_MODEL*);
+};
+
+
+ThiscallFunctionPointer(void*, njStartMotionObj, (NJS_MOTION* obj, float frame), 0x780500);
+DataPointer(ModelAnimationThing_r*, nj_objmotinfo_ptr, 0x389DCCC);
+
 DataArray(colaround, HomingAttackTarget_Sonic_, 0x3B259C0, 657);
 DataArray(colaround, HomingAttackTarget_NonSonic_, 0x3B242F8, 657);
 FunctionPointer(void, PlayIdleVoice, (taskwk* a1), 0x442360);

@@ -52,3 +52,4 @@ bool isTailsRace(char pnum);
 colaround GetClosestEnemyFromP(NJS_VECTOR* pos, char pnum);
 colaround GetClosestEnemy(NJS_VECTOR* pos);
 bool isMultiActive();
+void njActionOld_r(NJS_ACTION* a1, float a2);

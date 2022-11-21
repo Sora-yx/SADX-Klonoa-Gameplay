@@ -5,14 +5,9 @@ void ResetKlonoaGrab(klonoawk* klwk)
 	if (CharacterBossActive || !klwk)
 		return;
 
-	auto task = klwk->enemyGrabPtr;
+	klwk->enemyGrabPtr = nullptr;
+	return;
 
-	if (task)
-	{
-		FreeTask(task);
-		klwk->enemyGrabPtr = nullptr;
-		return;
-	}
 }
 
 void CheckKlonoaEnemyPtr(klonoawk* klwk, taskwk* data, playerwk* co2)

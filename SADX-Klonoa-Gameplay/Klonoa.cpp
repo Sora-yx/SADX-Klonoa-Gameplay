@@ -390,7 +390,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 	auto klwk = (klonoawk*)playertp[pnum]->awp;
 	char action = data->mode;
 
-	if (!isKlonoa(pnum) || EV_MainThread_ptr || !IsIngame() || MetalSonicFlag || isTailsRace(pnum))
+	if (!isKlonoa(pnum) || EV_MainThread_ptr || MetalSonicFlag || isTailsRace(pnum))
 	{
 		return Sonic_RunsActions_t.Original(data, data2, co2);
 	}
@@ -430,6 +430,12 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 	}
 
 	CheckKlonoaEnemyPtr(klwk, data, co2);
+	KlonoaManageVictoryMotion(co2);
+
+	if (!IsIngame())
+	{
+		return Sonic_RunsActions_t.Original(data, data2, co2);
+	}
 
 	switch (data->mode)
 	{

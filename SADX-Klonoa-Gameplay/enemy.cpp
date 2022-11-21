@@ -2,7 +2,7 @@
 #include "abilities.h"
 
 ObjectFuncPtr enemyList[] = { Kiki_Main, RhinoTank_Main, Sweep_Main, SpinnerA_Main, SpinnerB_Main, SpinnerC_Main, EPolice_Main, EBuyon,
-ESman, UnindusA_Exec, UnindusB_Exec, UnindusC_Exec, (ObjectFuncPtr)0x5B03B0, (ObjectFuncPtr)0x4A6420, OMonkeyCage, (ObjectFuncPtr)ESman_Exec, Leon_Main };
+ESman, UnindusA_Exec, UnindusB_Exec, UnindusC_Exec, (ObjectFuncPtr)0x5B03B0, (ObjectFuncPtr)0x4A6420, OMonkeyCage, (ObjectFuncPtr)ESman_Exec };
 
 const char enemyArraySize = LengthOfArray(enemyList);
 static const float ColCrashThrowTimer = 0.083333336f * 7; //small timer to make the enemy die almost instantly when they hit each other
@@ -438,8 +438,8 @@ static bool EnemyCapturedHandle(task* obj)
 				break;
 			case dead:
 				DestroyEnemy(obj, data);
-				ResetKlonoaGrab(klwk);
 				UpdateSetDataAndDelete(obj);
+				ResetKlonoaGrab(klwk);
 				break;
 			}
 

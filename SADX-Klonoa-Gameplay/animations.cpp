@@ -34,6 +34,24 @@ static const std::unordered_map<uint16_t, uint16_t> AnimMotion_ids_map = {
 	{ 123, anm_bStance1 },
 };
 
+void KlonoaManageVictoryMotion(playerwk* co2)
+{
+	if (!co2)
+		return;
+
+	if (co2->mj.reqaction == 75 || co2->mj.reqaction == 143)
+	{
+		if (co2->mj.nframe >= 39.99f)
+		{
+			co2->mj.nframe = 24.0f;
+		}
+		else
+		{
+			co2->mj.nframe += 0.4f;
+		}
+	}
+}
+
 //Series of hack to make all the rendering events anim function working with Chunk Model
 
 void DrawKlonoa_Event(NJS_ACTION* anim, float frame, QueuedModelFlagsB flg)
@@ -215,6 +233,11 @@ void __cdecl EV_SetAction_r(task* obj, NJS_ACTION* anim, NJS_TEXLIST* tex, float
 			if (speed > 1.0f)
 				speed = 1.0f;
 		}
+	}
+
+	if (anim == KlonoaAnimList[11].Animation && !IsIngame())
+	{
+		speed /= 1.7f;
 	}
 
 	EV_SetAction_t.Original(obj, anim, tex, speed, mode, linkframe);
@@ -519,9 +542,10 @@ void SetKlonoaAnims()
 
 	//victory.
 	KlonoaAnimList[75].Animation->motion = KlonoaANM[anmID_victory]->getmotion();
-	KlonoaAnimList[75].NextAnim = 76;
+	KlonoaAnimList[75].NextAnim = 75;
 	KlonoaAnimList[75].TransitionSpeed = 0.5f;
 	KlonoaAnimList[75].AnimationSpeed = 0.5f;
+	KlonoaAnimList[75].Property = 12;
 
 	//victory standing.
 	KlonoaAnimList[76].Animation->motion = KlonoaANM[anmID_victoryStd]->getmotion();
@@ -868,7 +892,7 @@ void InitKlonoaCharSelAnim()
 {
 	SonicCharSelAnim[0] = KlonoaAnimList[11].Animation;
 	SonicCharSelAnim[1] = KlonoaAnimList[75].Animation;
-	SonicCharSelAnim[2] = KlonoaAnimList[76].Animation;
+	SonicCharSelAnim[2] = 0;
 	SonicCharSelAnim[3] = 0;
 }
 
