@@ -1,0 +1,2 @@
+365134,../maru_sonic.png,64x64
+365140,../maru_supersonic.png,64x64
