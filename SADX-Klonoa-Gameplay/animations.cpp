@@ -403,11 +403,12 @@ void SetKlonoaAnims()
 	//turn around
 	KlonoaAnimList[30] = KlonoaAnimList[20];
 
-	//pick obj (bullet for now)
-	KlonoaAnimList[33].Animation->motion = KlonoaANM[anmID_bulletStart]->getmotion();
+	//pick obj (throw anim reversed for now)
+	KlonoaAnimList[33].Animation->motion = KlonoaANM[anmID_throw]->getmotion();
 	KlonoaAnimList[33].NextAnim = 37;
 	KlonoaAnimList[33].TransitionSpeed = 0.25f;
 	KlonoaAnimList[33].AnimationSpeed = 0.4f;
+	KlonoaAnimList[33].Property = 6; //reverse
 
 	//obj run
 	KlonoaAnimList[34].Animation->motion = KlonoaANM[anmID_holdRun]->getmotion();
@@ -471,11 +472,11 @@ void SetKlonoaAnims()
 	KlonoaAnimList[49].Property = 3;
 	KlonoaAnimList[49].AnimationSpeed = 0.2f;
 
-	//pick obj again (unused?) (bullet for now)
-	KlonoaAnimList[50].Animation->motion = KlonoaANM[anmID_bulletStart]->getmotion();
+	//set shake (throw anim for now)
+	KlonoaAnimList[50].Animation->motion = KlonoaANM[anmID_throw]->getmotion();
 	KlonoaAnimList[50].NextAnim = 51;
 	KlonoaAnimList[50].TransitionSpeed = 0.25f;
-	KlonoaAnimList[50].AnimationSpeed = 0.4f;
+	KlonoaAnimList[50].AnimationSpeed = 0.3f;
 
 	//shaking
 	KlonoaAnimList[51].Animation->motion = KlonoaANM[anmID_shake]->getmotion();

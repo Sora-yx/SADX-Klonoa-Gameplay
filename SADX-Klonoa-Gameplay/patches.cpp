@@ -1,5 +1,7 @@
 #include "pch.h"
 
+static UsercallFunc(signed int, Sonic_CheckPickUpObject_t, (playerwk* a1, taskwk* a2, motionwk2* a3), (a1, a2, a3), 0x495310, rEAX, rEAX, rECX, rEDI);
+
 //patch regular obj pick /drop anim frames check BS
 
 void FixSonicDropThrowObject()
@@ -13,7 +15,8 @@ void FixSonicDropThrowObject()
 	WriteData<1>((int*)0x49337c, 0x77);
 }
 
-float pickAnimFrame = 5.0f;
+
+float pickAnimFrame = 6.0f;
 //fix animation frame check for object throw / drop etc.
 void PickDrop_Patches()
 {
