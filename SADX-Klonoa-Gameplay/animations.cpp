@@ -642,11 +642,24 @@ void SetKlonoaAnims()
 	KlonoaAnimList[108].AnimationSpeed = 0.3f;
 	KlonoaAnimList[108].Property = 12;
 
-	KlonoaAnimList[111] = KlonoaAnimList[105];
-	KlonoaAnimList[112] = KlonoaAnimList[105];
+	KlonoaAnimList[109] = KlonoaAnimList[107];
+	KlonoaAnimList[109].NextAnim = 114;
 
+	KlonoaAnimList[110] = KlonoaAnimList[108];
+	KlonoaAnimList[110].NextAnim = 114;
+
+	KlonoaAnimList[111] = KlonoaAnimList[105];
+	KlonoaAnimList[111].NextAnim = 112;
+	KlonoaAnimList[112] = KlonoaAnimList[105];
+	KlonoaAnimList[112].NextAnim = 112;
+
+	KlonoaAnimList[113] = KlonoaAnimList[105];
+	KlonoaAnimList[113].NextAnim = 102;
 
 	KlonoaAnimList[114] = KlonoaAnimList[102];
+	KlonoaAnimList[114].NextAnim = 114;
+	KlonoaAnimList[114].Property = 3;
+
 	//losing balance, don't have a counterpart so stick to neutral
 	KlonoaAnimList[115] = KlonoaAnimList[102];
 
@@ -669,9 +682,16 @@ void SetKlonoaAnims()
 	KlonoaAnimList[118].AnimationSpeed = 0.5f;
 
 	KlonoaAnimList[119] = KlonoaAnimList[118];
+	KlonoaAnimList[119].Property = 6;
+	KlonoaAnimList[119].NextAnim = 112;
+
 	KlonoaAnimList[120] = KlonoaAnimList[118];
+	KlonoaAnimList[120].NextAnim = 121;
 	KlonoaAnimList[121] = KlonoaAnimList[117];
+	KlonoaAnimList[121].NextAnim = 122;
 	KlonoaAnimList[122] = KlonoaAnimList[116];
+	KlonoaAnimList[122].NextAnim = 112;
+	KlonoaAnimList[123] = KlonoaAnimList[117];
 
 	//crouch
 	KlonoaAnimList[124].Animation->motion = KlonoaANM[animID_Crouch]->getmotion();

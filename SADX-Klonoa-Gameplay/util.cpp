@@ -253,15 +253,6 @@ bool isOnSnowBoard(int curAnim)
 const float stdPos = 5.2f;
 float kloGetPosYDiff(int curAnim)
 {
-	if (curAnim == 102)
-	{
-		return 6.8f;
-	}
-	else if (isOnSnowBoard(curAnim))
-	{
-		return 8.8f;
-	}
-
 	return stdPos;
 }
 

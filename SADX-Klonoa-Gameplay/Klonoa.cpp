@@ -858,7 +858,6 @@ void __cdecl Sonic_Snowboard_Main_r(task* a1)
 	auto pData = playertwp[pNum];
 	auto objMtn = a1->mwp;
 	auto curAnim = playerpwp[pNum]->mj.action;
-	auto klwk = (klonoawk*)playertp[pNum]->awp;
 
 	if (curAnim < 102 || curAnim > 124)
 	{
@@ -894,7 +893,7 @@ void initKlonoa()
 
 	init_Objects();
 
-	//WriteJump(Sonic_Snowboard_Main, Sonic_Snowboard_Main_r);
+	WriteJump(Sonic_Snowboard_Main, Sonic_Snowboard_Main_r);
 	PickDrop_Patches(); //to do rework the whole function for mod compatibility
 
 	for (int i = 0; i < LengthOfArray(klonoaTex_Entry); i++) {
