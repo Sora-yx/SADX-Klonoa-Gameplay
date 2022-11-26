@@ -1,6 +1,6 @@
 #include "pch.h"
 
-AnimationFile* KlonoaANM[50] = { 0 };
+AnimationFile* KlonoaANM[60] = { 0 };
 AnimationFile* KlonoaEvANM[50] = { 0 };
 #define AnimCount 160
 #define boneCount 48
@@ -752,6 +752,17 @@ void SetKlonoaAnims()
 	KlonoaAnimList[130].TransitionSpeed = 1.0f;
 	KlonoaAnimList[130].AnimationSpeed = 1.0f;
 
+	KlonoaAnimList[131].Animation->motion = KlonoaANM[anmID_PetLoop]->getmotion();
+	KlonoaAnimList[131].NextAnim = 131;
+	KlonoaAnimList[131].TransitionSpeed = 1.0f;
+	KlonoaAnimList[131].AnimationSpeed = 0.5f;
+	KlonoaAnimList[131].Property = 3;
+
+	KlonoaAnimList[132].Animation->motion = KlonoaANM[anmID_PetEnd]->getmotion();
+	KlonoaAnimList[132].NextAnim = 0;
+	KlonoaAnimList[132].TransitionSpeed = 1.0f;
+	KlonoaAnimList[132].AnimationSpeed = 0.8f;
+
 
 	KlonoaAnimList[133].Animation->motion = KlonoaANM[anmID_whistle]->getmotion();
 	KlonoaAnimList[133].NextAnim = 130;
@@ -953,6 +964,8 @@ void LoadKlonoa_AnimFiles()
 	KlonoaANM[47] = LoadObjectAnim("Whistle");
 	KlonoaANM[48] = LoadObjectAnim("PetSet");
 	KlonoaANM[49] = LoadObjectAnim("shake");
+	KlonoaANM[50] = LoadObjectAnim("PetLoop");
+	KlonoaANM[51] = LoadObjectAnim("PetEnd");
 
 }
 

@@ -52,6 +52,8 @@ enum klonoaAnimDLL //dll is for the array on init
 	anmID_whistle,
 	anmID_PetSet,
 	anmID_shake,
+	anmID_PetLoop,
+	anmID_PetEnd
 };
 
 enum klonoaAnim //regular ID used to play anim on the character
