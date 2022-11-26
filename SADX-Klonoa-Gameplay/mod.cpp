@@ -34,6 +34,7 @@ extern "C" {
 		initKlonoaHP();
 		init_Hud();
 		Tornado_init();
+		init_Patches();
 		srand((unsigned)time(&t));
 	}
 

@@ -22,5 +22,6 @@
 #include "mod.h"
 #include "util.h"
 #include "audio.h"
+#include "anim.h"
 
 #endif //PCH_H
