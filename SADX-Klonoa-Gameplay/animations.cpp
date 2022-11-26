@@ -464,7 +464,38 @@ void SetKlonoaAnims()
 	KlonoaAnimList[47].TransitionSpeed = 0.5f;
 	KlonoaAnimList[47].AnimationSpeed = 0.5f;
 
+	//shake tree
+	KlonoaAnimList[49].Animation->motion = KlonoaANM[anmID_shake]->getmotion();
+	KlonoaAnimList[49].NextAnim = 49;
+	KlonoaAnimList[49].TransitionSpeed = 0.5f;
+	KlonoaAnimList[49].Property = 3;
+	KlonoaAnimList[49].AnimationSpeed = 0.2f;
+
+	//pick obj again (unused?) (bullet for now)
+	KlonoaAnimList[50].Animation->motion = KlonoaANM[anmID_bulletStart]->getmotion();
+	KlonoaAnimList[50].NextAnim = 51;
+	KlonoaAnimList[50].TransitionSpeed = 0.25f;
+	KlonoaAnimList[50].AnimationSpeed = 0.4f;
+
+	//shaking
+	KlonoaAnimList[51].Animation->motion = KlonoaANM[anmID_shake]->getmotion();
+	KlonoaAnimList[51].NextAnim = 51;
+	KlonoaAnimList[51].Property = 3;
+	KlonoaAnimList[51].TransitionSpeed = 0.25f;
+	KlonoaAnimList[51].AnimationSpeed = 0.2f;
+
+	//stop shaking
+	KlonoaAnimList[52].Animation->motion = KlonoaANM[anmID_holdObj]->getmotion();
+	KlonoaAnimList[52].NextAnim = 37;
+	KlonoaAnimList[52].TransitionSpeed = 0.25f;
+	KlonoaAnimList[52].AnimationSpeed = 0.4f;
+
 	//idle hold tree
+	KlonoaAnimList[53].Animation->motion = KlonoaANM[anmID_holdObj]->getmotion();
+	KlonoaAnimList[53].NextAnim = 54;
+	KlonoaAnimList[53].TransitionSpeed = 0.5f;
+	KlonoaAnimList[53].AnimationSpeed = 0.5f;
+
 	KlonoaAnimList[54].Animation->motion = KlonoaANM[anmID_holdObj]->getmotion();
 	KlonoaAnimList[54].Property = 3;
 	KlonoaAnimList[54].NextAnim = 54;
@@ -714,6 +745,18 @@ void SetKlonoaAnims()
 	KlonoaAnimList[128] = KlonoaAnimList[127];
 	KlonoaAnimList[128].NextAnim = 0;
 
+	//Chao Pet
+	KlonoaAnimList[130].Animation->motion = KlonoaANM[anmID_PetSet]->getmotion();
+	KlonoaAnimList[130].NextAnim = 131;
+	KlonoaAnimList[130].TransitionSpeed = 1.0f;
+	KlonoaAnimList[130].AnimationSpeed = 1.0f;
+
+
+	KlonoaAnimList[133].Animation->motion = KlonoaANM[anmID_whistle]->getmotion();
+	KlonoaAnimList[133].NextAnim = 130;
+	KlonoaAnimList[133].TransitionSpeed = 1.0f;
+	KlonoaAnimList[133].AnimationSpeed = 1.0f;
+
 	//Super Klonoa anims (to do: use SS anim here maybe?)
 
 	//standing SK
@@ -906,6 +949,10 @@ void LoadKlonoa_AnimFiles()
 	KlonoaANM[44] = LoadObjectAnim("holdRocketV");
 	KlonoaANM[45] = LoadObjectAnim("shower");
 	KlonoaANM[46] = LoadObjectAnim("shower2");
+	KlonoaANM[47] = LoadObjectAnim("Whistle");
+	KlonoaANM[48] = LoadObjectAnim("PetSet");
+	KlonoaANM[49] = LoadObjectAnim("shake");
+
 }
 
 void InitKlonoaCharSelAnim()

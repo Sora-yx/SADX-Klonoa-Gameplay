@@ -293,7 +293,7 @@ void __cdecl Klonoa_Display_r(task* obj)
 {
 	auto data = obj->twp;
 
-	if (MissedFrames || (!IsVisible(&data->pos, 15.0)))
+	if (MissedFrames || (!IsVisible(&data->pos, 15.0f)))
 		return;
 
 	char pnum = data->charIndex;
@@ -882,6 +882,7 @@ void __cdecl Sonic_Snowboard_Main_r(task* a1)
 
 void initKlonoa()
 {
+
 	KlonoaMDL = LoadChunkModel("Klonoa");
 	SuperKlonoaMDL = LoadChunkModel("SuperKlonoa");
 	Init_KlonoaAnim();

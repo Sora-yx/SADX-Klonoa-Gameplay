@@ -89,7 +89,10 @@ enum klonoaAnimDLL //dll is for the array on init
 	anmID_hurt,
 	anmID_holdRocketV,
 	anmID_shower,
-	anmID_shower2
+	anmID_shower2,
+	anmID_whistle,
+	anmID_PetSet,
+	anmID_shake,
 };
 
 enum klonoaAnim //regular ID used to play anim on the character
@@ -122,6 +125,10 @@ enum klonoaAnim //regular ID used to play anim on the character
 	anm_trick03,
 	anm_trick04,
 	anm_crouchBoard = 124,
+	anm_setPet = 130,
+	anm_pet,
+	anm_petStop,
+	anm_whistle,
 	anm_hover = 147,
 	anm_windBullet,
 	anm_windBulletAir,
