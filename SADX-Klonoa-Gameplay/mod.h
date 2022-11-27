@@ -19,7 +19,7 @@ extern bool hud;
 extern bool obj;
 extern bool useHP;
 extern bool infiniteHover;
-extern uint8_t difficulty;
+extern uint8_t hpMaxConfig;
 
 extern const NJS_VECTOR KLScaleDiff;
 
@@ -80,13 +80,6 @@ enum charBossState
 	BthrowSetup,
 	Bthrew,
 	bDone,
-};
-
-enum difficultyE
-{
-	easy,
-	normal,
-	hard
 };
 
 void ReadConfig(const char* path, const HelperFunctions& helperFunctions);

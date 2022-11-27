@@ -6,6 +6,7 @@ static NJS_TEXLIST KHudTexlist = { arrayptrandlength(KHud) };
 static const float ringPos = 52.0f;
 static bool HudPlus = false;
 
+
 static NJS_TEXANIM Hud_TEXANIM[] = {
 	{ 0x20, 0x27, 0, 0, 0, 0, 0x100, 0x100, dream, 0x20 },
 	{ 0x32, 0x27, 0, 0, 0, 0, 0x100, 0x100, heartEmpty, 0x20 },
@@ -112,13 +113,13 @@ void DrawBGHeartHUD()
 	auto saveAng = Hud_BGSprite.ang;
 
 	//adjust hud size and pos depending on the number of the difficulty
-	if (difficulty == hard)
+	if (hpMaxConfig == 1)
 	{
 		Hud_BGSprite.sx /= 3.0f;
 		Hud_BGSprite.p.x += 15.0f;
 	}
 
-	if (difficulty == easy)
+	if (hpMaxConfig == 6)
 	{
 		Hud_BGSprite.p.y += 15.0f;
 		Heart_SPRITE.p.y += 10.0f;

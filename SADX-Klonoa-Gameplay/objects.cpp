@@ -323,7 +323,7 @@ void AlarmClock_Main(task* tsk)
 		{
 			CreateChildTask((LoadObj)(LoadObj_Data1), Bubble_ChildMain, tsk);
 		}
-		if (useHP && difficulty != hard)
+		if (useHP && hpMaxConfig != 1)
 		{
 			task* heart = CreateElementalTask(2, 2, Heart_Exec);
 			if (heart)

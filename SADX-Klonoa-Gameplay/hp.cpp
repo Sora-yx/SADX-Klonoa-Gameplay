@@ -63,14 +63,6 @@ void initKlonoaHP()
 	{
 		HurtCharacter_t.Hook(HurtCharacter_r);
 
-		if (difficulty == easy)
-		{
-			HpMax = 6;
-		}
-
-		if (difficulty == hard)
-		{
-			HpMax = 1;
-		}
+		HpMax = hpMaxConfig;
 	}
 }

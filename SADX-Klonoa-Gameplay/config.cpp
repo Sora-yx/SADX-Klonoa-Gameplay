@@ -6,8 +6,16 @@ bool hud = true;
 bool obj = true;
 bool useHP = true;
 bool infiniteHover = false;
+bool music = true;
 
-uint8_t difficulty = normal;
+uint8_t hpMaxConfig = 1;
+
+static const uint8_t hpList[] =
+{
+	6,
+	3,
+	1
+};
 
 static UsercallFunc(signed int, Sonic_ChargeSpinDash_t, (playerwk* a1, taskwk* a2), (a1, a2), 0x496EE0, rEAX, rEAX, rEDI);
 static UsercallFuncVoid(DoHomingAttack_t, (playerwk* a1, taskwk* a2, motionwk2* a3), (a1, a2, a3), 0x494B80, rEAX, rECX, stack4);
@@ -51,11 +59,13 @@ void ReadConfig(const char* path, const HelperFunctions& helperFunctions) {
 	allowKlonoaMoves = config->getBool("gameplay", "allowKlonoaMoves", true);
 	nerfPhysics = config->getBool("gameplay", "nerfPhysics", true);
 	useHP = config->getBool("gameplay", "useHP", true);
-	difficulty = config->getInt("gameplay", "difficulty", normal);
+	hpMaxConfig = hpList[config->getInt("gameplay", "hpMax", 1)];
 	infiniteHover = config->getBool("gameplay", "infiniteHover", false);
 
 	hud = config->getBool("visual", "hud", true);
 	obj = config->getBool("visual", "obj", true);
+
+	music = config->getBool("audio", "music", true);
 
 	delete config;
 
@@ -80,4 +90,10 @@ void ReadConfig(const char* path, const HelperFunctions& helperFunctions) {
 
 	if (useHP)
 		obj = true;
+
+	if (music)
+	{
+		helperFunctions.ReplaceFile("system\\sounddata\\bgm\\wma\\icecap3.wma", "system\\music\\icecap3.mp3");
+		helperFunctions.ReplaceFile("system\\sounddata\\bgm\\wma\\option.wma", "system\\music\\option.adx");
+	}
 }
