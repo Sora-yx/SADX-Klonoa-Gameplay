@@ -1,7 +1,7 @@
-- A big thanks to Triph (T4ils__) for extracting and uploading all Klonoa animations and models on ModelResource with his armature, this mod couldn't have been done otherwise.
+- A big thanks to Triph (T4ils__) for extracting and uploading all Klonoa animations and models (rigged) on ModelResource, this mod couldn't have been done otherwise.
 - Special thanks to Kell for fixing an interpolation issue with animations in SADX that allowed Klonoa to work properly in-game.
 - Special thanks to ItsEasyActually for fixing many issues on the Blender SA addon that made the rendering of Klonoa much better and easier in-game.
 - Life Icon from Klonoa Heroes ripped by Meta Warp.
 - Some part of the mod code uses SA2 Sonic by MainMemory as a reference, specially to draw chunk model.
-- Super Klonoa textures, name and extra fixes by SoloSlacker
-- Few SADX animations made from scratch by Chaorrin
+- Super Klonoa and nameplates texture and other graphic tweaks by SoloSlacker.
+- Few custom Klonoa animations made from scratch by Chaorrin.

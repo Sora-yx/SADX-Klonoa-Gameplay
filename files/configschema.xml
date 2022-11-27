@@ -14,14 +14,15 @@
         <HelpText>Use HP to manage Klonoa life instead of rings, this will force Klonoa objects to show up.</HelpText>
       </Property>
 	  
+	  	  	  	  	<Property name="hpMax" display="HP Max" type="hpE" defaultvalue="1">
+        <HelpText>Select your HP max. (No effect if "Use HP" is disabled.)</HelpText>
+      </Property>
+		</Group>
+	  
 	  	  	<Property name="infiniteHover" display="Infinite Hover" type="bool" defaultvalue="False">
         <HelpText>Have no fear, Klonoa is here!</HelpText>
       </Property>
-	  
-	  	  	  	<Property name="difficulty" display="Difficulty" type="difficultyE" defaultvalue="1">
-        <HelpText>Select the difficulty. Easy: 6 hearts, normal: 3, hard: one hit ko. (No effect if "Use HP" is disabled.)</HelpText>
-      </Property>
-		</Group>
+	
 		
 			<Group name="visual" display="2. Visuals">
 	      <Property name="hud" display="Klonoa Hud" type="bool" defaultvalue="True">
@@ -31,16 +32,21 @@
         <HelpText>Replace some objects with their Klonoa counterpart (only apply when playing Klonoa)</HelpText>
       </Property>
 	  
-	
 		
 		</Group>
+		
+					<Group name="audio" display="3. Audio">
+	      <Property name="music" display="Klonoa Music" type="bool" defaultvalue="True">
+        <HelpText>Replace menu and ice cap 3 music with Klonoa counterpart.</HelpText>
+      </Property>
+	  		</Group>
 		</Groups>
 		
-		<Enums>
-				    <Enum name="difficultyE">
-      <EnumMember name="0" display="Easy" />
-      <EnumMember name="1" display="Normal" />
-      <EnumMember name="2" display="Hard" />
+	<Enums>
+	<Enum name="hpE">
+      <EnumMember name="0" display="6 HP" />
+      <EnumMember name="1" display="3 HP" />
+      <EnumMember name="2" display="1 HP" />
     </Enum>
 	</Enums>
 
