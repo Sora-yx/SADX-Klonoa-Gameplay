@@ -8,14 +8,14 @@ bool useHP = true;
 bool infiniteHover = false;
 bool music = true;
 
-uint8_t hpMaxConfig = 1;
-
 static const uint8_t hpList[] =
 {
 	6,
 	3,
 	1
 };
+
+uint8_t hpMaxConfig = hpList[1];
 
 static UsercallFunc(signed int, Sonic_ChargeSpinDash_t, (playerwk* a1, taskwk* a2), (a1, a2), 0x496EE0, rEAX, rEAX, rEDI);
 static UsercallFuncVoid(DoHomingAttack_t, (playerwk* a1, taskwk* a2, motionwk2* a3), (a1, a2, a3), 0x494B80, rEAX, rECX, stack4);
