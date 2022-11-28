@@ -8,7 +8,7 @@ ModelInfo* boardMDL = nullptr;
 ModelInfo* heartMDL = nullptr;
 ModelInfo* largeHeartMDL = nullptr;
 
-static NJS_TEXNAME KObjCommonTex[3] = { 0 };
+static NJS_TEXNAME KObjCommonTex[4] = { 0 };
 static NJS_TEXLIST KObjComTexlist = { arrayptrandlength(KObjCommonTex) };
 
 TaskHook CheckPoint_t((intptr_t)CheckPoint_Main);
@@ -443,6 +443,11 @@ void LoadKlonoaTask()
 	tsk->twp->pos = playertwp[0]->pos;
 }
 
+Sint32 __cdecl njSetTexture_Snowboard(NJS_TEXLIST* texlist)
+{
+	return njSetTexture(&KObjComTexlist);
+}
+
 void init_Objects()
 {
 	LoadLevelObjTextures_t.Hook(LoadLevelObjTextures_r);
@@ -456,6 +461,12 @@ void init_Objects()
 	boardMDL = LoadBasicModel("board");
 	heartMDL = LoadBasicModel("heart");
 	largeHeartMDL = LoadBasicModel("largeHeart");
+
+	if (boardMDL)
+	{
+		SONIC_OBJECTS[71] = boardMDL->getmodel();
+		WriteCall((void*)0x494182, njSetTexture_Snowboard);
+	}
 
 	//obj display hack
 	Ring_Display_t.Hook(DreamStone_Display);

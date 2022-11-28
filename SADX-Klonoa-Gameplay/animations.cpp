@@ -629,7 +629,7 @@ void SetKlonoaAnims()
 	KlonoaAnimList[102].Animation->motion = KlonoaANM[animID_Board]->getmotion();
 	KlonoaAnimList[102].NextAnim = 102;
 	KlonoaAnimList[102].TransitionSpeed = 0.125;
-	KlonoaAnimList[102].AnimationSpeed = 1.0f;
+	KlonoaAnimList[102].AnimationSpeed = 0.5f;
 	KlonoaAnimList[102].Property = 3;
 
 	//board brake right
@@ -650,7 +650,7 @@ void SetKlonoaAnims()
 	KlonoaAnimList[105].Animation->motion = KlonoaANM[animID_FallBoard]->getmotion();
 	KlonoaAnimList[105].NextAnim = 111;
 	KlonoaAnimList[105].TransitionSpeed = 0.125;
-	KlonoaAnimList[105].AnimationSpeed = 0.2f;
+	KlonoaAnimList[105].AnimationSpeed = 0.4f;
 	KlonoaAnimList[105].Property = 4;
 
 	//jump board
@@ -729,7 +729,7 @@ void SetKlonoaAnims()
 	KlonoaAnimList[124].Animation->motion = KlonoaANM[animID_Crouch]->getmotion();
 	KlonoaAnimList[124].NextAnim = 124;
 	KlonoaAnimList[124].TransitionSpeed = 0.125;
-	KlonoaAnimList[124].AnimationSpeed = 0.3f;
+	KlonoaAnimList[124].AnimationSpeed = 0.6f;
 	KlonoaAnimList[124].Property = 3;
 
 	//showers
