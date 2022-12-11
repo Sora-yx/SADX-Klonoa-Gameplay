@@ -1,5 +1,8 @@
 #include "pch.h"
 
+
+CCL_INFO bullet_col = { 0, 0, 0x70, 0x40, 0x400, { 0 }, 12.0f, 0.0, 0.0, 0.0, 0, 0, 0 };
+
 extern ObjectFuncPtr enemyList[];
 
 signed int KlonoaWBullet_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
@@ -9,7 +12,7 @@ signed int KlonoaWBullet_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 		return 0;
 	}
 
-	klwk->bulletShot = false;
+
 	bool isOnGround = (data->flag & 3);
 	data->mode = isOnGround ? act_windBullet : act_windBulletAir;
 	co2->mj.reqaction = isOnGround ? anm_windBullet : anm_windBulletAir;
@@ -34,15 +37,14 @@ bool isTargetAnEnemy(task* enemy) {
 	return false;
 }
 
-signed int WindBullet_CheckHitEnemy(taskwk* bulletData, klonoawk* klwk, playerwk* co2, char pnum)
+signed int WindBullet_CheckHitEnemy(taskwk* bulletData, klonoawk* klwk, playerwk* co2)
 {
 	if (!bulletData)
 		return 0;
 
-	auto target = GetClosestEnemyFromP(&bulletData->pos, pnum);
-	auto data = target.twp;
+	auto data = GetClosestEnemyCol(bulletData);
 
-	if (data && data->cwp && target.dist <= 20.0f)
+	if (data && data->cwp)
 	{
 		if (isTargetAnEnemy(data->cwp->mytask)) //check if it's an enemy...
 		{
@@ -69,6 +71,7 @@ signed int WindBullet_CheckHitEnemy(taskwk* bulletData, klonoawk* klwk, playerwk
 }
 
 bool isTargetCharBoss(task* enemy) {
+
 	if (CharacterBossActive) {
 		if ((ObjectFuncPtr)enemy->exec == Knuckles_Main || (ObjectFuncPtr)enemy->exec == Gamma_Main) {
 			return true;
@@ -78,15 +81,14 @@ bool isTargetCharBoss(task* enemy) {
 	return false;
 }
 
-signed int WindBullet_CheckHitCharBoss(taskwk* bulletData, klonoawk* klwk, char pnum)
+signed int WindBullet_CheckHitCharBoss(taskwk* bulletData, klonoawk* klwk)
 {
 	if (!bulletData || !CharacterBossActive)
 		return 0;
 
-	auto target = GetClosestEnemyFromP(&bulletData->pos, pnum);
-	auto data = target.twp;
+	auto data = GetClosestEnemyCol(bulletData);
 
-	if (data && data->cwp && target.dist <= 20.0f)
+	if (data && data->cwp)
 	{
 		if (isTargetCharBoss(data->cwp->mytask)) //check if it's a char fight...
 		{
@@ -116,6 +118,7 @@ void deleteBullet(task* tp)
 				FreeTask(task);
 			}
 
+			klwk->bulletShot = false;;
 			klwk->currentBulletPtr = nullptr;
 		}
 	}
@@ -130,9 +133,17 @@ void bulletTask(task* tp)
 	{
 		if (data->mode == 1)
 		{
+			char pnum = tp->twp->smode;
+			auto player = playertp[pnum];
+			klonoawk* klwk = nullptr;
+
+			if (player)
+				klwk = (klonoawk*)player->awp;
+
 			timer = (data->counter.f - 0.083333336f);
 			data->counter.f = data->counter.f - 0.083333336f;
-			if (timer <= 0.0f)
+
+			if (timer <= 0.0f || klwk && klwk->enemyGrabPtr != nullptr)
 			{
 				FreeTask(tp);
 				return;
@@ -141,11 +152,14 @@ void bulletTask(task* tp)
 			data->pos.x += data->scl.x;
 			data->pos.y += data->scl.y;
 			data->pos.z += data->scl.z;
+
+			EntryColliList(data);
 		}
 	}
 	else
 	{
 		data->counter.f = 1.5f;
+		CCL_Init(tp, &bullet_col, 1, 3u);
 		tp->disp = dispEffectKnuxHadoken;
 		tp->dest = deleteBullet;
 
@@ -160,11 +174,13 @@ void BulletLookForTarget(klonoawk* klwk, taskwk* data)
 {
 	auto pnum = data->counter.b[0];
 	//if bullet exists, look for an enemy
+
 	if (klwk->currentBulletPtr) {
+
 		auto co2 = playerpwp[pnum];
 
 		//if bullet hit an enemy
-		if (WindBullet_CheckHitEnemy(klwk->currentBulletPtr->twp, klwk, co2, pnum) || WindBullet_CheckHitCharBoss(klwk->currentBulletPtr->twp, klwk, pnum))
+		if (WindBullet_CheckHitEnemy(klwk->currentBulletPtr->twp, klwk, co2) || WindBullet_CheckHitCharBoss(klwk->currentBulletPtr->twp, klwk))
 		{
 			//if target is monkey in cage, don't grab it, destroy instead.
 			if (klwk->currentBulletPtr->exec == (TaskFuncPtr)OMonkeyCage)
@@ -193,6 +209,7 @@ void BulletEnd(taskwk* data, playerwk* co2, klonoawk* klwk)
 		{
 			bool isOnGround = (data->flag & 3);
 			data->mode = isOnGround ? act_stnd : act_fall;
+			klwk->bulletShot = false;
 		}
 	}
 }
@@ -232,7 +249,10 @@ void BulletAction(taskwk* data, playerwk* co2, klonoawk* klwk)
 
 void Klonoa_ManageBullet(taskwk* data, playerwk* co2, klonoawk* klwk)
 {
-	BulletAction(data, co2, klwk);
-	BulletLookForTarget(klwk, data);
-	BulletEnd(data, co2, klwk);
+	if (!klwk->enemyGrabPtr)
+	{
+		BulletAction(data, co2, klwk);
+		BulletLookForTarget(klwk, data);
+		BulletEnd(data, co2, klwk);
+	}
 }

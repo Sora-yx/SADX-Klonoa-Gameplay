@@ -897,6 +897,12 @@ void SetKlonoaAnims()
 	KlonoaAnimList[anm_throwStd].AnimationSpeed = 0.5f;
 	KlonoaAnimList[anm_throwStd].Property = 4;
 
+	//throw enemy air
+	KlonoaAnimList[anm_throwAir].Animation->motion = KlonoaANM[anmID_throwAir]->getmotion();
+	KlonoaAnimList[anm_throwAir].NextAnim = anm_fall;
+	KlonoaAnimList[anm_throwAir].AnimationSpeed = 0.5f;
+	KlonoaAnimList[anm_throwAir].Property = 4;
+
 	//fly standing
 	KlonoaAnimList[anm_flyStd].Animation->motion = KlonoaANM[anmID_flyStd]->getmotion();
 	KlonoaAnimList[anm_flyStd].NextAnim = anm_flyStd;

@@ -594,6 +594,19 @@ void OMonkeyCage_r(task* obj)
 	}
 }
 
+void EnemyCol_Fix(ObjectMaster* obj, CollisionData* collisionArray, int count, unsigned __int8 list)
+{
+	for (int i = 0; i < PMax; i++)
+	{
+		if (isKlonoa(i))
+		{
+			return Collision_Init(obj, collisionArray, count, 4u);
+		}
+	}
+
+	return Collision_Init(obj, collisionArray, count, list);
+}
+
 void init_EnemiesHack()
 {
 	IncrementAct_t.Hook(IncrementAct_r);
@@ -621,4 +634,8 @@ void init_EnemiesHack()
 	RingLine_t.Hook(RingLine_r);
 	OMonkeyCage_t.Hook(OMonkeyCage_r);
 	UpdateSetAndDelete_t.Hook(UpdateSetAndDelete_r);
+
+	//change spinner col list so they can be grabbed
+	WriteCall((void*)0x4B0D17, EnemyCol_Fix);
+	WriteCall((void*)0x540684, EnemyCol_Fix);
 }

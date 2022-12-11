@@ -331,7 +331,7 @@ colaround GetClosestEnemy(NJS_VECTOR* pos) {
 		float dist = GetDistance(pos, &target_->twp->pos);
 
 		if (dist < target.dist && target_->twp &&
-			target_->twp->cwp && target_->twp->cwp->mytask && target_->twp->cwp->mytask->mwp)
+			target_->twp->cwp)
 		{
 			if (target_->twp->cwp->id == 3 || target_->twp->cwp->id == 2)
 			{
@@ -346,46 +346,78 @@ colaround GetClosestEnemy(NJS_VECTOR* pos) {
 
 colaround GetClosestEnemyFromP(NJS_VECTOR* pos, char pnum) {
 
-	colaround target = { 0, 1000000.0f };
+	colaround target = { 0, 100.0f };
 
-	bool multi = isMultiActive();
+	static const bool multiMod = isMultiActive();
 
 	auto size = HomingAttackTarget_Sonic_Index;
 
 	if (pnum == 1)
+	{
 		size = HomingAttackTarget_NonSonic_Index;
-	else if (pnum > 1 && multi)
+	}
+	else if (pnum > 1 && multiMod)
 	{
 		size = *multi_get_enemy_list_index(pnum);
 	}
+
+	static taskwk* targetData = nullptr;
 
 	for (int i = 0; i < size; ++i) {
 
 		colaround* target_ = &HomingAttackTarget_Sonic_[i];
 
 		if (pnum == 1)
+		{
 			target_ = &HomingAttackTarget_NonSonic_[i];
-		else if (pnum > 1 && multi)
+		}
+		else if (pnum > 1 && multiMod)
 		{
 			target_ = multi_get_enemy_list(pnum);
 		}
 
-		if (!target_)
+
+		if (!target_ || !target_->twp)
 			continue;
 
-		float dist = GetDistance(pos, &target_->twp->pos);
+		targetData = target_->twp;
+		break;
+	}
 
-		if (dist < target.dist && target_->twp &&
-			target_->twp->cwp && target_->twp->cwp->mytask && target_->twp->cwp->mytask->mwp)
+	float dist = GetDistance(pos, &targetData->pos);
+
+	if (dist < target.dist && targetData->cwp)
+	{
+		if (targetData->cwp->id == 3 || targetData->cwp->id == 2)
 		{
-			if (target_->twp->cwp->id == 3 || target_->twp->cwp->id == 2)
+			target.dist = dist;
+			target.twp = targetData;
+		}
+	}
+
+	return target;
+}
+
+taskwk* GetClosestEnemyCol(taskwk* bulletData) {
+
+	if (!bulletData || !bulletData->cwp)
+		return 0;
+
+	auto cwp = bulletData->cwp;
+
+	//Loop the collision array of the bullet...
+	for (int i = 0; i < 16; i++)
+	{
+		auto target = cwp->hit_info[i].hit_twp;
+
+		if (target != nullptr) //if the collision hit something, start looking for more data.
+		{
+			if (target->cwp->mytask && target->cwp->mytask->twp) // if the target has an exec and twp data
 			{
-				target.dist = dist;
-				target.twp = target_->twp;
+				return target;
 			}
 		}
 	}
 
-
-	return target;
+	return nullptr;
 }
