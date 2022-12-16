@@ -437,6 +437,7 @@ static bool EnemyCapturedHandle(task* obj)
 
 				break;
 			case dead:
+				AddEnemyScore(10);
 				DestroyEnemy(obj, data);
 				UpdateSetDataAndDelete(obj);
 				ResetKlonoaGrab(klwk);

@@ -1,10 +1,15 @@
 #include "pch.h"
 #include "hud.h"
 
+#define ReplaceTex 	HelperFunctionsGlobal.ReplaceTexture
+#define replaceFile HelperFunctionsGlobal.ReplaceFile
+
 static NJS_TEXNAME KHud[4] = { 0 };
 static NJS_TEXLIST KHudTexlist = { arrayptrandlength(KHud) };
 static const float ringPos = 52.0f;
 static bool HudPlus = false;
+
+static UsercallFuncVoid(HudDisplayRings_t, (signed int a1, unsigned __int8 a2, NJS_SPRITE* a3), (a1, a2, a3), 0x425960, rEAX, rBL, rESI);
 
 
 static NJS_TEXANIM Hud_TEXANIM[] = {
@@ -103,7 +108,7 @@ void DrawDreamStoneHUD(bool bosslevel)
 
 void DrawBGHeartHUD()
 {
-	static const float y = HudPlus ? 0.0f : 12.0f;
+	static const float y = HudPlus ? 12.0f : 32.0f;
 	Heart_SPRITE.p.x = 10;
 	Heart_SPRITE.p.y = ringPos + 50.0f - y;
 	Hud_BGSprite.p.x = -5;
@@ -171,10 +176,53 @@ void loadKLHudTex()
 	LoadPVM("hud", &KHudTexlist);
 }
 
+static const void* const loc_425960 = (void*)0x425960;
+static inline void DisplaySNumbers(NJS_SPRITE* ssp, Sint32 number, Uint8 fig)
+{
+	__asm
+	{
+		mov bl, [fig]
+		mov eax, [number]
+		mov esi, [ssp]
+		call loc_425960
+	}
+}
+
+//hide ring (also used for compatibility hud plus)
+void HudDisplayRings_r(signed int ringCount, unsigned __int8 digits, NJS_SPRITE* hud)
+{
+	if (ringCount == Rings && digits == 3 && hud == &Hud_RingTimeLife)
+	{
+		return;
+	}
+
+	HudDisplayRings_t.Original(ringCount, digits, hud);
+}
+
 void init_Hud()
 {
+	std::string texHudPath = modpath + "\\replacetex\\OBJ_REGULAR2\\";
+	std::string path0 = texHudPath + "item_1up.png";
+	std::string path1 = texHudPath + "item_ring10.png";
+	std::string path2 = texHudPath + "item_ring5.png";
+	std::string path3 = texHudPath + "item_ringq.png";
+	std::string path4 = texHudPath + "item_ringnum.png";
+
 	if (hud) {
-		HMODULE hud = GetModuleHandle(L"sadx-hud-plus");
-		HudPlus = hud != NULL;
+	
+		ReplaceTex("OBJ_REGULAR", "item_1up", path0.c_str(), 4031, 64, 64);
+		ReplaceTex("OBJ_REGULAR", "item_ring10", path1.c_str(), 4032, 64, 64);
+		ReplaceTex("OBJ_REGULAR", "item_ring5", path2.c_str(), 4033, 64, 64);
+		ReplaceTex("OBJ_REGULAR", "item_ringq", path3.c_str(), 4034, 64, 64);
+		ReplaceTex("OBJ_REGULAR", "item_ringnum", path4.c_str(), 3250000, 64, 64);
+
+		replaceFile("system\\CON_REGULAR.PVM", "system\\CON_REGULAR_Klonoa.pvmx");
+		replaceFile("system\\CON_REGULAR_E.PVM", "system\\CON_REGULAR_Klonoa_E.pvmx");
+
+		HMODULE hudP = GetModuleHandle(L"sadx-hud-plus");
+		HudPlus = hudP != NULL;
+
+		HudDisplayRings_t.Hook(HudDisplayRings_r);
+
 	}
 }

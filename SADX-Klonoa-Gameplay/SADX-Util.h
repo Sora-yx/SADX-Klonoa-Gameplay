@@ -58,6 +58,8 @@ DataPointer(NJS_SPRITE, AncientLightSprite, 0x981A28);
 DataPointer(NJS_SPRITE, AncientLightSprite2, 0x981A08);
 DataPointer(NJS_TEXLIST, textlist_ancient_light, 0x981998);
 
+DataPointer(NJS_SPRITE, sprite_score, 0x913078);
+
 //cutscene anims
 //EV0002
 DataPointer(NJS_ACTION, action_s_s0029_sonic, 0x3C84998);
