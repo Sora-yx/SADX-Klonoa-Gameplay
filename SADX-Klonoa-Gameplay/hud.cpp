@@ -11,7 +11,6 @@ static bool HudPlus = false;
 
 static UsercallFuncVoid(HudDisplayRings_t, (signed int a1, unsigned __int8 a2, NJS_SPRITE* a3), (a1, a2, a3), 0x425960, rEAX, rBL, rESI);
 
-
 static NJS_TEXANIM Hud_TEXANIM[] = {
 	{ 0x20, 0x27, 0, 0, 0, 0, 0x100, 0x100, dream, 0x20 },
 	{ 0x32, 0x27, 0, 0, 0, 0, 0x100, 0x100, heartEmpty, 0x20 },
@@ -174,18 +173,6 @@ void loadKLHudTex()
 		return;
 
 	LoadPVM("hud", &KHudTexlist);
-}
-
-static const void* const loc_425960 = (void*)0x425960;
-static inline void DisplaySNumbers(NJS_SPRITE* ssp, Sint32 number, Uint8 fig)
-{
-	__asm
-	{
-		mov bl, [fig]
-		mov eax, [number]
-		mov esi, [ssp]
-		call loc_425960
-	}
 }
 
 //hide ring (also used for compatibility hud plus)

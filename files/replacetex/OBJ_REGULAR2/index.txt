@@ -1,0 +1,5 @@
+4031,item_1up.png,64x64
+4032,item_ring10.png,64x64
+4033,item_ring5.png,64x64
+4034,item_ringq.png,64x64
+3250000,item_ringnum.png,64x64
