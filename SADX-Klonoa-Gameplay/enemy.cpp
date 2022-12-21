@@ -387,6 +387,7 @@ static bool EnemyCapturedHandle(task* obj)
 
 			if (!isKlonoa(pnum))
 			{
+				data->mode = 1;
 				return false;
 			}
 
@@ -394,7 +395,9 @@ static bool EnemyCapturedHandle(task* obj)
 			auto klwk = (klonoawk*)playertp[pnum]->awp;
 
 			if (!klwk)
+			{
 				return false;
+			}
 
 			data->ang.y += 1024;
 
@@ -403,6 +406,11 @@ static bool EnemyCapturedHandle(task* obj)
 			case captured:
 				if (player)
 				{
+					if (player->mode <= 2)
+					{
+						player->mode = act_holdStd;
+					}
+
 					data->pos = player->pos;
 					data->pos.y += 16.0f;
 					data->ang.x = player->ang.x;

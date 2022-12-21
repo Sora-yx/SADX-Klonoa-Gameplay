@@ -8,7 +8,7 @@ AnimationFile* KlonoaEvANM[50] = { 0 };
 AnimData_t KlonoaAnimList[AnimCount] = { 0 };
 
 static FunctionHook<void, taskwk*, int> DrawEventActionPL_t((intptr_t)0x417FB0);
-static FunctionHook<void, task*, NJS_ACTION*, NJS_TEXLIST*, float, char, char> EV_SetAction_t((intptr_t)EV_SetAction);
+//static FunctionHook<void, task*, NJS_ACTION*, NJS_TEXLIST*, float, char, char> EV_SetAction_t((intptr_t)EV_SetAction);
 static FunctionHook<void, task*, NJS_OBJECT*, NJS_MOTION*, NJS_TEXLIST*, float, int, int> EV_SetMotion_t((intptr_t)EV_SetMotion);
 static FunctionHook<void> LoadPlayerMotionDataAll_t((intptr_t)0x5034A0);
 static FunctionHook<void, task*, char*> EV_SetFace_t((intptr_t)0x4310D0);
@@ -218,6 +218,7 @@ bool ConvertSonicActionToKloAction(NJS_ACTION* a2)
 	return false;
 }
 
+static Trampoline* EV_SetAction_t = nullptr; //use trampoline to compatibility with DC Conversion
 void __cdecl EV_SetAction_r(task* obj, NJS_ACTION* anim, NJS_TEXLIST* tex, float speed, char mode, char linkframe)
 {
 	if (obj && anim && anim->object != KlonoaMDL->getmodel())
@@ -240,7 +241,8 @@ void __cdecl EV_SetAction_r(task* obj, NJS_ACTION* anim, NJS_TEXLIST* tex, float
 		speed /= 1.7f;
 	}
 
-	EV_SetAction_t.Original(obj, anim, tex, speed, mode, linkframe);
+	FunctionPointer(void, origin, (task * obj, NJS_ACTION * anim, NJS_TEXLIST * tex, float speed, char mode, char linkframe), EV_SetAction_t->Target());
+	origin(obj, anim, tex, speed, mode, linkframe);
 }
 
 int loc_49AB51 = 0x49AB51;
@@ -1061,7 +1063,8 @@ void Init_KlonoaAnim()
 	SetKlonoaAnims();
 	LoadKlonoaEventAnims();
 
-	EV_SetAction_t.Hook(EV_SetAction_r);
+//	EV_SetAction_t.Hook(EV_SetAction_r);
+	EV_SetAction_t = new Trampoline(0x42FE00, 0x42FE06, EV_SetAction_r);
 	EV_SetMotion_t.Hook(EV_SetMotion_r);
 	LoadPlayerMotionDataAll_t.Hook(LoadPlayerMotionDataAll_r);
 
