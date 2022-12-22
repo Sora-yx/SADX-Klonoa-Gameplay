@@ -369,7 +369,7 @@ void SetKlonoaAnims()
 	KlonoaAnimList[14].Property = 10;
 	KlonoaAnimList[14].NextAnim = 14;
 	KlonoaAnimList[14].TransitionSpeed = 0.25f;
-	KlonoaAnimList[14].AnimationSpeed = 0.07f;
+	KlonoaAnimList[14].AnimationSpeed = 0.06f;
 
 	//spring
 	KlonoaAnimList[16].Animation->motion = KlonoaANM[anmID_jump]->getmotion();
