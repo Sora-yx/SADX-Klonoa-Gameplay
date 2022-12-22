@@ -353,18 +353,26 @@ void ThrowEnemy_Action(task* tp)
 		return;
 	}
 
+	SetDamageCol(data);
 	njAddVector(&data->pos, &des);
 	data->ang.x += 2048;
 
-
 	if (data->cwp && data->cwp->hit_cwp && data->cwp->hit_cwp->mytask)
 	{
-		if (data->counter.f > ColCrashThrowTimer)
-			data->counter.f = ColCrashThrowTimer;
+		auto target = data->cwp->hit_cwp->mytask;
 
-		if (data->cwp->hit_cwp->mytask->twp)
-			data->cwp->hit_cwp->mytask->twp->flag |= Status_Hurt;
+		if (target->twp->cwp->id == 2 || target->twp->cwp->id == 3)
+		{
+			if (data->counter.f > ColCrashThrowTimer)
+				data->counter.f = ColCrashThrowTimer;
+
+			if (target->twp)
+				target->twp->flag |= Status_Hurt;
+		}
 	}
+
+
+	EntryColliList(data);
 }
 
 static bool EnemyCapturedHandle(task* obj)

@@ -245,7 +245,7 @@ void Bubble_ChildMain(task* obj)
 
 	if (!data->mode)
 	{
-		data->scl = { 10.0, 1.0, 4.0 };
+		data->scl = { 10.0f, 1.0f, 4.0f };
 		data->pos.y += 1.5f;
 		obj->disp = Bubble_Child;
 		data->mode++;
