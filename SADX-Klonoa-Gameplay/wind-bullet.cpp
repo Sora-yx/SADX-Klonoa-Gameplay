@@ -95,7 +95,8 @@ signed int WindBullet_CheckHitCharBoss(taskwk* bulletData, klonoawk* klwk)
 			if (!data->wtimer) {
 				data->mode = Bcaptured; //set the enemy to a new custom state, see "bosses.cpp"
 				data->btimer = bulletData->smode; //store pnum
-				klwk->enemyGrabPtr = data->cwp->mytask; //we copy the task of the boss for external use with Klonoa.
+				klwk->enemyGrabPtr = data->cwp->mytask;
+				klwk->charBossGrabbed = true;
 				return 1;
 			}
 		}
@@ -118,7 +119,7 @@ void deleteBullet(task* tp)
 				FreeTask(task);
 			}
 
-			klwk->bulletShot = false;;
+			klwk->bulletShot = false;
 			klwk->currentBulletPtr = nullptr;
 		}
 	}
@@ -203,7 +204,7 @@ void BulletLookForTarget(klonoawk* klwk, taskwk* data)
 //reset klonoa action when the bullet despawn
 void BulletEnd(taskwk* data, playerwk* co2, klonoawk* klwk)
 {
-	if (!klwk->enemyGrabPtr)
+	if (!klwk->enemyGrabPtr && !klwk->charBossGrabbed)
 	{
 		if (co2->mj.reqaction < anm_windBullet || co2->mj.reqaction > anm_windBulletEnd)
 		{

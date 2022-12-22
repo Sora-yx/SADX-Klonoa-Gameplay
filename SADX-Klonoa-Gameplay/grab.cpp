@@ -2,10 +2,11 @@
 
 void ResetKlonoaGrab(klonoawk* klwk)
 {
-	if (CharacterBossActive || !klwk)
+	if (!klwk)
 		return;
 
 	klwk->enemyGrabPtr = nullptr;
+	klwk->charBossGrabbed = false;
 	return;
 
 }
@@ -15,7 +16,7 @@ void CheckKlonoaEnemyPtr(klonoawk* klwk, taskwk* data, playerwk* co2)
 	if (!data || !klwk)
 		return;
 
-	if (klwk->enemyGrabPtr)
+	if (klwk->enemyGrabPtr || klwk->charBossGrabbed)
 	{
 		if (!isKlonoaHold(data->counter.b[0]) && data->mode > act_fall && data->mode != act_hurt)
 		{

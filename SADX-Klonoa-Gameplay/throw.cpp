@@ -54,7 +54,7 @@ void ThrowEnemyCalcDirection(taskwk* data, klonoawk* klwk)
 
 void DropEnemy(klonoawk* klwk)
 {
-	if (klwk && klwk->enemyGrabPtr && klwk->enemyGrabPtr->twp)
+	if (klwk && klwk->enemyGrabPtr)
 	{
 		auto data = klwk->enemyGrabPtr->twp;
 		if (!CharacterBossActive) {

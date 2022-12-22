@@ -304,10 +304,12 @@ void BThrowEnemy_Action(task* tp)
 	auto wk = (playerwk*)tp->mwp->work.l;
 	if (wk)
 	{
+		wk->acc.x = 7.0f;
 		njAddVector(&data->pos, &wk->acc);
 	}
 }
 
+static bool hurtBoss = false;
 static bool CharacterCapturedHandle(task* obj)
 {
 	auto data = obj->twp;
@@ -321,6 +323,7 @@ static bool CharacterCapturedHandle(task* obj)
 			auto pnum = 0;
 			auto player = playertwp[pnum];
 			auto klwk = (klonoawk*)playertp[pnum]->awp;
+			auto co2Boss = (playerwk*)obj->mwp->work.l;
 
 			if (!player || !klwk)
 				return false;
@@ -330,6 +333,7 @@ static bool CharacterCapturedHandle(task* obj)
 			switch (data->mode)
 			{
 			case Bcaptured:
+				hurtBoss = false;
 				pnum = data->btimer;
 
 				if (obj->exec == (TaskFuncPtr)Knuckles_Main)
@@ -352,11 +356,17 @@ static bool CharacterCapturedHandle(task* obj)
 				{
 					data->pos = { player->pos.x, player->pos.y + 16.0f, player->pos.z };
 				}
+				else
+				{
+					data->mode = 1;
+					return false;
+				}
 				break;
 			case Bdrop:
 				if (!BTimingEnemyHurt(data))
 				{
-					data->pos.y -= dropSpd;
+					if (co2Boss)
+						co2Boss->spd.y -= 2.0f;
 				}
 				break;
 			case BthrowSetup:
@@ -369,18 +379,10 @@ static bool CharacterCapturedHandle(task* obj)
 			case bDone:
 			default:
 				EV_ClrAction(obj);
+				hurtBoss = true;
 				player->mode = 1;
-
-				data->pos = player->pos;
-				if ((player->flag & 3) == 0)
-				{
-					data->pos.y -= 2.0f;
-				}
-				data->pos.x += 15.0f;
-				data->pos.z += 10.0f;
-
 				data->mode = 1;
-				data->flag |= Status_Hurt;
+				klwk->charBossGrabbed = false;
 				break;
 			}
 
@@ -417,6 +419,10 @@ void Gamma_Main_r(task* obj)
 		{
 			CharacterCapturedHandle(obj);
 		}
+	}
+	else
+	{
+		hurtBoss = false;
 	}
 
 	Gamma_Main_t.Original(obj);
@@ -458,6 +464,28 @@ void RemoveEnemyBounceThing(unsigned __int8 playerID, float speedX, float speedY
 	return EnemyBounceThing(playerID, speedX, speedY, speedZ);
 }
 
+TaskHook GammaBossAi_t(0x4D5340);
+
+void __cdecl GammaBossAI_r(task* a1)
+{
+	GammaBossAi_t.Original(a1);
+
+	auto evbosswk = (EVBOSS_WORK*)a1->awp;
+
+	if (hurtBoss && evbosswk)
+	{
+		evbosswk->stwp->flag |= Status_Hurt;
+		auto v31 = evbosswk->flag & 0xFFFFFFFE;
+		++evbosswk->attackmode;
+		evbosswk->timer = 0;
+		evbosswk->smode = 0;
+		evbosswk->mode = 5;
+		evbosswk->flag = v31;
+		PlayVoice(1776);
+		hurtBoss = false;
+	}
+}
+
 void init_BossesHacks()
 {
 	if (!allowKlonoaMoves)
@@ -482,6 +510,7 @@ void init_BossesHacks()
 	Knux_Main_t.Hook(Knuckles_Main_r);
 	Gamma_Main_t.Hook(Gamma_Main_r);
 	sub_4C27B0_t.Hook(sub_4C27B0_r);
+	GammaBossAi_t.Hook(GammaBossAI_r);
 
 	RunLevelDestructor_t.Hook(RunLevelDestructor_r);
 

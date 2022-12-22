@@ -15,6 +15,44 @@ struct ModelAnimationThing_r
 	void(__cdecl* Function)(NJS_CNK_MODEL*);
 };
 
+struct EVBOSS_WORK
+{
+	char mode;
+	char smode;
+	char type;
+	char attackmode;
+	__int16 timer;
+	__int16 count;
+	char* attackmodetbl;
+	int flag;
+	void(__cdecl* exec)(task*);
+	void(__cdecl* exit)(task*);
+	NJS_POINT3 targetpos;
+	unsigned int old_ang;
+	float homing_dist;
+	int ana_ang;
+	float ana_str;
+	float dist;
+	float distxz;
+	unsigned int btn_on;
+	unsigned int btn_press;
+	task* stp;
+	taskwk* stwp;
+	motionwk2* smwp;
+	CharObj2* spwp;
+	task* dtp;
+	taskwk* dtwp;
+	motionwk2* dmwp;
+	CharObj2* dpwp;
+	task* ltp;
+	task* ring_tp;
+	task* wall_tp;
+	float fpara[4];
+	__int16 spara[8];
+	NJS_POINT3 init_pos;
+};
+
+
 
 ThiscallFunctionPointer(void*, njStartMotionObj, (NJS_MOTION* obj, float frame), 0x780500);
 DataPointer(ModelAnimationThing_r*, nj_objmotinfo_ptr, 0x389DCCC);
@@ -209,3 +247,4 @@ static inline void SonicHoldObject(playerwk* a1, taskwk* a2)
 		call sHoldObjPtr
 	}
 }
+

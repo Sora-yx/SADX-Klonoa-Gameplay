@@ -35,6 +35,7 @@ struct klonoawk
 	char superJumpCount;
 	task* currentBulletPtr;
 	task* enemyGrabPtr;
+	bool charBossGrabbed;
 	NJS_VECTOR ringPos;
 	NJS_VECTOR ringVec;
 };
