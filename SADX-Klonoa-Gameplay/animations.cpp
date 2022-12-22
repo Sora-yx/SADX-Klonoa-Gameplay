@@ -31,6 +31,7 @@ static const std::unordered_map<uint16_t, uint16_t> AnimMotion_ids_map = {
 	{ 14, anm_jump},
 	{ 18, anm_run2},
 	{ 20, anm_turnAround},
+	{ 122, anm_bStance0},
 	{ 123, anm_bStance1 },
 };
 
@@ -229,10 +230,17 @@ void __cdecl EV_SetAction_r(task* obj, NJS_ACTION* anim, NJS_TEXLIST* tex, float
 			tex = &KlonoaTexList;
 
 			if (!ConvertSonicActionToKloAction(anim)) //if the animation didn't get replaced, apply a placeholder as a failafe.
-				anim->motion = KlonoaEvANM[1]->getmotion();
+			{
+				 anim->motion = KlonoaAnimList[anm_bStance1].Animation->motion;		
+			}
 
 			if (speed > 1.0f)
 				speed = 1.0f;
+
+			if (anim->motion == KlonoaAnimList[9].Animation->motion || anim->motion == KlonoaAnimList[10].Animation->motion || anim->motion == KlonoaAnimList[11].Animation->motion)
+			{
+				speed = 0.6f;
+			}
 		}
 	}
 
@@ -1063,7 +1071,6 @@ void Init_KlonoaAnim()
 	SetKlonoaAnims();
 	LoadKlonoaEventAnims();
 
-//	EV_SetAction_t.Hook(EV_SetAction_r);
 	EV_SetAction_t = new Trampoline(0x42FE00, 0x42FE06, EV_SetAction_r);
 	EV_SetMotion_t.Hook(EV_SetMotion_r);
 	LoadPlayerMotionDataAll_t.Hook(LoadPlayerMotionDataAll_r);
@@ -1078,5 +1085,5 @@ void Init_KlonoaAnim()
 	WriteCall((void*)0x4181FD, late_ActionMesh_r);
 	WriteCall((void*)0x41820D, late_Action_r);
 
-	WriteCall((void*)0x6E7C5E, EV_Wait_r);
+	WriteCall((void*)0x6E7C5E, EV_Wait_r); //fix klonoa not rotating in the tails pool cutscene
 }

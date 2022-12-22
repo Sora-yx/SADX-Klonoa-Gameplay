@@ -49,7 +49,7 @@ static void SetDamageCol(taskwk* twp)
 	if (CurrentLevel != LevelIDs_Chaos4)
 		twp->cwp->info->a = 13.0f;
 	else
-		twp->cwp->info->a = 30.0f;
+		twp->cwp->info->a = 50.0f;
 
 	twp->cwp->info->damage |= 3u;
 	twp->cwp->info->damage |= 0xCu;
