@@ -152,17 +152,31 @@ void Heart_Exec(task* obj)
 	case 1:
 	{
 		data->ang.y += 400;
-		auto player = GetCollidingEntityA((EntityData1*)data);
+		auto player = (taskwk*)GetCollidingEntityA((EntityData1*)data);
 		if (player)
 		{
+			if (!isKlonoa(player->counter.b[0])) //if a non klonoa player get a heart, give it to klonoa player
+			{
+				int id = getKlonoaPlayer();
+
+				if (id > -1) 
+					player = playertwp[id];
+				else
+				{
+					data->mode++;
+					return;
+				}
+
+			}
+				
 			if (data->scl.z == 2.0f) {
-				PlayCustomSoundVolume(se_heartLarge, 0.5f);
-				ResetKlonoaHP(player->CharID);
+				PlayCustomSoundVolume(se_heartLarge, 0.3f);
+				ResetKlonoaHP(player->counter.b[1]);
 			}
 			else
 			{
-				PlayCustomSoundVolume(se_heart, 0.5f);
-				AddKlonoaHP(player->CharID, 1);
+				PlayCustomSoundVolume(se_heart, 0.3f);
+				AddKlonoaHP(player->counter.b[1], 1);
 			}
 
 			data->mode++;
