@@ -49,7 +49,5 @@ bool isSuper(char pnum);
 AnimData_t* GetKlonoaAnimList();
 void ReplaceSonicAnimPtr();
 bool isTailsRace(char pnum);
-colaround GetClosestEnemyFromP(NJS_VECTOR* pos, char pnum);
-colaround GetClosestEnemy(NJS_VECTOR* pos);
 bool isMultiActive();
 taskwk* GetClosestEnemyCol(taskwk* bulletData);

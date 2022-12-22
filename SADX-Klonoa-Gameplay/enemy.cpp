@@ -49,7 +49,7 @@ static void SetDamageCol(taskwk* twp)
 	if (CurrentLevel != LevelIDs_Chaos4)
 		twp->cwp->info->a = 13.0f;
 	else
-		twp->cwp->info->a = 50.0f;
+		twp->cwp->info->a = 35.0f;
 
 	twp->cwp->info->damage |= 3u;
 	twp->cwp->info->damage |= 0xCu;
@@ -241,7 +241,7 @@ void KillLeon(taskwk* data1)
 		data1->mode = 5;
 		data1->counter.b[1] = 0;
 		data1->counter.b[2] = 1;
-		data1->scl.z = 0.34999999;
+		data1->scl.z = 0.34999999f;
 	}
 }
 
@@ -333,11 +333,6 @@ void ThrowEnemyToBoss_Action(task* tp)
 	njAddVector(&data->pos, &des);
 	data->ang.x += 2048;
 
-	if (SetCrashCol(data))
-	{
-		if (data->counter.f > ColCrashThrowTimer)
-			data->counter.f = ColCrashThrowTimer;
-	}
 
 	EntryColliList(data);
 }
@@ -361,15 +356,14 @@ void ThrowEnemy_Action(task* tp)
 	njAddVector(&data->pos, &des);
 	data->ang.x += 2048;
 
-	auto target = GetClosestEnemy(&data->pos);
-	auto dataT = target.twp;
 
-	if (dataT && dataT->cwp && target.dist <= 15.0f)
+	if (data->cwp && data->cwp->hit_cwp && data->cwp->hit_cwp->mytask)
 	{
 		if (data->counter.f > ColCrashThrowTimer)
 			data->counter.f = ColCrashThrowTimer;
 
-		dataT->flag |= Status_Hurt;
+		if (data->cwp->hit_cwp->mytask->twp)
+			data->cwp->hit_cwp->mytask->twp->flag |= Status_Hurt;
 	}
 }
 
@@ -419,10 +413,7 @@ static bool EnemyCapturedHandle(task* obj)
 				break;
 			case dropSetup:
 				data->counter.f = 5.0f; //timer
-
-				if (isBossLevel())
-					CCL_Init(obj, &stru_981D10, 1, GetColListIDForThrowEnemy());
-
+				CCL_Init(obj, &stru_981D10, 1, GetColListIDForThrowEnemy());
 				data->mode = drop;
 				break;
 			case drop:
@@ -433,8 +424,7 @@ static bool EnemyCapturedHandle(task* obj)
 				break;
 			case throwSetup:
 				data->counter.f = 5.0f; //timer
-				if (isBossLevel())
-					CCL_Init(obj, &stru_981D10, 1, GetColListIDForThrowEnemy());
+				CCL_Init(obj, &stru_981D10, 1, GetColListIDForThrowEnemy());
 				data->mode++;
 				break;
 			case threw:

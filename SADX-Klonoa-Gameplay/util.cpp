@@ -321,82 +321,6 @@ bool isMultiActive()
 	return false;
 }
 
-colaround GetClosestEnemy(NJS_VECTOR* pos) {
-
-	colaround target = { 0, 1000000.0f };
-
-	for (int i = 0; i < HomingAttackTarget_Sonic_Index; ++i) {
-
-		colaround* target_ = &HomingAttackTarget_Sonic_[i];
-		float dist = GetDistance(pos, &target_->twp->pos);
-
-		if (dist < target.dist && target_->twp &&
-			target_->twp->cwp)
-		{
-			if (target_->twp->cwp->id == 3 || target_->twp->cwp->id == 2)
-			{
-				target.dist = dist;
-				target.twp = target_->twp;
-			}
-		}
-	}
-
-	return target;
-}
-
-colaround GetClosestEnemyFromP(NJS_VECTOR* pos, char pnum) {
-
-	colaround target = { 0, 100.0f };
-
-	static const bool multiMod = isMultiActive();
-
-	auto size = HomingAttackTarget_Sonic_Index;
-
-	if (pnum == 1)
-	{
-		size = HomingAttackTarget_NonSonic_Index;
-	}
-	else if (pnum > 1 && multiMod)
-	{
-		size = *multi_get_enemy_list_index(pnum);
-	}
-
-	static taskwk* targetData = nullptr;
-
-	for (int i = 0; i < size; ++i) {
-
-		colaround* target_ = &HomingAttackTarget_Sonic_[i];
-
-		if (pnum == 1)
-		{
-			target_ = &HomingAttackTarget_NonSonic_[i];
-		}
-		else if (pnum > 1 && multiMod)
-		{
-			target_ = multi_get_enemy_list(pnum);
-		}
-
-
-		if (!target_ || !target_->twp)
-			continue;
-
-		targetData = target_->twp;
-		break;
-	}
-
-	float dist = GetDistance(pos, &targetData->pos);
-
-	if (dist < target.dist && targetData->cwp)
-	{
-		if (targetData->cwp->id == 3 || targetData->cwp->id == 2)
-		{
-			target.dist = dist;
-			target.twp = targetData;
-		}
-	}
-
-	return target;
-}
 
 taskwk* GetClosestEnemyCol(taskwk* bulletData) {
 
@@ -406,7 +330,7 @@ taskwk* GetClosestEnemyCol(taskwk* bulletData) {
 	auto cwp = bulletData->cwp;
 
 	//Loop the collision array of the bullet...
-	for (int i = 0; i < 16; i++)
+	for (uint8_t i = 0; i < 16; i++)
 	{
 		auto target = cwp->hit_info[i].hit_twp;
 
