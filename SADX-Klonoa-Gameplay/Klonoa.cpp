@@ -868,4 +868,8 @@ void initKlonoa()
 	for (int i = 0; i < LengthOfArray(klonoaTex_Entry); i++) {
 		HelperFunctionsGlobal.RegisterCharacterPVM(Characters_Sonic, klonoaTex_Entry[i]);
 	}
+
+	//fix Klonoa stuck on jump panel
+	JumpPanel_Collision_[3].center.y = 2.0f;
+	JumpPanel_Collision_[3].a = 7.0f;
 }

@@ -249,3 +249,4 @@ static inline void SonicHoldObject(playerwk* a1, taskwk* a2)
 	}
 }
 
+DataArray(CollisionData, JumpPanel_Collision_, 0x97DF68, 4);
