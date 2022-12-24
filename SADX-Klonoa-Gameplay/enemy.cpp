@@ -55,52 +55,6 @@ static void SetDamageCol(taskwk* twp)
 	twp->cwp->info->damage |= 0xCu;
 }
 
-static void ChildDamageCol(task* obj);
-static bool SetCrashCol(taskwk* data)
-{
-	if (data->cwp && data->cwp->hit_cwp && data->cwp->hit_cwp->mytask)
-	{
-		auto task = data->cwp->hit_cwp->mytask;
-
-		if (task->exec == ChildDamageCol || task->ctp && task->ctp->exec == ChildDamageCol)
-			return false;
-
-		if (task->twp && task->twp->cwp->id != 0) //if the enemy hit another col type that isn't a player
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
-
-//used to add an extra col to damage other enemies with throw
-static void ChildDamageCol(task* obj)
-{
-	auto twp = obj->twp;
-	twp->pos = obj->ptp->twp->pos;
-
-	if (!twp->mode)
-	{
-		CCL_Init(obj, &stru_981D10, 1, 1u);
-		twp->mode++;
-	}
-
-	if (twp->cwp)
-	{
-		SetDamageCol(twp);
-
-		if (SetCrashCol(twp))
-		{
-			auto timer = obj->ptp->twp->counter.f;
-
-			if (timer > ColCrashThrowTimer)
-				obj->ptp->twp->counter.f = ColCrashThrowTimer;
-		}
-
-		EntryColliList(twp);
-	}
-}
 
 void UpdateSetAndDelete_r(task* obj)
 {
@@ -410,9 +364,10 @@ static bool EnemyCapturedHandle(task* obj)
 			case captured:
 				if (player)
 				{
-					if (player->mode <= 2)
+					if (!isKlonoaHold(pnum))
 					{
-						player->mode = act_holdStd;
+						FreeTask(obj);
+						return false;
 					}
 
 					data->pos = player->pos;
