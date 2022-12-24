@@ -7,11 +7,8 @@ time_t t = NULL;
 HelperFunctions HelperFunctionsGlobal;
 std::string modpath;
 
-#define DataArray_(type, name, address, length) \
-    static type *const name = (type *)address; static const int name##_Length = length
-
-DataArray_(playerwk*, playerpwp_, 0x3B3CDF0, 8);
 bool MultiModEnabled = false;
+
 
 extern "C" {
 	__declspec(dllexport) void __cdecl Init(const char* path, const HelperFunctions& helperFunctions)

@@ -244,9 +244,12 @@ void __cdecl EV_SetAction_r(task* obj, NJS_ACTION* anim, NJS_TEXLIST* tex, float
 		}
 	}
 
-	if (anim == KlonoaAnimList[11].Animation && !IsIngame())
+	if (!IsIngame()) //charsel walk anim spd fix
 	{
-		speed /= 1.7f;
+		if (anim == KlonoaAnimList[11].Animation)
+		{
+			speed /= 1.7f; 
+		}
 	}
 
 	FunctionPointer(void, origin, (task * obj, NJS_ACTION * anim, NJS_TEXLIST * tex, float speed, char mode, char linkframe), EV_SetAction_t->Target());
@@ -989,7 +992,7 @@ void InitKlonoaCharSelAnim()
 {
 	SonicCharSelAnim[0] = KlonoaAnimList[11].Animation;
 	SonicCharSelAnim[1] = KlonoaAnimList[75].Animation;
-	SonicCharSelAnim[2] = 0;
+	SonicCharSelAnim[2] = KlonoaAnimList[76].Animation;
 	SonicCharSelAnim[3] = 0;
 }
 
@@ -998,6 +1001,8 @@ void LoadKlonoaEventAnims()
 	KlonoaEvANM[0] = LoadEventAnim("Upgrade0");
 	KlonoaEvANM[1] = LoadEventAnim("battlePos");
 	KlonoaEvANM[2] = LoadEventAnim("Victory");
+	KlonoaEvANM[3] = LoadEventAnim("sleep");
+	KlonoaEvANM[4] = LoadEventAnim("wakeUp");
 }
 
 void SetKlonoaEventAnims()
@@ -1024,6 +1029,19 @@ void SetKlonoaEventAnims()
 	action_s_item_l0.object = KlonoaMDL->getmodel();
 	action_s_item_l1.object = KlonoaMDL->getmodel();
 	action_s_item_l2.object = KlonoaMDL->getmodel();
+
+	//sleep
+	action_s_s0031_sonic.object = KlonoaMDL->getmodel();
+	action_s_s0031_sonic.motion = KlonoaEvANM[3]->getmotion();
+	action_s_s0053_sonic.object = KlonoaMDL->getmodel();
+	action_s_s0053_sonic.motion = KlonoaEvANM[3]->getmotion();
+
+	//wake up
+	action_s_s0032_sonic.object = KlonoaMDL->getmodel();
+	action_s_s0032_sonic.motion = KlonoaEvANM[4]->getmotion();
+	action_s_s0054_sonic.object = KlonoaMDL->getmodel();
+	action_s_s0054_sonic.motion = KlonoaEvANM[4]->getmotion();
+
 
 	action_s_s0071_sonic.object = KlonoaMDL->getmodel();
 	action_s_s0071_sonic.motion = KlonoaEvANM[2]->getmotion();
@@ -1065,6 +1083,34 @@ void ReplaceSonicAnimPtr()
 	}
 }
 
+DataPointer(PADREC_DATA_TAG, EV0052T, 0x8694FC);
+DataPointer(EPATHTAG, epathtag_cube0052_t3, 0x2BE82B0);
+FunctionPointer(task*, COverlayCreate, (float s, float a, float r, float g, float b), 0x6EF480);
+
+void PLayVictoryAnim()
+{
+	EV_SetAction(playertp[0], &action_s_s0071_sonic, &KlonoaTexList, 0.5f, 1, 12);
+}
+
+void SetEndingAnimationOutro(task* player)
+{
+	EV_ClrAction(player);
+	EV_PlayPad(0, &EV0052T);
+	EV_Wait(5);
+	EV_CameraPos(1, 85, 2171.3999f, 118.0f, 1630.995f);
+	EV_CameraAng(1, 85, 0x1B6D, 0x200E, 0xFD00);
+	EV_Wait(93);
+	EV_CameraAng(0, 15, 0x66D, 0x200E, 0xFD00);
+	EV_CameraPos(0, 15, 2171.3f, 125.0f , 1630.665f); 
+	EV_SetAction(player, &action_s_s0071_sonic, &KlonoaTexList, 0.5f, 1, 12);
+	PlayCustomSoundVolume(kl_SuperJump0, 2.0f);
+	EV_SetMode(player, 0);
+	EV_SetPath(player, &epathtag_cube0052_t3, 0.0f, 2);
+	EV_Wait(50);
+	auto BLACK = COverlayCreate(0.033333335f, 0.1f, 0.0f, 0.0f, 0.0f);
+	EV_Wait(30);
+}
+
 void Init_KlonoaAnim()
 {
 	LoadKlonoa_AnimFiles();
@@ -1086,4 +1132,7 @@ void Init_KlonoaAnim()
 	WriteCall((void*)0x41820D, late_Action_r);
 
 	WriteCall((void*)0x6E7C5E, EV_Wait_r); //fix klonoa not rotating in the tails pool cutscene
+	WriteCall((void*)0x6D00E7, SetEndingAnimationOutro);
+	WriteData<5>((int*)0x006D013D, 0x90);	
+	WriteData<5>((int*)0x006D0119, 0x90);
 }

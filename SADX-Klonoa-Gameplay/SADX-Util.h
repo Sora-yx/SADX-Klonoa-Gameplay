@@ -103,8 +103,9 @@ DataPointer(NJS_SPRITE, sprite_score, 0x913078);
 DataPointer(NJS_ACTION, action_s_s0029_sonic, 0x3C84998);
 
 //03
-DataPointer(NJS_ACTION, action_s_s0032_sonic, 0x3C851F0);
+
 DataPointer(NJS_ACTION, action_s_s0031_sonic, 0x3C851F8);
+DataPointer(NJS_ACTION, action_s_s0032_sonic, 0x3C851F0);
 DataPointer(NJS_ACTION, action_s_s0033_sonic, 0x3C85200);
 DataPointer(NJS_ACTION, action_s_s0013_sonic, 0x3C85208);
 
