@@ -309,8 +309,10 @@ void DestroyEnemy(task* tp, taskwk* data)
 	CreateExpSpring(data, 8u);
 	auto a3 = data->pos.y + 14.0f;
 
-	if (CurrentLevel < LevelIDs_Chaos0)
+	if (CurrentLevel < LevelIDs_Chaos0) {
 		CreateAnimal(rand() % 15, data->pos.x, a3, data->pos.z);
+		AddEnemyScore(10);
+	}
 }
 
 
@@ -443,10 +445,12 @@ static bool EnemyCapturedHandle(task* obj)
 
 				break;
 			case dead:
-				AddEnemyScore(10);
+	
+				if (klwk->enemyGrabPtr == obj)
+					ResetKlonoaGrab(klwk);
+
 				DestroyEnemy(obj, data);
 				UpdateSetDataAndDelete(obj);
-				ResetKlonoaGrab(klwk);
 				break;
 			}
 
