@@ -26,10 +26,10 @@
 		
 			<Group name="visual" display="2. Visuals">
 	      <Property name="hud" display="Klonoa Hud" type="bool" defaultvalue="True">
-        <HelpText>Display Klonoa hud (only apply when playing Klonoa).</HelpText>
+        <HelpText>Display Klonoa hud.</HelpText>
       </Property>
       <Property name="obj" display="Klonoa Objects" type="bool" defaultvalue="True">
-        <HelpText>Replace some objects with their Klonoa counterpart (only apply when playing Klonoa)</HelpText>
+        <HelpText>Replace some objects with their Klonoa counterpart.</HelpText>
       </Property>
 	  
 		

@@ -1,6 +1,5 @@
 #include "pch.h"
 
-
 CCL_INFO bullet_col = { 0, 0, 0x70, 0x40, 0x400, { 0 }, 12.0f, 0.0, 0.0, 0.0, 0, 0, 0 };
 
 extern ObjectFuncPtr enemyList[];
@@ -11,7 +10,6 @@ signed int KlonoaWBullet_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 	{
 		return 0;
 	}
-
 
 	bool isOnGround = (data->flag & 3);
 	data->mode = isOnGround ? act_windBullet : act_windBulletAir;
