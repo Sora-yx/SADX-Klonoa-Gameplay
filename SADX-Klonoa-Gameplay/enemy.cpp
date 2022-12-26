@@ -364,7 +364,7 @@ static bool EnemyCapturedHandle(task* obj)
 			case captured:
 				if (player)
 				{
-					if (!isKlonoaHold(pnum))
+					if (!isKlonoaHold(pnum) && player->mode != act_hurt && player->mode != act_jump)
 					{
 						FreeTask(obj);
 						return false;
