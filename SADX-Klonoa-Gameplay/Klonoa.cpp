@@ -464,7 +464,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		{
 			if (co2->spd.y < 0.0f)
 			{
-				co2->mj.reqaction = anm_fall;
+				co2->mj.reqaction = isSuper(pnum) ? anm_SSFall : anm_fall;
 			}
 
 			if (Fly_CheckInput(data, co2))
@@ -745,8 +745,8 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 			data->ang.x = data2->ang_aim.x;
 			data->ang.z = data2->ang_aim.z;
 
-			data->mode = 1;
-			co2->mj.reqaction = 0;
+			data->mode = isSuper(pnum) ? 75 : 1;
+			co2->mj.reqaction = isSuper(pnum) ? 134 : 0;
 			data->flag &= 0xFAu;
 			return;
 		}

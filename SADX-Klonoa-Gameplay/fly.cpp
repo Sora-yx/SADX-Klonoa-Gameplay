@@ -125,12 +125,12 @@ void Fly_ManageMotion(taskwk* data, playerwk* co2)
 	if (!GetAnalog((EntityData1*)data, 0, nullptr)) {
 		if (Controllers[pnum].HeldButtons & AttackButtons)
 		{
-			Fly_ChangeMotion(act_fly, anm_fall, pnum);
+			Fly_ChangeMotion(act_fly, anm_flyDown, pnum);
 			return;
 		}
 		else if (Controllers[pnum].HeldButtons & JumpButtons)
 		{
-			Fly_ChangeMotion(act_fly, anm_jump, pnum);
+			Fly_ChangeMotion(act_fly, anm_flyUp, pnum);
 			return;
 		}
 
@@ -139,6 +139,6 @@ void Fly_ManageMotion(taskwk* data, playerwk* co2)
 	}
 	else
 	{
-		Fly_ChangeMotion(act_fly, anm_fly, pnum);
+		Fly_ChangeMotion(act_fly, anm_flyMoving, pnum);
 	}
 }

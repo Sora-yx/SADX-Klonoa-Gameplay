@@ -90,6 +90,7 @@ enum klonoaAnim //regular ID used to play anim on the character
 	anm_pet,
 	anm_petStop,
 	anm_whistle,
+	anm_SSFall = 141,
 	anm_hover = 147,
 	anm_windBullet,
 	anm_windBulletAir,
@@ -102,4 +103,7 @@ enum klonoaAnim //regular ID used to play anim on the character
 	anm_throwStd,
 	anm_throwAir,
 	anm_flyStd,
+	anm_flyUp,
+	anm_flyDown,
+	anm_flyMoving,
 };

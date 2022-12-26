@@ -7,7 +7,7 @@ extern ObjectFuncPtr enemyList[];
 
 signed int KlonoaWBullet_CheckInput(taskwk* data, playerwk* co2, klonoawk* klwk)
 {
-	if ((AttackButtons & Controllers[data->charIndex].PressedButtons) == 0 || !allowKlonoaMoves || klwk->currentBulletPtr)
+	if ((AttackButtons & Controllers[data->charIndex].PressedButtons) == 0 || !allowKlonoaMoves || klwk->currentBulletPtr || CurrentLevel == LevelIDs_PerfectChaos)
 	{
 		return 0;
 	}
@@ -209,7 +209,15 @@ void BulletEnd(taskwk* data, playerwk* co2, klonoawk* klwk)
 		if (co2->mj.reqaction < anm_windBullet || co2->mj.reqaction > anm_windBulletEnd)
 		{
 			bool isOnGround = (data->flag & 3);
-			data->mode = isOnGround ? act_stnd : act_fall;
+			if (!isSuper(data->counter.b[0]))
+			{
+				data->mode = isOnGround ? act_stnd : act_fall;
+			}
+			else
+			{
+				data->mode = isOnGround ? act_SKStand : act_SKFall;
+			}
+
 			klwk->bulletShot = false;
 		}
 	}

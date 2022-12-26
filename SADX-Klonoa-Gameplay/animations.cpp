@@ -2,7 +2,7 @@
 
 AnimationFile* KlonoaANM[60] = { 0 };
 AnimationFile* KlonoaEvANM[50] = { 0 };
-#define AnimCount 160
+#define AnimCount 170
 #define boneCount 48
 
 AnimData_t KlonoaAnimList[AnimCount] = { 0 };
@@ -279,14 +279,25 @@ void SetKlonoaAnims()
 	for (int i = 0; i < LengthOfArray(KlonoaAnimList); i++)
 	{
 		KlonoaAnimList[i].Animation = new NJS_ACTION;
-		KlonoaAnimList[i].Animation->object = KlonoaMDL->getmodel();
+
+		if (i >= 134 && i <= 145)
+		{
+			KlonoaAnimList[i].Animation->object = SuperKlonoaMDL->getmodel();
+			KlonoaAnimList[i].NextAnim = 141;
+		}
+		else
+		{
+			KlonoaAnimList[i].Animation->object = KlonoaMDL->getmodel();
+			KlonoaAnimList[i].NextAnim = 18;
+		}
+
 		KlonoaAnimList[i].Animation->motion = KlonoaANM[anmID_fall]->getmotion();
 		KlonoaAnimList[i].Instance = KlonoaANM[anmID_fall]->getmodelcount();
 		KlonoaAnimList[i].Property = 4;
-		KlonoaAnimList[i].NextAnim = 18;
 		KlonoaAnimList[i].TransitionSpeed = 0.25f;
 		KlonoaAnimList[i].AnimationSpeed = 0.5f;
 	}
+
 
 	KlonoaAnimList[0].Animation->motion = KlonoaANM[anmID_stand]->getmotion();
 	KlonoaAnimList[0].AnimationSpeed = 0.5f;
@@ -786,6 +797,7 @@ void SetKlonoaAnims()
 
 	//standing SK
 	KlonoaAnimList[134].Animation->motion = KlonoaAnimList[0].Animation->motion;
+	KlonoaAnimList[134].Animation->object = SuperKlonoaMDL->getmodel();
 	KlonoaAnimList[134].AnimationSpeed = KlonoaAnimList[0].AnimationSpeed;
 	KlonoaAnimList[134].Property = KlonoaAnimList[0].Property;
 	KlonoaAnimList[134].TransitionSpeed = KlonoaAnimList[0].TransitionSpeed;
@@ -818,6 +830,13 @@ void SetKlonoaAnims()
 	KlonoaAnimList[138].Property = KlonoaAnimList[13].Property;
 	KlonoaAnimList[138].TransitionSpeed = KlonoaAnimList[13].TransitionSpeed;
 	KlonoaAnimList[138].NextAnim = 138;
+
+	//falling
+	KlonoaAnimList[139].Animation->motion = KlonoaAnimList[13].Animation->motion;
+	KlonoaAnimList[139].AnimationSpeed = KlonoaAnimList[13].AnimationSpeed;
+	KlonoaAnimList[139].Property = KlonoaAnimList[13].Property;
+	KlonoaAnimList[139].TransitionSpeed = KlonoaAnimList[13].TransitionSpeed;
+	KlonoaAnimList[139].NextAnim = 138;
 
 	//landing SK
 	KlonoaAnimList[142].Animation->motion = KlonoaAnimList[19].Animation->motion;
@@ -916,11 +935,35 @@ void SetKlonoaAnims()
 	KlonoaAnimList[anm_throwAir].AnimationSpeed = 0.5f;
 	KlonoaAnimList[anm_throwAir].Property = 4;
 
+
+	//Super Klonoa next anims
 	//fly standing
 	KlonoaAnimList[anm_flyStd].Animation->motion = KlonoaANM[anmID_flyStd]->getmotion();
 	KlonoaAnimList[anm_flyStd].NextAnim = anm_flyStd;
 	KlonoaAnimList[anm_flyStd].AnimationSpeed = 0.7f;
 	KlonoaAnimList[anm_flyStd].Property = 3;
+	KlonoaAnimList[anm_flyStd].Animation->object = SuperKlonoaMDL->getmodel();
+
+	//fly Up
+	KlonoaAnimList[anm_flyUp].Animation->motion = KlonoaANM[anmID_jump]->getmotion();
+	KlonoaAnimList[anm_flyUp].NextAnim = anm_flyUp;
+	KlonoaAnimList[anm_flyUp].AnimationSpeed = 0.5f;
+	KlonoaAnimList[anm_flyUp].Property = 3;
+	KlonoaAnimList[anm_flyUp].Animation->object = SuperKlonoaMDL->getmodel();
+
+	//fly down
+	KlonoaAnimList[anm_flyDown].Animation->motion = KlonoaANM[anmID_fall]->getmotion();
+	KlonoaAnimList[anm_flyDown].NextAnim = anm_flyDown;
+	KlonoaAnimList[anm_flyDown].AnimationSpeed = 0.5f;
+	KlonoaAnimList[anm_flyDown].Property = 3;
+	KlonoaAnimList[anm_flyDown].Animation->object = SuperKlonoaMDL->getmodel();
+
+	//fly moving
+	KlonoaAnimList[anm_flyMoving].Animation->motion = KlonoaANM[anmID_fly]->getmotion();
+	KlonoaAnimList[anm_flyMoving].NextAnim = anm_flyMoving;
+	KlonoaAnimList[anm_flyMoving].AnimationSpeed = 0.5f;
+	KlonoaAnimList[anm_flyMoving].Property = 3;
+	KlonoaAnimList[anm_flyMoving].Animation->object = SuperKlonoaMDL->getmodel();
 
 	for (int j = 134; j < 146; j++)
 	{
