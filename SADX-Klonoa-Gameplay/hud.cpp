@@ -140,7 +140,7 @@ void DrawBGHeartHUD()
 
 void DrawKlonoaHUD()
 {
-	if (getKlonoaPlayer() < 0 || !isHudAllowed())
+	if (!isHudAllowed())
 		return;
 
 	HelperFunctionsGlobal.PushScaleUI(uiscale::Align_Automatic, false, 1.0f, 1.0f);
@@ -150,7 +150,7 @@ void DrawKlonoaHUD()
 	SetMaterialAndSpriteColor_Float(1.0f, 1.0f, 1.0f, 1.0f);
 	njSetTexture(&KHudTexlist);
 
-	if (useHP)
+	if (useHP && CurrentCharacter == Characters_Sonic)
 	{
 		DrawBGHeartHUD();
 		DrawKlonoaHP(0);

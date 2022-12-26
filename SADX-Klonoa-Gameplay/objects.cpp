@@ -29,7 +29,7 @@ bool isKlonoaAndObj(ModelInfo* obj)
 
 void __cdecl DreamStone_Display(task* obj)
 {
-	if (!isKlonoaAndObj(dreamStoneMDL))
+	if (!obj)
 	{
 		return Ring_Display_t.Original(obj);
 	}
@@ -67,7 +67,7 @@ void __cdecl DreamStone_Display(task* obj)
 
 void __cdecl DrawDreamStone(NJS_MODEL_SADX* a1)
 {
-	if (!isKlonoaAndObj(dreamStoneMDL))
+	if (!dreamStoneMDL)
 	{
 		return DrawModel(a1);
 	}
@@ -80,7 +80,7 @@ void __cdecl DrawDreamStone(NJS_MODEL_SADX* a1)
 
 void __cdecl DrawDreamStoneClip(NJS_MODEL_SADX* model, float scale)
 {
-	if (!isKlonoaAndObj(dreamStoneMDL))
+	if (!dreamStoneMDL)
 	{
 		return ds_DrawModelClip(model, scale);
 	}
@@ -113,7 +113,7 @@ void __cdecl DrawDreamStoneClip(NJS_MODEL_SADX* model, float scale)
 
 int PlayDreamStoneSound(int ID, void* a2, int a3, void* a4)
 {
-	if (!isKlonoaAndObj(dreamStoneMDL))
+	if (!dreamStoneMDL)
 	{
 		return PlaySound(ID, a2, a3, a4);
 	}
@@ -295,7 +295,7 @@ void AlarmClock_Main(task* tsk)
 		return;
 	}
 
-	if (!isKlonoaAndObj(alarmClockMDL))
+	if (!isKlonoaAndObj(alarmClockMDL) || CurrentCharacter != Characters_Sonic)
 	{
 		return CheckPoint_t.Original(tsk);
 	}
