@@ -7,6 +7,8 @@ static FunctionHook<void, unsigned __int8, float, NJS_VECTOR*> DoExplosionRockTh
 static FunctionHook<void, int> KillPlayer_t(KillHimP);
 static FunctionHook<void, int> KillP1ByFallingDown_t(KillHimByFallingDownP); //gotta love symbol name
 
+
+int EV_SerifBreakTimer = 0;
 //we identify Sonic voice clip and replace them with some random Klonoa speech voice, all done in code to avoid duplicate voices files. :D
 
 //The game often has many Sonic voices file in a row, so we can just identify a range to replace them (ex: the voices from 36 to 53 are all Sonic clips)
@@ -17,7 +19,8 @@ static const std::unordered_map<int16_t, int16_t> Sonicvoice_ids_map = {
 	{ 205, 215},
 	{ 400, 403 },
 	{ 410, 411},
-	{ 414, 420},
+	{ 414, 416},
+	{ 418, 420},
 	{ 446, 447 },
 	{ 460, 462 },
 	{ 468, 469},
@@ -60,7 +63,7 @@ static const std::unordered_map<int16_t, int16_t> Sonicvoice_ids_map = {
 };
 
 //other sonic voices that aren't followed by each other
-int SonicVoiceIDs2[] = { 406, 422, 425,432, 435, 440, 442, 444, 457, 464, 466, 476, 484, 499, 502, 505, 518, 531,
+int SonicVoiceIDs2[] = { 406, 422, 425, 432, 435, 440, 442, 444, 457, 464, 466, 476, 484, 489, 499, 502, 505, 518, 531,
 534, 549, 556, 558, 561, 565, 573, 600, 608, 610, 613, 615, 629, 632, 642, 654, 664, 694, 696, 707, 717, 766, 789, 791, 827, 830,
 832, 861, 864, 866, 871, 948, 950, 1074, 1082, 1093, 1148, 1150, 1282, 1288, 1290, 1385, 1409, 1416, 1419, 1452, 1457, 1464,
 1469, 1492, 1494, 1513, 1515, 1520, 1540, 1546, 1548 };
@@ -72,7 +75,8 @@ void PlayRandomKlonoaVoice()
 	if (EV_MainThread_ptr)
 	{
 		int total = kl_EvVoiceEnd - kl_EvVoice01;
-		rng = kl_EvVoice01 + rand() % total;
+		int rng = kl_EvVoice01 + rand() % total;
+		return PlayVoice_t.Original(rng);
 	}
 
 	return PlayCustomSoundVolume(rng, 0.8f);
@@ -80,6 +84,7 @@ void PlayRandomKlonoaVoice()
 
 static void __cdecl PlayVoice_r(int a1)
 {
+	EV_SerifBreakTimer = 0;
 	std::unordered_map<int16_t, int16_t>::const_iterator it = Sonicvoice_ids_map.begin();
 
 	while (it != Sonicvoice_ids_map.end())
@@ -110,6 +115,9 @@ static void __cdecl PlayVoice_r(int a1)
 
 void PlayIdleVoice_r(taskwk* data)
 {
+	if (EV_MainThread_ptr)
+		return;
+
 	if (data && isKlonoa(data->charIndex))
 	{
 		return PlayRandomKlonoaVoice();
@@ -209,6 +217,29 @@ void PlayReboundVoice(unsigned __int8 playerID, float speedX, float speedY, floa
 	return EnemyBounceThing(playerID, speedX, speedY, speedZ);
 }
 
+FunctionPointer(int, Get_dword_3B29CF4, (void), 0x425740);
+
+int EV_SerifWait_r(void)
+{
+	int result; // eax
+
+	for (result = Get_dword_3B29CF4(); result; result = Get_dword_3B29CF4())
+	{
+		if (result == 5)
+			break;
+
+		if (EV_SerifBreakTimer == 240)
+		{
+			ResetCurrentVoice();
+			break;
+		}
+
+		EV_Wait(1);
+		++EV_SerifBreakTimer;
+	}
+	return result;
+}
+
 void init_Audio()
 {
 	WriteCall((void*)0x491701, PlayIdleVoice_r);
@@ -217,6 +248,7 @@ void init_Audio()
 	WriteCall((void*)0x4D6E6F, PlayInvncibMagneticVoice);
 	WriteCall((void*)0x4D6C39, PlaySpeedBarrierVoice);
 	WriteCall((void*)0x4D6DEF, PlaySpeedBarrierVoice);
+	WriteJump((void*)0x431900, EV_SerifWait_r);
 	PlayVoice_t.Hook(PlayVoice_r);
 	DoExplosionRockThing_t.Hook(PlayBlowPlayerVoice);
 	KillPlayer_t.Hook(KillPlayer_r);

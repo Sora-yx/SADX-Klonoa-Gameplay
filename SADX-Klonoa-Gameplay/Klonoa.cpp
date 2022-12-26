@@ -853,7 +853,6 @@ void __cdecl Klonoa_Main_r(task* obj)
 
 void initKlonoa()
 {
-
 	KlonoaMDL = LoadChunkModel("Klonoa");
 	SuperKlonoaMDL = LoadChunkModel("SuperKlonoa");
 	Init_KlonoaAnim();
