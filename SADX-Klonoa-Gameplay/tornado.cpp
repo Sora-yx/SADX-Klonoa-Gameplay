@@ -30,7 +30,6 @@ void Tornado_init()
 		{
 			Tornado1_Object.child->sibling->sibling->sibling->child = model;
 			Tornado1_EventShot.child->child->sibling->sibling->sibling->sibling->sibling->child = TornadoShotMDL->getmodel()->child;
-
 			Tornado1_EventObj.child->sibling->sibling->sibling->child = Tornado1EvMdl->getmodel();
 
 			Tornado2Before_Object.child->sibling->sibling->child = model;

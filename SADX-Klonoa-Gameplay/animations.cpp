@@ -1098,13 +1098,6 @@ void LoadPlayerMotionDataAll_r()
 	SetKlonoaEventAnims();
 }
 
-TaskFunc(EV_ClrFace, 0x4310F0);
-void EV_Wait_r(task* tp)
-{
-	EV_SetAng(playertp[0], 0, 57000, 0);
-	EV_ClrFace(tp);
-}
-
 void InitSuperKlonoa(HMODULE h)
 {
 	unsigned int* pcount = reinterpret_cast<unsigned int*>(GetProcAddress(h, "SSAnimCount"));
@@ -1174,7 +1167,6 @@ void Init_KlonoaAnim()
 	WriteCall((void*)0x4181FD, late_ActionMesh_r);
 	WriteCall((void*)0x41820D, late_Action_r);
 
-	WriteCall((void*)0x6E7C5E, EV_Wait_r); //fix klonoa not rotating in the tails pool cutscene
 	WriteCall((void*)0x6D00E7, SetEndingAnimationOutro);
 	WriteData<5>((int*)0x006D013D, 0x90);	
 	WriteData<5>((int*)0x006D0119, 0x90);

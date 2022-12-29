@@ -7,8 +7,6 @@ static FunctionHook<void, unsigned __int8, float, NJS_VECTOR*> DoExplosionRockTh
 static FunctionHook<void, int> KillPlayer_t(KillHimP);
 static FunctionHook<void, int> KillP1ByFallingDown_t(KillHimByFallingDownP); //gotta love symbol name
 
-
-int EV_SerifBreakTimer = 0;
 //we identify Sonic voice clip and replace them with some random Klonoa speech voice, all done in code to avoid duplicate voices files. :D
 
 //The game often has many Sonic voices file in a row, so we can just identify a range to replace them (ex: the voices from 36 to 53 are all Sonic clips)
@@ -84,7 +82,6 @@ void PlayRandomKlonoaVoice()
 
 static void __cdecl PlayVoice_r(int a1)
 {
-	EV_SerifBreakTimer = 0;
 	std::unordered_map<int16_t, int16_t>::const_iterator it = Sonicvoice_ids_map.begin();
 
 	while (it != Sonicvoice_ids_map.end())
@@ -217,29 +214,6 @@ void PlayReboundVoice(unsigned __int8 playerID, float speedX, float speedY, floa
 	return EnemyBounceThing(playerID, speedX, speedY, speedZ);
 }
 
-FunctionPointer(int, Get_dword_3B29CF4, (void), 0x425740);
-
-int EV_SerifWait_r(void)
-{
-	int result; // eax
-
-	for (result = Get_dword_3B29CF4(); result; result = Get_dword_3B29CF4())
-	{
-		if (result == 5)
-			break;
-
-		if (EV_SerifBreakTimer == 240)
-		{
-			ResetCurrentVoice();
-			break;
-		}
-
-		EV_Wait(1);
-		++EV_SerifBreakTimer;
-	}
-	return result;
-}
-
 void init_Audio()
 {
 	WriteCall((void*)0x491701, PlayIdleVoice_r);
@@ -248,7 +222,7 @@ void init_Audio()
 	WriteCall((void*)0x4D6E6F, PlayInvncibMagneticVoice);
 	WriteCall((void*)0x4D6C39, PlaySpeedBarrierVoice);
 	WriteCall((void*)0x4D6DEF, PlaySpeedBarrierVoice);
-	WriteJump((void*)0x431900, EV_SerifWait_r);
+
 	PlayVoice_t.Hook(PlayVoice_r);
 	DoExplosionRockThing_t.Hook(PlayBlowPlayerVoice);
 	KillPlayer_t.Hook(KillPlayer_r);
