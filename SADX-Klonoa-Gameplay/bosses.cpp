@@ -486,6 +486,27 @@ void __cdecl GammaBossAI_r(task* a1)
 	}
 }
 
+TaskHook KnuxBossAi_t(0x4D5DE0);
+
+void __cdecl KnuxBossAI_r(task* a1)
+{
+	KnuxBossAi_t.Original(a1);
+
+	auto evbosswk = (EVBOSS_WORK*)a1->awp;
+
+	if (hurtBoss && evbosswk)
+	{
+		evbosswk->mode = 11;
+		evbosswk->stwp->flag |= Status_Hurt;
+		++evbosswk->attackmode;
+		evbosswk->timer = 0;
+		evbosswk->smode = 0;
+		evbosswk->mode = 5;
+		PlayVoice(164);
+		hurtBoss = false;
+	}
+}
+
 void init_BossesHacks()
 {
 	if (!allowKlonoaMoves)
@@ -511,6 +532,7 @@ void init_BossesHacks()
 	Gamma_Main_t.Hook(Gamma_Main_r);
 	sub_4C27B0_t.Hook(sub_4C27B0_r);
 	GammaBossAi_t.Hook(GammaBossAI_r);
+	KnuxBossAi_t.Hook(KnuxBossAI_r);
 
 	RunLevelDestructor_t.Hook(RunLevelDestructor_r);
 
