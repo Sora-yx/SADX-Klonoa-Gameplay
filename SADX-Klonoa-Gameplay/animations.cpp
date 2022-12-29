@@ -1073,6 +1073,13 @@ void SetKlonoaEventAnims()
 	action_s_item_l1.object = KlonoaMDL->getmodel();
 	action_s_item_l2.object = KlonoaMDL->getmodel();
 
+
+	//dodge knux punch
+	action_s_s0035_sonic.object = KlonoaMDL->getmodel();
+	action_s_s0035_sonic.motion = KlonoaANM[5]->getmotion();
+	action_s_s0036_sonic.object = KlonoaMDL->getmodel();
+	action_s_s0036_sonic.motion = KlonoaEvANM[1]->getmotion();
+
 	//sleep
 	action_s_s0031_sonic.object = KlonoaMDL->getmodel();
 	action_s_s0031_sonic.motion = KlonoaEvANM[3]->getmotion();

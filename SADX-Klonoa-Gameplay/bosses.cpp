@@ -407,6 +407,10 @@ void Knuckles_Main_r(task* obj)
 			}
 		}
 	}
+	else
+	{
+		hurtBoss = false;
+	}
 
 	Knux_Main_t.Original(obj);
 }
