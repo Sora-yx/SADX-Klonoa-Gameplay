@@ -426,11 +426,9 @@ void klonoaDisp(task* obj)
 	njRotateX_(data->ang.x);
 	njRotateY_(-0x8000 - LOWORD(data->ang.y));
 
-	auto anim = GetKlonoaAnimList();
-	NJS_ACTION* action = anim[134].Animation;
-
 	SetupChunkModelRender();
-	njCnkDrawMotion(action->object, action->motion, FrameCounterUnpaused % action->motion->nbFrame);
+
+	DrawChunkObject(KlonoaMDL->getmodel());
 
 	njPopMatrix(1u);
 
@@ -453,14 +451,19 @@ void KlonoaMdlTsk(task* obj)
 
 void LoadKlonoaTask()
 {
-	auto tsk = CreateElementalTask(2, 1, KlonoaMdlTsk);
-	tsk->twp->pos = playertwp[0]->pos;
+	if (Controllers[0].PressedButtons & Buttons_Y)
+	{
+		auto tsk = CreateElementalTask(2, 1, KlonoaMdlTsk);
+		tsk->twp->pos = playertwp[0]->pos;
+	}
 }
+
 
 Sint32 __cdecl njSetTexture_Snowboard(NJS_TEXLIST* texlist)
 {
 	return njSetTexture(&KObjComTexlist);
 }
+
 
 void init_Objects()
 {

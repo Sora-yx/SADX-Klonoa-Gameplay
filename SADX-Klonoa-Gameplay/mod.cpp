@@ -9,7 +9,6 @@ std::string modpath;
 
 bool MultiModEnabled = false;
 
-
 extern "C" {
 	__declspec(dllexport) void __cdecl Init(const char* path, const HelperFunctions& helperFunctions)
 	{

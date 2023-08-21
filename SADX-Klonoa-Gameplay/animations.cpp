@@ -1128,9 +1128,8 @@ void ReplaceSonicAnimPtr()
 
 DataPointer(PADREC_DATA_TAG, EV0052T, 0x8694FC);
 DataPointer(EPATHTAG, epathtag_cube0052_t3, 0x2BE82B0);
-FunctionPointer(task*, COverlayCreate, (float s, float a, float r, float g, float b), 0x6EF480);
 
-void PLayVictoryAnim()
+void PlayVictoryAnim()
 {
 	EV_SetAction(playertp[0], &action_s_s0071_sonic, &KlonoaTexList, 0.5f, 1, 12);
 }
