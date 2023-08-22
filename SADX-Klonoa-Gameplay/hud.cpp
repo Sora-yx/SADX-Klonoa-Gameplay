@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "hud.h"
+#include "multiapi.h"
 
 #define ReplaceTex 	HelperFunctionsGlobal.ReplaceTexture
 #define replaceFile HelperFunctionsGlobal.ReplaceFile
@@ -7,7 +8,7 @@
 static NJS_TEXNAME KHud[4] = { 0 };
 static NJS_TEXLIST KHudTexlist = { arrayptrandlength(KHud) };
 static const float ringPos = 52.0f;
-static bool HudPlus = false;
+bool HudPlus = false;
 
 static UsercallFuncVoid(HudDisplayRings_t, (signed int a1, unsigned __int8 a2, NJS_SPRITE* a3), (a1, a2, a3), 0x425960, rEAX, rBL, rESI);
 
@@ -36,7 +37,11 @@ bool isHudAllowed()
 
 static Uint32 StoneTimer = 0;
 
-void DrawDreamStoneCounter(float posY, bool boss) {
+void DrawDreamStoneCounter(float posY, bool boss)
+{
+	if (isMultiActive())
+		return;
+
 	static const auto backup = Hud_RingTimeLife;
 	Hud_RingTimeLife.ang = -1000;
 
@@ -105,11 +110,43 @@ void DrawDreamStoneHUD(bool bosslevel)
 	ResetMaterial();
 }
 
+void DrawBGHeartHUD(uint32_t screen, const Float resX, const Float resY, const Float sclX, const Float sclY)
+{
+	static const float yDiff = HudPlus ? 12.0f : 32.0f;
+	static float yExtra = 13.0f;
+
+	Hud_BGSprite.p.x = resX + -5 * sclX;
+	Hud_BGSprite.p.y = resY + ringPos * sclY + yExtra * sclY - yDiff * sclY;
+
+	auto saveScl = Hud_BGSprite.sx;
+	auto saveAng = Hud_BGSprite.ang;
+
+	Hud_BGSprite.sx = Hud_BGSprite.sy = min(sclX, sclY);
+
+	//adjust hud size and pos depending on the number of the difficulty
+	if (hpMaxConfig == 1)
+	{
+		Hud_BGSprite.sx /= 3.0f;
+		Hud_BGSprite.p.x += 15.0f * sclX;
+	}
+
+	if (hpMaxConfig == 6)
+	{
+		Hud_BGSprite.p.y += 15.0f * sclY;
+		Hud_BGSprite.sx *= 2.0f;
+		Hud_BGSprite.p.x -= 15.0f * sclX;
+		Hud_BGSprite.ang = -1000;
+	}
+
+	late_DrawSprite2D(&Hud_BGSprite, bgHeart, 22045.498f, NJD_SPRITE_ALPHA | NJD_SPRITE_COLOR | NJD_SPRITE_ANGLE, LATE_LIG);
+
+	Hud_BGSprite.sx = saveScl;
+	Hud_BGSprite.ang = saveAng;
+}
+
 void DrawBGHeartHUD()
 {
 	static const float y = HudPlus ? 12.0f : 32.0f;
-	Heart_SPRITE.p.x = 10;
-	Heart_SPRITE.p.y = ringPos + 50.0f - y;
 	Hud_BGSprite.p.x = -5;
 	Hud_BGSprite.p.y = ringPos + 13.0f - y;
 
@@ -126,7 +163,6 @@ void DrawBGHeartHUD()
 	if (hpMaxConfig == 6)
 	{
 		Hud_BGSprite.p.y += 15.0f;
-		Heart_SPRITE.p.y += 10.0f;
 		Hud_BGSprite.sx *= 2.0f;
 		Hud_BGSprite.p.x -= 15.0f;
 		Hud_BGSprite.ang = -1000;
@@ -138,33 +174,88 @@ void DrawBGHeartHUD()
 	Hud_BGSprite.ang = saveAng;
 }
 
-void DrawKlonoaHUD()
+void DrawKlonoaHUD(uint32_t screen, const Float x, const Float y, const Float sclX, const Float sclY)
 {
-	if (!isHudAllowed())
-		return;
+	const bool isMP = isMultiActive();
 
-	HelperFunctionsGlobal.PushScaleUI(uiscale::Align_Automatic, false, 1.0f, 1.0f);
+	if (!isMP)
+		HelperFunctionsGlobal.PushScaleUI(uiscale::Align_Automatic, false, 1.0f, 1.0f);
+
 	njColorBlendingMode(NJD_SOURCE_COLOR, NJD_COLOR_BLENDING_SRCALPHA);
 	njColorBlendingMode(NJD_DESTINATION_COLOR, NJD_COLOR_BLENDING_INVSRCALPHA);
 
 	SetMaterialAndSpriteColor_Float(1.0f, 1.0f, 1.0f, 1.0f);
 	njSetTexture(&KHudTexlist);
 
-	if (useHP && CurrentCharacter == Characters_Sonic)
+	if (useHP)
 	{
-		DrawBGHeartHUD();
-		DrawKlonoaHP(0);
+		if (isMP)
+		{
+			DrawBGHeartHUD(screen, x, y, sclX, sclY);
+		}
+		else
+		{
+			DrawBGHeartHUD();
+		}
+
+		DrawKlonoaHP(screen, x, y, sclX, sclY);
 	}
 
-	static bool boss = isBossLevel();
-	DrawDreamStoneHUD(boss);
-	static float posY = HudPlus ? 20.0f : 0.0f;
-	DrawDreamStoneCounter(posY, boss);
+	if (!isMP)
+	{
+		static bool boss = isBossLevel();
+		DrawDreamStoneHUD(boss);
+		static float posY = HudPlus ? 20.0f : 0.0f;
+		DrawDreamStoneCounter(posY, boss);
+	}
 
 	njColorBlendingMode(NJD_SOURCE_COLOR, NJD_COLOR_BLENDING_SRCALPHA);
 	njColorBlendingMode(NJD_DESTINATION_COLOR, NJD_COLOR_BLENDING_ONE);
 	ResetMaterial();
-	HelperFunctionsGlobal.PopScaleUI();
+
+	if (!isMP)
+		HelperFunctionsGlobal.PopScaleUI();
+}
+
+void DrawKlonoaHUD()
+{
+	if (!isHudAllowed())
+		return;
+
+	const bool isMP = isMultiActive();
+
+	if (isMP && !IsGamePaused())
+	{
+		int viewport_backup = viewport_get_num();
+		viewport_set_num(-1);
+
+		for (int i = 0; i < 4; ++i)
+		{
+			if (playertwp[i] && isKlonoa(i) && viewport_is_enabled(i))
+			{
+				float x, y, w, h;
+
+				if (!viewport_get_info(i, &x, &y, &w, &h))
+				{
+					continue;
+				}
+
+				float screenX = HorizontalResolution * x; // X position of the splitted screen
+				float screenY = VerticalResolution * y; // Y position of the splitted screen
+				float scaleX = HorizontalStretch * w + 0.5f; // X stretch of the splitted screen
+				float scaleY = VerticalStretch * h + 0.5f; // Y stretch of the splitted screen
+
+				DrawKlonoaHUD(i, screenX, screenY, scaleX, scaleY);
+			}
+		}
+
+		viewport_set_num(viewport_backup);
+	}
+	else
+	{
+		DrawKlonoaHUD(0, 0, 0, 0 ,0);
+	}
+
 }
 
 void loadKLHudTex()
@@ -195,8 +286,9 @@ void init_Hud()
 	std::string path3 = texHudPath + "item_ringq.png";
 	std::string path4 = texHudPath + "item_ringnum.png";
 
-	if (hud) {
-	
+	if (hud)
+	{
+
 		ReplaceTex("OBJ_REGULAR", "item_1up", path0.c_str(), 4031, 64, 64);
 		ReplaceTex("OBJ_REGULAR", "item_ring10", path1.c_str(), 4032, 64, 64);
 		ReplaceTex("OBJ_REGULAR", "item_ring5", path2.c_str(), 4033, 64, 64);
@@ -210,6 +302,5 @@ void init_Hud()
 		HudPlus = hudP != NULL;
 
 		HudDisplayRings_t.Hook(HudDisplayRings_r);
-
 	}
 }

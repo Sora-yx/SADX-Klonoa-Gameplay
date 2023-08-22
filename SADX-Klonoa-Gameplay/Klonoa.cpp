@@ -415,6 +415,11 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 			data->wtimer--;
 			data->flag = v13;
 		}
+
+		if (data->wtimer <= 1 && useHP && isMultiActive() && HP[pnum] <= 0)
+		{
+			ResetKlonoaHP(pnum);
+		}
 	}
 	else if (KlonoaCheckDamage(data, co2))
 	{
@@ -871,7 +876,7 @@ void initKlonoa()
 
 	init_Objects();
 
-	for (int i = 0; i < LengthOfArray(klonoaTex_Entry); i++) {
+	for (uint8_t i = 0; i < LengthOfArray(klonoaTex_Entry); i++) {
 		HelperFunctionsGlobal.RegisterCharacterPVM(Characters_Sonic, klonoaTex_Entry[i]);
 	}
 

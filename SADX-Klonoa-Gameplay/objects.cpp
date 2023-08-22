@@ -217,7 +217,8 @@ void savepointCollision_r(task* tsk, taskwk* data)
 	bool hitCwp = data->cwp->hit_cwp;
 	bool mytask = flag && hitCwp && data->cwp->hit_cwp->mytask->exec == playertp[pNum]->exec;
 
-	if (flag && hitCwp  && mytask) {
+	if (flag && hitCwp  && mytask) 
+	{
 		data->mode = 2;
 		savepoint_data->ang_spd.y = 0.0f;
 		cpData->write_timer = 300;

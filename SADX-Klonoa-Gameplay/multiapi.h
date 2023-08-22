@@ -3,6 +3,7 @@
 
 #include "ninja.h"
 #include "SADXStructs.h"
+#include "SADXStructsNew.h"
 #include "SADXEnums.h"
 
 #ifdef __cplusplus
@@ -25,26 +26,34 @@ extern "C"
 {
 #endif
 
-	// Returns whether splitscreen is currently enabled
+	// Returns whether split screen is currently active (in game)
+	// If it retuns true, at least two screens are currently rendering
 	API bool splitscreen_is_active(void);
 
-	// Returns whether the given screen is enabled (ie. the player is connected)
+	// Returns whether split screen is enabled but not necessarily active
+	// For example, split screen is inactive during events, menus, etc.
+	API bool splitscreen_is_enabled();
+
+	// Enable split screen
+	// This is done automatically when multiplayer is enabled
+	API void splitscreen_enable();
+
+	// Disable split screen
+	// This is done automatically when multiplayer is disabled
+	API void splitscreen_disable();
+
+	// Returns whether the given viewport is enabled
 	API bool viewport_is_enabled(int32_t num);
 
-	// Saves the current viewport
-	API void viewport_save(void);
+	// Set the viewport that the game is rendering to
+	// Pass -1 to draw to the whole screen
+	API void viewport_set_num(int32_t num);
 
-	// Restores the saved viewport
-	API void viewport_restore(void);
+	// Get the viewport that the game is rendering to
+	// Returns -1 if it is drawing to the whole screen
+	API int32_t viewport_get_num(void);
 
-	// Change the viewport to draw sprites/models into another screenspace
-	// Pass -1 to draw to whole screen
-	API void viewport_change(int32_t num);
-
-	// Returns the current screen that the game is drawing to
-	API uint32_t viewport_get_num(void);
-
-	// Get screen information as percentage of game screenspace.
+	// Get screen information as percentage of game screen space.
 	// ie. "w * HorizontalResolution" is the viewport width
 	// Returns false if no information is avaiable
 	API bool viewport_get_info(int32_t num, float* x, float* y, float* w, float* h);
@@ -91,11 +100,11 @@ extern "C"
 	// Returns true if multiplayer is active and in coop mode
 	API bool multi_is_coop(void);
 
-	// Enable multiplayer mode
-	API void multi_enable(uint32_t player_count, bool battle);
+	// Enable multiplayer mode, returns true on success
+	API bool multi_enable(uint32_t player_count, bool battle);
 
-	// Disable multiplayer mode
-	API void multi_disable(void);
+	// Disable multiplayer mode, returns true on success
+	API bool multi_disable(void);
 
 	// Get the amount of connected players
 	API uint32_t multi_get_player_count(void);
@@ -105,6 +114,28 @@ extern "C"
 
 	// Set the ID of the winning player (-1 to reset)
 	API void multi_set_winner(uint32_t pnum);
+
+	// Retrieve local (per-player) gravity of the given player
+	// Returns false if the player is using the global gravity (pointers are not written to)
+	API bool multi_get_gravity(uint32_t pnum, NJS_POINT3* v, Angle* angx, Angle* angz);
+
+	// Set local (per-player) gravity for the given player
+	// Once set, the player will ignore the global gravity
+	API void multi_set_gravity(uint32_t pnum, Angle angx, Angle angz);
+
+	// Disables local gravity for a given player
+	API void multi_reset_gravity(uint32_t pnum);
+
+	// Retrieve local (per-player) fog of the given player
+	// Returns false if the player is using the global fog
+	API bool multi_get_fog(uint32_t pnum, ___stcFog* pFog);
+
+	// Set local (per-player) fog for the given player
+	// Once set, the player will ignore the global fog
+	API void multi_set_fog(uint32_t pnum, ___stcFog* pFog);
+
+	// Disables local fog for a given player
+	API void multi_reset_fog(uint32_t pnum);
 
 	// Calculate projection matrix of a player's camera
 	API void camera_apply(uint32_t num);
@@ -160,11 +191,9 @@ extern "C"
 	// Note that the vanilla function `CameraReleaseEventCmaera` will work for P1
 	API void camera_release_event_camera(uint32_t pnum);
 
-	// get Homing Attack target list 
-	API colaround* multi_get_enemy_list(Uint8 pno);
-
-	// get Homing Attack index target list 
-	API Uint16* multi_get_enemy_list_index(Uint8 pno);
+	// Get the target list and count for a specific player
+	// Return false on error (pointers no written to)
+	API bool multi_get_enemy_list(uint32_t pnum, colaround** pp_ael, Uint16* p_num);
 
 #ifdef __cplusplus
 }
