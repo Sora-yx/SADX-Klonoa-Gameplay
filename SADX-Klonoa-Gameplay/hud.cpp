@@ -114,14 +114,15 @@ void DrawBGHeartHUD(uint32_t screen, const Float resX, const Float resY, const F
 {
 	static const float yDiff = HudPlus ? 12.0f : 32.0f;
 	static float yExtra = 13.0f;
+	const float scaling = min(sclX, sclY);
 
-	Hud_BGSprite.p.x = resX + -5 * sclX;
-	Hud_BGSprite.p.y = resY + ringPos * sclY + yExtra * sclY - yDiff * sclY;
+	Hud_BGSprite.p.x = resX + -5 * scaling;
+	Hud_BGSprite.p.y = resY + ringPos * sclY + yExtra * sclY - yDiff * scaling;
 
 	auto saveScl = Hud_BGSprite.sx;
 	auto saveAng = Hud_BGSprite.ang;
 
-	Hud_BGSprite.sx = Hud_BGSprite.sy = min(sclX, sclY);
+	Hud_BGSprite.sx = Hud_BGSprite.sy = scaling;
 
 	//adjust hud size and pos depending on the number of the difficulty
 	if (hpMaxConfig == 1)

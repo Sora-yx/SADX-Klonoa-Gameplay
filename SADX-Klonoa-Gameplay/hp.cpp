@@ -13,12 +13,13 @@ void DrawKlonoaHP(char pnum, const Float x, const Float y, const Float sclX, con
 	static const float yDiff = HudPlus ? 12.0f : 32.0f;
 	Float heartDiff = HpMax == 6 ? 10.0f : 0.0f;
 	const bool isMP = isMultiActive();
+	const float scaling = min(sclX, sclY);
 
 	if (isMP)
 	{
-		Heart_SPRITE.sx = Heart_SPRITE.sy = min(sclX, sclY);
-		Heart_SPRITE.p.x = x + 10.0f * sclX;
-		Heart_SPRITE.p.y = y + ringPos * sclY + 50.0f * sclY - yDiff * sclY + heartDiff * sclY;
+		Heart_SPRITE.sx = Heart_SPRITE.sy = scaling;
+		Heart_SPRITE.p.x = x + 10.0f * scaling;
+		Heart_SPRITE.p.y = y + ringPos * sclY + 50.0f * sclY - yDiff * sclY + heartDiff * scaling;
 	}
 	else
 	{
@@ -37,8 +38,8 @@ void DrawKlonoaHP(char pnum, const Float x, const Float y, const Float sclX, con
 
 		if (isMP)
 		{
-			Heart_SPRITE.p.x += 40.0f * min(sclX, sclY);
-			Heart_SPRITE.p.y -= 6.0f * sclY;
+			Heart_SPRITE.p.x += 40.0f * scaling;
+			Heart_SPRITE.p.y -= 6.0f * scaling;
 		}
 		else
 		{

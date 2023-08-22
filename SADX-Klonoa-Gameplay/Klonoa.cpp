@@ -246,8 +246,8 @@ void NodeCallback2(NJS_OBJECT* obj)
 		{
 			if (playertwp[pnum]->mode == 2)
 				njRotateX(v1, twistamount[pnum]);
-		}
-		else if (obj == klMDL->child->child->child->sibling->sibling->sibling->sibling->sibling->child->sibling->sibling->child->child->child)
+		}                 
+		else if (obj == klMDL->getnode(37)) 
 		{
 			NJS_VECTOR v = { 0.0f, -1.5f, 0.0f };
 
@@ -256,8 +256,8 @@ void NodeCallback2(NJS_OBJECT* obj)
 			njCalcVector(v1, &v, &co2->righthand_vec);  //right hand vec
 			SetVectorDiff(&co2->righthand_pos);
 			SetVectorDiff(&co2->righthand_vec);
-		}
-		else if (obj == klMDL->child->child->child->sibling->sibling->sibling->sibling->sibling->child->sibling->sibling->sibling->child->child->child)
+		}             
+		else if (obj == klMDL->getnode(32))
 		{
 			NJS_VECTOR v = { 0, -1.5, 0 };
 			njCalcPoint(v1, &v, &co2->lefthand_pos); //left hand pos
@@ -266,7 +266,7 @@ void NodeCallback2(NJS_OBJECT* obj)
 			SetVectorDiff(&co2->lefthand_pos);
 			SetVectorDiff(&co2->lefthand_vec);
 		}
-		else if (obj == klMDL->child->child->child->sibling->sibling->sibling->sibling->sibling->child->sibling->sibling->child->child->child->child)
+		else if (obj == klMDL->getnode(33))
 		{
 			NJS_VECTOR v = { 0, 1.0f, 0 };
 			njCalcPoint(v1, &v, &kl->ringPos); //ring pos
