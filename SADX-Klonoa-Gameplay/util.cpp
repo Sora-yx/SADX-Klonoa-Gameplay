@@ -291,6 +291,7 @@ void ResetChunkModelRender()
 {
 	Direct3D_ResetWorldTransform();
 	Direct3D_UnsetChunkModelRenderState();
+	CnkRestoreSpecular();
 }
 
 bool isSuper(char pnum)
