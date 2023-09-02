@@ -231,7 +231,7 @@ void __cdecl EV_SetAction_r(task* obj, NJS_ACTION* anim, NJS_TEXLIST* tex, float
 
 			if (!ConvertSonicActionToKloAction(anim)) //if the animation didn't get replaced, apply a placeholder as a failafe.
 			{
-				 anim->motion = KlonoaAnimList[anm_bStance1].Animation->motion;		
+				anim->motion = KlonoaAnimList[anm_bStance1].Animation->motion;
 			}
 
 			if (speed > 1.0f)
@@ -248,7 +248,7 @@ void __cdecl EV_SetAction_r(task* obj, NJS_ACTION* anim, NJS_TEXLIST* tex, float
 	{
 		if (anim == KlonoaAnimList[11].Animation)
 		{
-			speed /= 1.7f; 
+			speed /= 1.7f;
 		}
 	}
 
@@ -300,7 +300,7 @@ void SetKlonoaAnims()
 
 
 	KlonoaAnimList[0].Animation->motion = KlonoaANM[anmID_stand]->getmotion();
-	KlonoaAnimList[0].AnimationSpeed = 0.5f;
+	KlonoaAnimList[0].AnimationSpeed = 0.7f;
 	KlonoaAnimList[0].NextAnim = 0;
 	KlonoaAnimList[0].Property = 3;
 	KlonoaAnimList[0].TransitionSpeed = 0.0625f;
@@ -308,12 +308,12 @@ void SetKlonoaAnims()
 	//surf stance
 	KlonoaAnimList[1].Animation->motion = KlonoaANM[anmID_battleStd]->getmotion();
 	KlonoaAnimList[1].TransitionSpeed = 0.25f;
-	KlonoaAnimList[1].AnimationSpeed = 0.50f;
+	KlonoaAnimList[1].AnimationSpeed = 0.70f;
 	KlonoaAnimList[1].NextAnim = 2;
 
 	KlonoaAnimList[2].Animation->motion = KlonoaANM[anmID_battleStd]->getmotion();
 	KlonoaAnimList[2].TransitionSpeed = 0.25f;
-	KlonoaAnimList[2].AnimationSpeed = 0.50f;
+	KlonoaAnimList[2].AnimationSpeed = 0.70f;
 	KlonoaAnimList[2].NextAnim = 2;
 
 	KlonoaAnimList[7] = KlonoaAnimList[0];
@@ -366,12 +366,12 @@ void SetKlonoaAnims()
 	KlonoaAnimList[4].Property = 4;
 	KlonoaAnimList[4].NextAnim = 5;
 	KlonoaAnimList[4].TransitionSpeed = 0.25f;
-	KlonoaAnimList[4].AnimationSpeed = 0.5f;
+	KlonoaAnimList[4].AnimationSpeed = 0.7f;
 
 	KlonoaAnimList[5].Animation->motion = KlonoaANM[anmID_idle]->getmotion();
 	KlonoaAnimList[5].NextAnim = 6;
 	KlonoaAnimList[5].TransitionSpeed = 0.25f;
-	KlonoaAnimList[5].AnimationSpeed = 0.5f;
+	KlonoaAnimList[5].AnimationSpeed = 0.7f;
 
 	KlonoaAnimList[6].Animation->motion = KlonoaANM[anmID_idle]->getmotion();
 	KlonoaAnimList[6].NextAnim = 0;
@@ -1143,7 +1143,7 @@ void SetEndingAnimationOutro(task* player)
 	EV_CameraAng(1, 85, 0x1B6D, 0x200E, 0xFD00);
 	EV_Wait(93);
 	EV_CameraAng(0, 15, 0x66D, 0x200E, 0xFD00);
-	EV_CameraPos(0, 15, 2171.3f, 125.0f , 1630.665f); 
+	EV_CameraPos(0, 15, 2171.3f, 125.0f, 1630.665f);
 	EV_SetAction(player, &action_s_s0071_sonic, &KlonoaTexList, 0.5f, 1, 12);
 	PlayCustomSoundVolume(kl_SuperJump0, 2.0f);
 	EV_SetMode(player, 0);
@@ -1174,6 +1174,6 @@ void Init_KlonoaAnim()
 	WriteCall((void*)0x41820D, late_Action_r);
 
 	WriteCall((void*)0x6D00E7, SetEndingAnimationOutro);
-	WriteData<5>((int*)0x006D013D, 0x90);	
+	WriteData<5>((int*)0x006D013D, 0x90);
 	WriteData<5>((int*)0x006D0119, 0x90);
 }

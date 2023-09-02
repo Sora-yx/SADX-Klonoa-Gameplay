@@ -9,13 +9,14 @@ std::string modpath;
 
 bool MultiModEnabled = false;
 
-extern "C" {
+extern "C" 
+{
 	__declspec(dllexport) void __cdecl Init(const char* path, const HelperFunctions& helperFunctions)
 	{
-		if (helperFunctions.Version < 14)
+		if (helperFunctions.Version < 16)
 		{
 			MessageBox(WindowHandle,
-				L"Error, your version of the mod loader does not support API version 14. Some functionality will not be available.\nPlease exit the game and update the mod loader for the best experience.",
+				L"Error, your version of the mod loader does not support API version 16. Some functionality will not be available.\nPlease exit the game and update the mod loader for the best experience.",
 				L"Klonoa Gameplay Error: Mod Loader out of date", MB_OK | MB_ICONERROR);
 		}
 
