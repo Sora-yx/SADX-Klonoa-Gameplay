@@ -219,7 +219,7 @@ bool ConvertSonicActionToKloAction(NJS_ACTION* a2)
 	return false;
 }
 
-static Trampoline* EV_SetAction_t = nullptr; //use trampoline to compatibility with DC Conversion
+static Trampoline* EV_SetAction_t = nullptr; //use trampoline for compatibility with DC Conversion
 void __cdecl EV_SetAction_r(task* obj, NJS_ACTION* anim, NJS_TEXLIST* tex, float speed, char mode, char linkframe)
 {
 	if (obj && anim && anim->object != KlonoaMDL->getmodel())
@@ -1000,7 +1000,7 @@ void LoadKlonoa_AnimFiles()
 	KlonoaANM[21] = LoadObjectAnim("holdJump");
 	KlonoaANM[22] = LoadObjectAnim("holdFall");
 	KlonoaANM[23] = LoadObjectAnim("throw");
-	KlonoaANM[24] = LoadObjectAnim("airThrow"); //TO DO ADD THROW AIR
+	KlonoaANM[24] = LoadObjectAnim("airThrow"); 
 	KlonoaANM[25] = LoadObjectAnim("Brake");
 	KlonoaANM[26] = LoadObjectAnim("Landing");
 	KlonoaANM[27] = LoadObjectAnim("Board");

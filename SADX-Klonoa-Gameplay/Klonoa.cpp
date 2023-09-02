@@ -764,8 +764,7 @@ void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
 		}
 
 		Fly_ManageMotion(data, co2);
-
-		return;
+		break;
 	}
 
 	Sonic_RunsActions_t.Original(data, data2, co2);
@@ -883,4 +882,7 @@ void initKlonoa()
 	//fix Klonoa stuck on jump panel
 	JumpPanel_Collision_[3].center.y = 2.0f;
 	JumpPanel_Collision_[3].a = 7.0f;
+
+	WriteData<1>((int*)0x493730, 0xC3); //disable event head
+	WriteData<5>((int*)0x46AD09, 0x90); //The game locks player control on the capsule BEFORE you even open it, which softlock Klonoa in flying mode, we disable that.
 }
