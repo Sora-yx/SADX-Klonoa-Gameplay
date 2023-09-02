@@ -344,10 +344,9 @@ void AlarmClock_Main(task* tsk)
 		}
 		if (useHP && hpMaxConfig != 1)
 		{
-			task* heart = CreateElementalTask(2, 2, Heart_Exec);
+			task* heart = CreateChildTask(2, Heart_Exec, tsk);
 			if (heart)
 			{
-				heart->twp->pos = data->pos;
 				heart->twp->pos.x += 20.0f;
 				heart->twp->pos.z += 20.0f;
 			}
