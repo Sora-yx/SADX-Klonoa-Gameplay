@@ -5,6 +5,8 @@ D3DMATRIX WorldMatrixBackup;
 
 FunctionPointer(void, _njCnkDrawModel, (NJS_CNK_MODEL* a3), 0x789750);
 
+void (*backupCallback)(NJS_OBJECT* obj) = NULL;
+
 ModelInfo* LoadBasicModel(const char* name) {
 	PrintDebug("Loading basic model: %s... ", name);
 
@@ -283,6 +285,7 @@ void SetupWorldMatrix() {
 
 void SetupChunkModelRender()
 {
+	CnkDisableSpecular();
 	SetupWorldMatrix();
 	Direct3D_SetChunkModelRenderState();
 }
@@ -345,4 +348,15 @@ taskwk* GetClosestEnemyCol(taskwk* bulletData) {
 	}
 
 	return nullptr;
+}
+
+void SetNodeCallBack(void (*Callback)(NJS_OBJECT* obj))
+{
+	backupCallback = *NodeCallbackFuncPtr; //save current node callback for mods compatibility
+	*NodeCallbackFuncPtr = Callback;
+}
+
+void RestoreOriginalCallBack()
+{
+	*NodeCallbackFuncPtr = backupCallback;
 }

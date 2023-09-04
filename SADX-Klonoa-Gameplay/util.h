@@ -1,5 +1,7 @@
 #pragma once
 
+extern void (*backupCallback)(NJS_OBJECT* obj);
+
 ModelInfo* LoadBasicModel(const char* name);
 
 ModelInfo* LoadChunkModel(const char* name);
@@ -51,3 +53,5 @@ void ReplaceSonicAnimPtr();
 bool isTailsRace(char pnum);
 bool isMultiActive();
 taskwk* GetClosestEnemyCol(taskwk* bulletData);
+void SetNodeCallBack(void (*Callback)(NJS_OBJECT* obj));
+void RestoreOriginalCallBack();

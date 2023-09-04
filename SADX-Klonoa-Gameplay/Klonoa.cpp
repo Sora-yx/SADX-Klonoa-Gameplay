@@ -72,7 +72,7 @@ bool isKlonoaHold(char pnum)
 }
 
 //regular draw during gameplay
-void DrawKlonoa(playerwk* co2, int animNum, NJS_ACTION* action)
+void DrawKlonoa(playerwk* co2, NJS_ACTION* action)
 {
 	NJS_ACTION act2 = *action;
 
@@ -222,7 +222,7 @@ signed int KlonoaCheckBeInTheAir(playerwk* co2, taskwk* data, klonoawk* klwk)
 }
 
 short twistamount[PMax] = {};
-void(__cdecl** NodeCallbackFuncPtr)(NJS_OBJECT* obj) = (decltype(NodeCallbackFuncPtr))0x3AB9908;
+
 
 //Calc Klonoa hand and root Pos for objects position
 void NodeCallback2(NJS_OBJECT* obj)
@@ -358,11 +358,12 @@ void __cdecl Klonoa_Display_r(task* obj)
 		else //regular gameplay
 		{
 			NJS_ACTION* action = co2->mj.plactptr[curAnim].actptr;
-			if (co2->mj.mtnmode == 2) {
+			if (co2->mj.mtnmode == 2) 
+			{
 				action = co2->mj.actwkptr;
 			}
 
-			DrawKlonoa(co2, curAnim, action);
+			DrawKlonoa(co2, action);
 			*NodeCallbackFuncPtr = NodeCallback2;
 			njPushMatrix(_nj_unit_matrix_);
 			njNullAction(action, co2->mj.nframe);

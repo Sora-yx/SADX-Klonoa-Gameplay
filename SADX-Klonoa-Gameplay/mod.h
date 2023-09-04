@@ -94,6 +94,5 @@ void init_BossesHacks();
 void init_Patches();
 void init_Hud();
 void initKlonoaHP();
-void Tornado_init();
 void InitSuperKlonoa(HMODULE h);
 void KlonoaManageVictoryMotion(playerwk* co2);

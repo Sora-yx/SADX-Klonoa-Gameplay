@@ -24,13 +24,13 @@ extern "C"
 		modpath = path;
 		ReadConfig(path, helperFunctions);
 
+
 		initKlonoa();
 		init_Audio();
 		init_EnemiesHack();
 		init_BossesHacks();
 		initKlonoaHP();
 		init_Hud();
-		Tornado_init();
 		init_Patches();
 		srand((unsigned)time(&t));
 	}
