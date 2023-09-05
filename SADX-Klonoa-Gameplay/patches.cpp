@@ -1,7 +1,5 @@
 #include "pch.h"
 
-static UsercallFunc(signed int, Sonic_CheckPickUpObject_t, (playerwk* a1, taskwk* a2, motionwk2* a3), (a1, a2, a3), 0x495310, rEAX, rEAX, rECX, rEDI);
-
 //patch regular obj pick /drop anim frames check BS
 
 void FixSonicDropThrowObject()
@@ -30,14 +28,11 @@ void PickDrop_Patches()
 
 void __fastcall FixChaoPosHold(NJS_VECTOR* vd, NJS_VECTOR *vs)
 {
-
 	if (vs && isKlonoa(0) && (playerpwp[0]->mj.reqaction == 51 || playerpwp[0]->mj.reqaction == 52))
 		vs->y -= 4.0f;
 
 	return njAddVector(vd, vs);
 }
-
-
 
 
 void init_Patches()
