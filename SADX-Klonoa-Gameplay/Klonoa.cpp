@@ -323,9 +323,8 @@ void __cdecl Klonoa_Display_r(task* obj)
 
 		njPushMatrix(0);
 
-		NJS_VECTOR pos = data->cwp->info->center;
-		pos.y -= kloGetPosYDiff(curAnim);
-		njTranslateV(0, &pos);
+		NJS_VECTOR pos = data->pos;
+		njTranslateV(0, &pos); //somehow, using "collision center" for translate like the game originally does create issues with slopes... This works with position instead, not sure why
 
 		njRotateZ_(data->ang.z);
 		njRotateX_(data->ang.x);

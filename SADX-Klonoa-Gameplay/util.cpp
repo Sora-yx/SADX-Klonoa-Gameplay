@@ -251,17 +251,7 @@ bool isOnSnowBoard(int curAnim)
 	return false;
 }
 
-//fucking kill me
-const float stdPos = 5.2f;
-float kloGetPosYDiff(int curAnim)
-{
-	if (isOnSnowBoard(curAnim))
-	{
-		return stdPos + 1.0f;
-	}
 
-	return stdPos;
-}
 
 bool hasLightShoes(char pnum)
 {

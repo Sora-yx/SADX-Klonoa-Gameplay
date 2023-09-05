@@ -38,39 +38,10 @@ void __fastcall FixChaoPosHold(NJS_VECTOR* vd, NJS_VECTOR *vs)
 }
 
 
-void __cdecl Sonic_Snowboard_Main_r(task* a1)
-{
-	auto data = a1->twp;
-	int pNum = (unsigned __int8)data->counter.b[0];
-	auto data2 = (motionwk2*)EntityData2Ptrs[pNum];
-	auto pData = playertwp[pNum];
-	auto objMtn = a1->mwp;
-	auto curAnim = playerpwp[pNum]->mj.action;
 
-	if (curAnim < 102 || curAnim > 124)
-	{
-		if ((data->flag & 8) == 0)
-		{
-			data->pos.y = data->pos.y - 5.2199998f;
-			ObjectMovableSRegularExecute(a1);
-			data->pos.y = data->pos.y - -5.2199998f;
-		}
-		Sonic_Snowboard_Display((ObjectMaster*)a1);
-	}
-	else
-	{
-		data->pos = pData->cwp->info->center;
-		data->ang = pData->ang;
-		data->ang.y = 0x8000 - pData->ang.y;
-		objMtn->spd = data2->spd;
-		data->flag &= 0xF7u;
-		Sonic_Snowboard_Display((ObjectMaster*)a1);
-	}
-}
 
 void init_Patches()
 {
 	PickDrop_Patches();
 	WriteCall((void*)0x49582A, FixChaoPosHold);
-	WriteJump(Sonic_Snowboard_Main, Sonic_Snowboard_Main_r);
 }
