@@ -9,8 +9,8 @@ bool klonoaPnum[PMax] = { false }; //used to get pNum of a klonoa player
 const NJS_VECTOR KLScaleDiff = { 0.2f, 0.2f, 0.2f };
 const NJS_VECTOR orgScale = { 1.0f, 1.0f, 1.0f };
 
-ModelInfo* KlonoaMDL = nullptr;
-ModelInfo* SuperKlonoaMDL = nullptr;
+std::shared_ptr<ModelInfo> KlonoaMDL;
+std::shared_ptr<ModelInfo> SuperKlonoaMDL;
 
 static NJS_TEXNAME KlonoaTex[2] = { 0 };
 NJS_TEXLIST KlonoaTexList = { arrayptrandlength(KlonoaTex) };
@@ -238,7 +238,7 @@ void NodeCallback2(NJS_OBJECT* obj)
 			continue;
 
 		auto kl = (klonoawk*)playertp[pnum]->awp;
-		auto klMDL = isSuper(pnum) ? SuperKlonoaMDL->getmodel() : KlonoaMDL->getmodel();
+		auto klMDL = isSuper(pnum) ? SuperKlonoaMDL.get()->getmodel() : KlonoaMDL.get()->getmodel();
 
 		float* v1 = _nj_current_matrix_ptr_;
 
@@ -864,8 +864,8 @@ void __cdecl Klonoa_Main_r(task* obj)
 
 void initKlonoa()
 {
-	KlonoaMDL = LoadChunkModel("Klonoa");
-	SuperKlonoaMDL = LoadChunkModel("SuperKlonoa");
+	KlonoaMDL = LoadChunkModelSmartPtr("Klonoa");
+	SuperKlonoaMDL = LoadChunkModelSmartPtr("SuperKlonoa");
 	Init_KlonoaAnim();
 
 	Sonic_Main_t.Hook(Klonoa_Main_r);

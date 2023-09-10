@@ -5,8 +5,8 @@ extern bool klonoaPnum[];
 extern bool MultiModEnabled;
 extern std::string modpath;
 
-extern ModelInfo* KlonoaMDL;
-extern ModelInfo* SuperKlonoaMDL;
+extern  std::shared_ptr<ModelInfo> KlonoaMDL;
+extern  std::shared_ptr<ModelInfo> SuperKlonoaMDL;
 
 #define TARGET_DYNAMIC(name) ((decltype(name##_r)*)name##_t->Target())
 #define charID counter.b[1]

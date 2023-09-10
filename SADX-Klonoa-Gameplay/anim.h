@@ -107,3 +107,5 @@ enum klonoaAnim //regular ID used to play anim on the character
 	anm_flyDown,
 	anm_flyMoving,
 };
+
+void FreeKlonoaAnims();

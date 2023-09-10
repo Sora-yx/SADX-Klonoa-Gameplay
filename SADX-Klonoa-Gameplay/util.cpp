@@ -43,6 +43,26 @@ ModelInfo* LoadChunkModel(const char* name) {
 	return mdl;
 }
 
+std::unique_ptr<ModelInfo> LoadChunkModelSmartPtr(const char* name)
+{
+	PrintDebug("Loading chunk model: %s... ", name);
+
+	std::string fullPath = "system\\models\\";
+	fullPath = fullPath + name + ".sa2mdl";
+
+	// Use std::make_unique to create a std::unique_ptr
+	std::unique_ptr<ModelInfo> mdl = std::make_unique<ModelInfo>(HelperFunctionsGlobal.GetReplaceablePath(fullPath.c_str()));
+
+	if (mdl->getformat() != ModelFormat_Chunk) {
+		PrintDebug("Failed!\n");
+		// No need to delete the pointer explicitly; it will be automatically cleaned up when the std::unique_ptr goes out of scope.
+		return nullptr;
+	}
+
+	PrintDebug("Done.\n");
+	return mdl;
+}
+
 void LoadModelListFuncPtr(const char** names, int count, ModelInfo** mdls, ModelInfo* (*func)(const char*)) {
 	for (int i = 0; i < count; ++i) {
 		mdls[i] = func(names[i]);
@@ -91,6 +111,43 @@ inline AnimationFile* LoadANM(const char* type, const char* name) {
 	}
 }
 
+inline std::unique_ptr<AnimationFile> LoadANMSmartPtr(const char* type, const char* name) 
+{
+	std::string fullPath = "system\\";
+	fullPath = fullPath + type + "\\" + name + ".saanim";
+
+	std::unique_ptr<AnimationFile> temp = std::make_unique<AnimationFile>(HelperFunctionsGlobal.GetReplaceablePath(fullPath.c_str()));
+
+	if (temp->getmodelcount()) {
+		PrintDebug("Done.\n");
+		return temp;
+	}
+	else {
+		PrintDebug("Failed.\n");
+		return nullptr;
+	}
+}
+
+std::unique_ptr<AnimationFile> LoadAnimSmartPtr(const char* name)
+{
+	PrintDebug("Loading Animation: %s... ", name);
+
+	std::string fullPath = "system/anims";
+	fullPath = fullPath + "/" + name + ".saanim";
+
+	std::unique_ptr<AnimationFile> temp = std::make_unique<AnimationFile>(HelperFunctionsGlobal.GetReplaceablePath(fullPath.c_str()));
+
+	if (temp->getmodelcount()) {
+		PrintDebug("Done.\n");
+		return temp;
+	}
+	else
+	{
+		PrintDebug("Failed.\n");
+		return nullptr;
+	}
+}
+
 AnimationFile* LoadObjectAnim(const char* name) {
 	PrintDebug("[Klonoa Mod] Loading object animation: %s... ", name);
 	return LoadANM("anims", name);
@@ -99,6 +156,12 @@ AnimationFile* LoadObjectAnim(const char* name) {
 AnimationFile* LoadEventAnim(const char* name) {
 	PrintDebug("[Klonoa Mod] Loading event animation: %s... ", name);
 	return LoadANM("anims\\events", name);
+}
+
+std::unique_ptr<AnimationFile> LoadEventAnimSmartPtr(const char* name) 
+{
+	PrintDebug("[Klonoa Mod] Loading event animation: %s... ", name);
+	return LoadANMSmartPtr("anims\\events", name);
 }
 
 void njCnkAction_Queue(NJS_ACTION* action, float frame, QueuedModelFlagsB flags) {

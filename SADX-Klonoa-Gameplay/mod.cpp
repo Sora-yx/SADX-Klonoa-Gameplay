@@ -53,6 +53,12 @@ extern "C"
 
 		DrawKlonoaHUD();
 	}
+	
+	
+	__declspec(dllexport) void __cdecl OnExit()
+	{
+		FreeKlonoaAnims();
+	}
 
 	__declspec(dllexport) ModInfo SADXModInfo = { ModLoaderVer };
 }
