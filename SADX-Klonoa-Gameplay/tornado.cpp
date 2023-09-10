@@ -56,7 +56,7 @@ void HideSonicTornado()
 		
 		for (uint8_t i = 0; i < 3; i++)
 		{
-			if (obj and obj->scl[i] != 0.0f) //crash otherwise, because hu, idk, lol
+			if (obj && obj->scl[i] != 0.0f) //crash otherwise, because hu, idk, lol
 				obj->scl[i] = 0.0f;
 		}
 	}
