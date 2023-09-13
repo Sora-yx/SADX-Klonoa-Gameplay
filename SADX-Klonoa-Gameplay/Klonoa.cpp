@@ -335,7 +335,6 @@ void __cdecl Klonoa_Display_r(task* obj)
 		if (!super)
 		{
 			njScaleV(0, &KLScaleDiff); //scale order fix lighting 
-			dsScaleLight(0.2f);
 		}
 			
 		SetupChunkModelRender();
@@ -343,7 +342,7 @@ void __cdecl Klonoa_Display_r(task* obj)
 		if (super)
 		{
 			njScaleV(0, &KLScaleDiff);
-			dsScaleLight(0.2f);
+			//dsScaleLight(0.2f);
 		}		
 
 		NJS_MATRIX m = { 0 };
@@ -375,7 +374,6 @@ void __cdecl Klonoa_Display_r(task* obj)
 		njPopMatrix(1u);
 	}
 
-	dsReScaleLight();
 	Direct3D_PerformLighting(0);
 	ClampGlobalColorThing_Thing();
 	RestoreConstantAttr();
