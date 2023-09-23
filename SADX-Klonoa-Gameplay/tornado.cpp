@@ -69,12 +69,7 @@ enum
 	idle,
 };
 
-NJS_ACTION KlonoaAnm[3]
-{
-	NULL
-};
 
-NJS_ACTION KlonoaPlaneIdleAnim = { NULL };
 
 static Float KlonoaAnmSpd[3] = { 0.5f, 0.4f, 1.0f }; //Klonoa Animations speed variables
 static float MotionFrames = 0.0f;
@@ -125,11 +120,8 @@ static void DrawKlonoaTornado(NJS_POINT3 Offset, const uint8_t index = stand)
 	njRotateZ(0, -0x800);
 	dsScaleLight(0.2f);
 
-	SetupChunkModelRender();
+	late_DrawMotionClipMesh(anim->object, anim->motion, curFrame, LATE_LIG, 0.0f);
 
-	njCnkAction(anim, curFrame);
-
-	ResetChunkModelRender();
 	njPopMatrix(1); //pop matrix
 
 	dsReScaleLight();
@@ -187,11 +179,7 @@ static void DrawKlonoaDuringTransform(task* tp)
 	njRotateZ(0, -0x800);
 	dsScaleLight(0.2f);
 
-	SetupChunkModelRender();
-
-	njCnkAction(anim, curFrame);
-
-	ResetChunkModelRender();
+	late_DrawMotionClipMesh(anim->object, anim->motion, curFrame, LATE_LIG, 0.0f);
 	njPopMatrix(1); //pop matrix
 
 	dsReScaleLight();

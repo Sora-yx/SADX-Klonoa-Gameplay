@@ -63,6 +63,26 @@ std::unique_ptr<ModelInfo> LoadChunkModelSmartPtr(const char* name)
 	return mdl;
 }
 
+std::unique_ptr<ModelInfo> LoadBasicModelSmartPtr(const char* name)
+{
+	PrintDebug("Loading chunk model: %s... ", name);
+
+	std::string fullPath = "system\\models\\";
+	fullPath = fullPath + name + ".sa1mdl";
+
+	// Use std::make_unique to create a std::unique_ptr
+	std::unique_ptr<ModelInfo> mdl = std::make_unique<ModelInfo>(HelperFunctionsGlobal.GetReplaceablePath(fullPath.c_str()));
+
+	if (mdl->getformat() != ModelFormat_Basic) {
+		PrintDebug("Failed!\n");
+		// No need to delete the pointer explicitly; it will be automatically cleaned up when the std::unique_ptr goes out of scope.
+		return nullptr;
+	}
+
+	PrintDebug("Done.\n");
+	return mdl;
+}
+
 void LoadModelListFuncPtr(const char** names, int count, ModelInfo** mdls, ModelInfo* (*func)(const char*)) {
 	for (int i = 0; i < count; ++i) {
 		mdls[i] = func(names[i]);

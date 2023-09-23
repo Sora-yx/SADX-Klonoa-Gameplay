@@ -96,3 +96,4 @@ void init_Hud();
 void initKlonoaHP();
 void InitSuperKlonoa(HMODULE h);
 void KlonoaManageVictoryMotion(playerwk* co2);
+void Init_BasicWeightedHack();

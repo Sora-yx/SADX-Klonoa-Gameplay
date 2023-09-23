@@ -185,6 +185,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="animations.cpp" />
+    <ClCompile Include="basic-weighted.cpp" />
     <ClCompile Include="bosses.cpp" />
     <ClCompile Include="config.cpp" />
     <ClCompile Include="dllmain.cpp" />

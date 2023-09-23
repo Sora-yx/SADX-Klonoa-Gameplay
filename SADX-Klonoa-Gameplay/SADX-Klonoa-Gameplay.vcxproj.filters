@@ -125,5 +125,8 @@
     <ClCompile Include="patches.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="basic-weighted.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

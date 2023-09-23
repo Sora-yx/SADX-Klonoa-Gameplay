@@ -7,6 +7,7 @@ ModelInfo* LoadBasicModel(const char* name);
 ModelInfo* LoadChunkModel(const char* name);
 
 void LoadModelListFuncPtr(const char** names, int count, ModelInfo** mdls, ModelInfo* (*func)(const char*));
+std::unique_ptr<ModelInfo> LoadBasicModelSmartPtr(const char* name);
 std::unique_ptr<ModelInfo> LoadChunkModelSmartPtr(const char* name);
 std::unique_ptr<AnimationFile> LoadAnimSmartPtr(const char* name);
 std::unique_ptr<AnimationFile> LoadEventAnimSmartPtr(const char* name);

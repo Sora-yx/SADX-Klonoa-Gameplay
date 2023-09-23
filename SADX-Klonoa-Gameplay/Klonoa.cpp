@@ -176,7 +176,7 @@ signed int KlonoaCheckDamage(taskwk* data, playerwk* mwp)
 	if (useHP || Rings > 0)
 		PlayCustomSoundVolume(rng ? kl_pain : kl_pain2, 1.0f);
 
-	if ( (mwp->item & 3) == 0)
+	if ((mwp->item & 3) == 0)
 		DamageKlonoa(charid, 1);
 
 	return 1;
@@ -246,8 +246,8 @@ void NodeCallback2(NJS_OBJECT* obj)
 		{
 			if (playertwp[pnum]->mode == 2)
 				njRotateX(v1, twistamount[pnum]);
-		}                 
-		else if (obj == klMDL->getnode(40)) 
+		}
+		else if (obj == klMDL->getnode(40))
 		{
 			NJS_VECTOR v = { 0.0f, -1.5f, 0.0f };
 
@@ -256,7 +256,7 @@ void NodeCallback2(NJS_OBJECT* obj)
 			njCalcVector(v1, &v, &co2->righthand_vec);  //right hand vec
 			SetVectorDiff(&co2->righthand_pos);
 			SetVectorDiff(&co2->righthand_vec);
-		}             
+		}
 		else if (obj == klMDL->getnode(45))
 		{
 			NJS_VECTOR v = { 0, -1.5, 0 };
@@ -307,8 +307,6 @@ void __cdecl Klonoa_Display_r(task* obj)
 	int curAnim = (unsigned __int16)co2->mj.reqaction;
 	auto data2_pp = (motionwk2*)obj->mwp;
 
-	Direct3D_SetZFunc(1u);
-	BackupConstantAttr();
 
 	Direct3D_PerformLighting(2);
 
@@ -324,7 +322,7 @@ void __cdecl Klonoa_Display_r(task* obj)
 		njPushMatrix(0);
 
 		NJS_VECTOR pos = data->pos;
-		njTranslateV(0, &pos); //somehow, using "collision center" for translate like the game originally does create issues with slopes... This works with position instead, not sure why
+		njTranslateV(0, &pos);
 
 		njRotateZ_(data->ang.z);
 		njRotateX_(data->ang.x);
@@ -332,22 +330,11 @@ void __cdecl Klonoa_Display_r(task* obj)
 
 		SpinDash_RotateModel(curAnim, (taskwk*)data);
 
-		if (!super)
-		{
-			njScaleV(0, &KLScaleDiff); //scale order fix lighting 
-		}
-			
-		SetupChunkModelRender();
-
-		if (super)
-		{
-			njScaleV(0, &KLScaleDiff);
-			//dsScaleLight(0.2f);
-		}		
+		njScaleV(0, &KLScaleDiff); //scale order fix lighting 
 
 		NJS_MATRIX m = { 0 };
 		njSetMatrix(m, (NJS_MATRIX_PTR)&EnvironmentMapMatrix);
-		njScale((NJS_MATRIX_PTR)&EnvironmentMapMatrix, 0.25f, 0.25f, 0.25f);
+		njScale((NJS_MATRIX_PTR)&EnvironmentMapMatrix, 0.2f, 0.2f, 0.2f);
 
 		if (data->ewp->action.list) //cutscene / charsel
 		{
@@ -356,28 +343,23 @@ void __cdecl Klonoa_Display_r(task* obj)
 		else //regular gameplay
 		{
 			NJS_ACTION* action = co2->mj.plactptr[curAnim].actptr;
-			if (co2->mj.mtnmode == 2) 
+
+			if (co2->mj.mtnmode == 2)
 			{
 				action = co2->mj.actwkptr;
 			}
 
-			DrawKlonoa(co2, action);
-			*NodeCallbackFuncPtr = NodeCallback2;
-			njPushMatrix(_nj_unit_matrix_);
-			njNullAction(action, co2->mj.nframe);
-			njPopMatrix(1);
-			*NodeCallbackFuncPtr = nullptr;
+			late_z_ofs___ = -5952.0f;
+			njAction_Queue(action, co2->mj.nframe, (QueuedModelFlagsB)LATE_WZ);
+			late_z_ofs___ = 0.0;
+
 		}
 
-		ResetChunkModelRender();
 		njSetMatrix((NJS_MATRIX_PTR)&EnvironmentMapMatrix, m);
 		njPopMatrix(1u);
 	}
 
 	Direct3D_PerformLighting(0);
-	ClampGlobalColorThing_Thing();
-	RestoreConstantAttr();
-	Direct3D_ResetZFunc();
 
 	if (IsGamePaused())
 		DrawCharacterShadow((EntityData1*)data, (struct_a3*)&co2->shadow);
@@ -862,9 +844,10 @@ void __cdecl Klonoa_Main_r(task* obj)
 
 void initKlonoa()
 {
-	KlonoaMDL = LoadChunkModelSmartPtr("Klonoa");
-	SuperKlonoaMDL = LoadChunkModelSmartPtr("SuperKlonoa");
+	KlonoaMDL = LoadBasicModelSmartPtr("Klonoa");
+	SuperKlonoaMDL = LoadBasicModelSmartPtr("SuperKlonoa");
 	Init_KlonoaAnim();
+	Init_BasicWeightedHack();
 
 	Sonic_Main_t.Hook(Klonoa_Main_r);
 	Sonic_RunsActions_t.Hook(Klonoa_runsActions_r);
@@ -873,7 +856,8 @@ void initKlonoa()
 
 	init_Objects();
 
-	for (uint8_t i = 0; i < LengthOfArray(klonoaTex_Entry); i++) {
+	for (uint8_t i = 0; i < LengthOfArray(klonoaTex_Entry); i++)
+	{
 		HelperFunctionsGlobal.RegisterCharacterPVM(Characters_Sonic, klonoaTex_Entry[i]);
 	}
 

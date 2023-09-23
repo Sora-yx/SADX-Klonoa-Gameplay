@@ -53,23 +53,7 @@ void KlonoaManageVictoryMotion(playerwk* co2)
 	}
 }
 
-//Series of hack to make all the rendering events anim function working with Chunk Model
 
-void DrawKlonoa_Event(NJS_ACTION* anim, float frame, QueuedModelFlagsB flg)
-{
-	NJS_ACTION act2 = *anim;
-
-	if (QueueCharacterAnimations)
-	{
-		DrawQueueDepthBias = -5952.0;
-		njCnkAction_Queue(&act2, frame, QueuedModelFlagsB_EnableZWrite);
-		DrawQueueDepthBias = 0.0;
-	}
-	else
-	{
-		njCnkAction(&act2, frame);
-	}
-}
 
 //used for cutscene and charSel
 void __cdecl Klonoa_linkEx(NJS_ACTION_LINK* action, float frame, int flag)
@@ -77,7 +61,6 @@ void __cdecl Klonoa_linkEx(NJS_ACTION_LINK* action, float frame, int flag)
 	if (action)
 	{
 		njSetTexture(&KlonoaTexList);
-		return njCnkActionLink(action, frame, (QueuedModelFlagsB)flag);
 	}
 }
 
@@ -86,7 +69,6 @@ void __cdecl late_actionClipEx_r(NJS_ACTION* anim, float a2, QueuedModelFlagsB a
 	if (anim && anim->object == KlonoaMDL.get()->getmodel())
 	{
 		njSetTexture(&KlonoaTexList);
-		return DrawKlonoa_Event(anim, a2, a3);
 	}
 
 	late_ActionClipEx(anim, a2, (LATE)a3, 0.0f);
@@ -98,14 +80,6 @@ void __cdecl late_ActionLinkEx_r(NJS_ACTION_LINK* action, float frame, int flag)
 	if (action && action->object == KlonoaMDL.get()->getmodel())
 	{
 		njSetTexture(&KlonoaTexList);
-		auto anim = GetKlonoaAnimList();
-
-		if (anim && anim[0].Animation)
-		{
-			return DrawKlonoa_Event(anim[0].Animation, frame, (QueuedModelFlagsB)flag);
-		}
-
-		return;
 	}
 
 	late_ActionLinkEx(action, frame, (LATE)flag);
@@ -118,7 +92,6 @@ void late_ActionLinkMesh_r(NJS_ACTION_LINK* actionLink, float frame, LATE flgs)
 		if (actionLink->object && actionLink->object == KlonoaMDL.get()->getmodel())
 		{
 			njSetTexture(&KlonoaTexList);
-			return Klonoa_linkEx(actionLink, frame, flgs);
 		}
 	}
 
@@ -132,7 +105,6 @@ void late_ActionLink_r(NJS_ACTION_LINK* actionLink, float frame, LATE flgs)
 		if (actionLink->object == KlonoaMDL.get()->getmodel())
 		{
 			njSetTexture(&KlonoaTexList);
-			return Klonoa_linkEx(actionLink, frame, flgs);
 		}
 	}
 
@@ -146,7 +118,6 @@ void late_ActionMesh_r(NJS_ACTION* act, float frame, LATE flgs)
 		if (act->object == KlonoaMDL.get()->getmodel())
 		{
 			njSetTexture(&KlonoaTexList);
-			return DrawKlonoa_Event(act, frame, (QueuedModelFlagsB)flgs);
 		}
 	}
 
@@ -160,7 +131,6 @@ void __cdecl late_Action_r(NJS_ACTION* anim, float a2, QueuedModelFlagsB a3)
 		if (anim->object == KlonoaMDL.get()->getmodel())
 		{
 			njSetTexture(&KlonoaTexList);
-			return DrawKlonoa_Event(anim, a2, a3);
 		}
 	}
 
@@ -1184,7 +1154,7 @@ void Init_KlonoaAnim()
 
 	WriteJump(InitSonicCharSelAnims, InitKlonoaCharSelAnim);
 
-	//hack all rendering events actions to use Chunk model draw function instead (cutscene anim support)
+	//hack all rendering events actions (cutscene anim support)
 	WriteCall((void*)0x418214, late_actionClipEx_r);
 	WriteCall((void*)0x41815E, late_ActionLinkEx_r);
 	WriteCall((void*)0x41812E, late_ActionLinkMesh_r);
