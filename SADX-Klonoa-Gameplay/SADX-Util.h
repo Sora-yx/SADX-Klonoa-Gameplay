@@ -238,3 +238,4 @@ static inline void SonicHoldObject(playerwk* a1, taskwk* a2)
 
 
 static void(__cdecl** NodeCallbackFuncPtr)(NJS_OBJECT* obj) = (decltype(NodeCallbackFuncPtr))0x3AB9908;
+DataPointer(task*, TRB2S, 0x3C8449C);
