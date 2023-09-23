@@ -17,7 +17,7 @@ TaskHook KnuxBossAI_t((intptr_t)0x4D5DE0);
 NJS_SPRITE portalEffSprite = { 0 };
 NJS_SPRITE starEffSprite = { 0 };
 
-static FunctionHook<void, int> RunLevelDestructor_t(RunLevelDestructor);
+static Trampoline* RunLevelDestructor_t = nullptr;
 static FunctionHook<void> sub_4C27B0_t((intptr_t)0x4C27B0);
 
 const static int TimerPortalCD = 100;
@@ -450,12 +450,13 @@ void sub_4C27B0_r()
 	sub_4C27B0_t.Original();
 }
 
-void RunLevelDestructor_r(int a1)
+void RunLevelDestructor_r(int heap)
 {
-	if (!a1)
+	if (!heap)
 		resetEnemyBossSpawn();
 
-	RunLevelDestructor_t.Original(a1);
+	FunctionPointer(void, origin, (int heap), RunLevelDestructor_t->Target());
+	origin(heap);
 }
 
 void RemoveEnemyBounceThing(unsigned __int8 playerID, float speedX, float speedY, float speedZ)
@@ -538,7 +539,8 @@ void init_BossesHacks()
 	GammaBossAi_t.Hook(GammaBossAI_r);
 	KnuxBossAi_t.Hook(KnuxBossAI_r);
 
-	RunLevelDestructor_t.Hook(RunLevelDestructor_r);
+	//need to trampoline that one
+	RunLevelDestructor_t = new Trampoline((intptr_t)RunLevelDestructor, (intptr_t)RunLevelDestructor + 0x6, RunLevelDestructor_r);
 
 	//remove bounce after hitting a boss
 	WriteCall((void*)0x571D36, RemoveEnemyBounceThing);	 //chaos 0

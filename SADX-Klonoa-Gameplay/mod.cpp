@@ -35,7 +35,8 @@ extern "C"
 		srand((unsigned)time(&t));
 	}
 
-	__declspec(dllexport) void __cdecl OnInitEnd() {
+	__declspec(dllexport) void __cdecl OnInitEnd() 
+	{
 
 		MultiModEnabled = GetModuleHandle(L"sadx-multiplayer") != nullptr;
 		auto BetterSuperSonicHandle = GetModuleHandle(L"better-super-sonic");
