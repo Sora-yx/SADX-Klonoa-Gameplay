@@ -13,7 +13,7 @@ extern "C"
 {
 	__declspec(dllexport) void __cdecl Init(const char* path, const HelperFunctions& helperFunctions)
 	{
-		if (helperFunctions.Version < 16)
+		if (helperFunctions.Version < 17)
 		{
 			MessageBox(WindowHandle,
 				L"Error, your version of the mod loader does not support API version 16. Some functionality will not be available.\nPlease exit the game and update the mod loader for the best experience.",
