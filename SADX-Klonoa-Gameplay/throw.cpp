@@ -29,10 +29,20 @@ void ThrowEnemyCalcDirection(taskwk* data, klonoawk* klwk)
 
 	enemyData->pos = startPos;
 
-	if (CurrentLevel != LevelIDs_Chaos4)
-		enemyData->pos.y += 6.0f;
-	else
+	if (CurrentLevel == LevelIDs_Chaos4)
+	{
 		enemyData->pos.y -= 2.0f;
+		dirspd.y -= 0.1f;
+	}
+	else if (CurrentLevel == LevelIDs_EggViper)
+	{
+		enemyData->pos.y += 4.0f;
+		dirspd.y += 0.5f;
+	}
+	else
+	{
+		enemyData->pos.y += 6.0f;
+	}
 
 	if (!CharacterBossActive) {
 		auto wk = (enemywk*)klwk->enemyGrabPtr->mwp;

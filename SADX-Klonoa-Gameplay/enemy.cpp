@@ -388,7 +388,7 @@ static bool EnemyCapturedHandle(task* obj)
 				}
 				break;
 			case throwSetup:
-				data->counter.f = 5.0f; //timer
+				data->counter.f = isBossLevel() ? 7.0f : 5.0f; //timer
 				CCL_Init(obj, &stru_981D10, 1, GetColListIDForThrowEnemy());
 				data->mode++;
 				break;
