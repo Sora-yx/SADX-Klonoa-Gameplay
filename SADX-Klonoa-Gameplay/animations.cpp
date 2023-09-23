@@ -234,7 +234,9 @@ void __cdecl EV_SetAction_r(task* obj, NJS_ACTION* anim, NJS_TEXLIST* tex, float
 				anim->motion = KlonoaAnimList[anm_bStance1].Animation->motion;
 			}
 
-			if (speed > 1.0f)
+			if (speed >= 2.5)
+				speed = 0.5f;
+			else if (speed > 1.0f)
 				speed = 1.0f;
 
 			if (anim->motion == KlonoaAnimList[9].Animation->motion || anim->motion == KlonoaAnimList[10].Animation->motion || anim->motion == KlonoaAnimList[11].Animation->motion)
@@ -1045,7 +1047,6 @@ void LoadKlonoa_AnimFiles()
 	KlonoaANM[49] =  LoadAnimSmartPtr("shake");
 	KlonoaANM[50] =  LoadAnimSmartPtr("PetLoop");
 	KlonoaANM[51] =  LoadAnimSmartPtr("PetEnd");
-
 }
 
 void InitKlonoaCharSelAnim()
@@ -1098,6 +1099,15 @@ void SetKlonoaEventAnims()
 	action_s_s0035_sonic.motion = KlonoaANM[5]->getmotion();
 	action_s_s0036_sonic.object = mdl;
 	action_s_s0036_sonic.motion = KlonoaEvANM[1]->getmotion();
+
+	action_s_s0046_sonic.object = mdl;
+	action_s_s0046_sonic.motion = KlonoaANM[animID_Brake]->getmotion();
+	//hit by knux
+	action_s_s9000_sonic.object = mdl;
+	action_s_s9000_sonic.motion = KlonoaANM[anmID_hurt]->getmotion();
+
+	action_s_s9001_sonic.object = mdl;
+	action_s_s9001_sonic.motion = KlonoaEvANM[3]->getmotion();
 
 	//sleep
 	action_s_s0031_sonic.object = mdl;
