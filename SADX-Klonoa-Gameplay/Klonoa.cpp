@@ -306,7 +306,7 @@ void __cdecl Klonoa_Display_r(task* obj)
 	auto co2 = playerpwp[pnum];
 	int curAnim = (unsigned __int16)co2->mj.reqaction;
 	auto data2_pp = (motionwk2*)obj->mwp;
-
+	const float scaleDiff = 0.2f;
 
 	Direct3D_PerformLighting(2);
 
@@ -330,11 +330,12 @@ void __cdecl Klonoa_Display_r(task* obj)
 
 		SpinDash_RotateModel(curAnim, (taskwk*)data);
 
-		njScaleV(0, &KLScaleDiff); //scale order fix lighting 
+		njScaleV(0, &KLScaleDiff);
+		dsScaleLight(scaleDiff);  //scale order fix lighting 
 
 		NJS_MATRIX m = { 0 };
 		njSetMatrix(m, (NJS_MATRIX_PTR)&EnvironmentMapMatrix);
-		njScale((NJS_MATRIX_PTR)&EnvironmentMapMatrix, 0.2f, 0.2f, 0.2f);
+		njScale((NJS_MATRIX_PTR)&EnvironmentMapMatrix, scaleDiff, scaleDiff, scaleDiff);
 
 		if (data->ewp->action.list) //cutscene / charsel
 		{
@@ -349,13 +350,11 @@ void __cdecl Klonoa_Display_r(task* obj)
 				action = co2->mj.actwkptr;
 			}
 
-			late_z_ofs___ = -5952.0f;
-			njAction_Queue(action, co2->mj.nframe, (QueuedModelFlagsB)LATE_WZ);
-			late_z_ofs___ = 0.0;
-
+			ds_ActionClip(action, co2->mj.nframe, scaleDiff);
 		}
 
 		njSetMatrix((NJS_MATRIX_PTR)&EnvironmentMapMatrix, m);
+		dsReScaleLight();
 		njPopMatrix(1u);
 	}
 
@@ -855,6 +854,7 @@ void initKlonoa()
 	Sonic_Delete_t.Hook(Klonoa_Delete_r);
 
 	init_Objects();
+
 
 	for (uint8_t i = 0; i < LengthOfArray(klonoaTex_Entry); i++)
 	{
