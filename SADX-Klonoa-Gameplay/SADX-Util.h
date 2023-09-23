@@ -54,11 +54,7 @@ DataArray(colaround, HomingAttackTarget_Sonic_, 0x3B259C0, 657);
 DataArray(colaround, HomingAttackTarget_NonSonic_, 0x3B242F8, 657);
 FunctionPointer(void, PlayIdleVoice, (taskwk* a1), 0x442360);
 FunctionPointer(void, DrawCharacterShadow, (EntityData1* a1, struct_a3* a2), 0x49F0B0);
-FunctionPointer(void, PGetAccelerationGlik, (taskwk* a1, motionwk2* a2, playerwk* a3), 0x448000);
-FunctionPointer(void, PGetSpeedGlik, (taskwk* a1, motionwk2* a2, playerwk* a3), 0x0444580);
 
-FunctionPointer(void, saCnkDrawMotionSA, (NJS_CNK_OBJECT* obj, NJS_MOTION* motion, float frame), 0x720A70);
-FunctionPointer(void, njCnkDrawMotion, (NJS_CNK_OBJECT* obj, NJS_MOTION* motion, float frame), 0x789690);
 
 DataArray(NJS_ACTION*, SonicCharSelAnim, 0x3C5FF94, 4);
 FunctionPointer(void, DrawEventAction, (taskwk* data), 0x4187D0);
@@ -79,9 +75,8 @@ ObjectFunc(UnindusB_Exec, 0x4AF3D0);
 ObjectFunc(UnindusC_Exec, 0x4AF770);
 DataPointer(float, Life_Max, 0x03C58158);
 
-FunctionPointer(void, PGetAccelerationFly, (taskwk* a1, motionwk2* a2, playerwk* a3), 0x447E70);
 FunctionPointer(void, CL_ColPolCFPolygon, (zxsdwstr* a1, float a2), 0x454F60);
-ThiscallFunctionPointer(void, njCnkPushPopMotion, (NJS_CNK_OBJECT* a1), 0x792F70);
+
 TaskFunc(ESman_Exec, 0x4C8DD0);
 
 DataPointer(NJS_SPRITE, AncientLightSprite, 0x981A28);
@@ -241,18 +236,5 @@ static inline void SonicHoldObject(playerwk* a1, taskwk* a2)
 	}
 }
 
-DataArray(CollisionData, JumpPanel_Collision_, 0x97DF68, 4);
-DataPointer(NJS_OBJECT, Tornado1_Object, 0x28B1DA0);
-DataPointer(NJS_OBJECT, Tornado1_EventObj, 0x32611F8);
-DataPointer(NJS_OBJECT, Tornado1_EventShot, 0x2920FC0);
-DataPointer(NJS_OBJECT, Tornado2Before_Object, 0x27EB198);
-DataPointer(NJS_OBJECT, Tornado2Transfo_Object, 0x2863E20);
-DataPointer(NJS_OBJECT, Tornado2Change_Object, 0x280C158);
-DataPointer(NJS_OBJECT, Tornado2_EventObj, 0x32E9D28);
-DataPointer(NJS_OBJECT, Tornado2TakeOff_EventObj, 0x2C08F40);
-DataPointer(task*, TR2TakeOffEVPtr, 0x3C842B8);
-DataPointer(task*, TR2TailsRM, 0x3C84274);
-DataPointer(task*, TR2SonkRM, 0x3C84530);
-DataPointer(task*, TRB2, 0x3C841C4);
 
 static void(__cdecl** NodeCallbackFuncPtr)(NJS_OBJECT* obj) = (decltype(NodeCallbackFuncPtr))0x3AB9908;
