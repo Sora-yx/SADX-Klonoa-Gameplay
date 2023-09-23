@@ -56,7 +56,6 @@ FunctionPointer(void, PlayIdleVoice, (taskwk* a1), 0x442360);
 FunctionPointer(void, DrawCharacterShadow, (EntityData1* a1, struct_a3* a2), 0x49F0B0);
 
 
-
 DataArray(NJS_ACTION*, SonicCharSelAnim, 0x3C5FF94, 4);
 FunctionPointer(void, DrawEventAction, (taskwk* data), 0x4187D0);
 
@@ -76,8 +75,8 @@ ObjectFunc(UnindusB_Exec, 0x4AF3D0);
 ObjectFunc(UnindusC_Exec, 0x4AF770);
 DataPointer(float, Life_Max, 0x03C58158);
 
-
 FunctionPointer(void, CL_ColPolCFPolygon, (zxsdwstr* a1, float a2), 0x454F60);
+
 TaskFunc(ESman_Exec, 0x4C8DD0);
 
 DataPointer(NJS_SPRITE, AncientLightSprite, 0x981A28);
@@ -238,7 +237,5 @@ static inline void SonicHoldObject(playerwk* a1, taskwk* a2)
 }
 
 
-
-
-
 static void(__cdecl** NodeCallbackFuncPtr)(NJS_OBJECT* obj) = (decltype(NodeCallbackFuncPtr))0x3AB9908;
+DataPointer(task*, TRB2S, 0x3C8449C);

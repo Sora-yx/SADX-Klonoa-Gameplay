@@ -24,7 +24,6 @@ extern "C"
 		modpath = path;
 		ReadConfig(path, helperFunctions);
 
-
 		initKlonoa();
 		init_Audio();
 		init_EnemiesHack();
@@ -50,8 +49,10 @@ extern "C"
 	__declspec(dllexport) void __cdecl OnFrame()
 	{
 		if (GameState >= 15)
+		{
 			RunCustomSounds();
-
+		}
+			
 		DrawKlonoaHUD();
 	}
 	

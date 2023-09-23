@@ -213,7 +213,7 @@ void TornadoEventDisp_r(task* tp)
 void Tornado2EventDisp_r(task* tp)
 {
 	bool isTR2 = (TR2TakeOffEVPtr && TR2TakeOffEVPtr == tp || TR2TailsRM && TR2TailsRM == tp || TR2SonkRM && TR2SonkRM == tp);
-	bool isTRB2 = (TRB2 && TRB2 == tp);
+	bool isTRB2 = (TRB2 && TRB2 == tp || TRB2S && TRB2S == tp);
 	auto twp = tp->twp;
 
 	if (isTR2 || isTRB2)

@@ -1,2 +1,0 @@
-304300,../s_tr_sonblue.png,128x128
-304301,../s_tr_sonkuro.png,128x128
