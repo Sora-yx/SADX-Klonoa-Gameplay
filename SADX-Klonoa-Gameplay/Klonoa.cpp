@@ -303,6 +303,7 @@ void __cdecl Klonoa_Display_r(task* obj)
 		return Sonic_Display_t.Original(obj);
 	}
 
+	HelperFunctionsGlobal.PushInterpolationFix();
 	auto co2 = playerpwp[pnum];
 	int curAnim = (unsigned __int16)co2->mj.reqaction;
 	auto data2_pp = (motionwk2*)obj->mwp;
@@ -381,6 +382,8 @@ void __cdecl Klonoa_Display_r(task* obj)
 
 	if (IsGamePaused())
 		DrawCharacterShadow((EntityData1*)data, (struct_a3*)&co2->shadow);
+
+	HelperFunctionsGlobal.PopInterpolationFix();
 }
 
 void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
