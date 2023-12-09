@@ -11,6 +11,7 @@ const NJS_VECTOR orgScale = { 1.0f, 1.0f, 1.0f };
 
 std::shared_ptr<ModelInfo> KlonoaMDL;
 std::shared_ptr<ModelInfo> SuperKlonoaMDL;
+ModelInfo* KlonoaWeightedModels[2] = { 0 };
 
 static NJS_TEXNAME KlonoaTex[2] = { 0 };
 NJS_TEXLIST KlonoaTexList = { arrayptrandlength(KlonoaTex) };
@@ -307,7 +308,7 @@ void __cdecl Klonoa_Display_r(task* obj)
 	int curAnim = (unsigned __int16)co2->mj.reqaction;
 	auto data2_pp = (motionwk2*)obj->mwp;
 	const float scaleDiff = 0.2f;
-
+	HelperFunctionsGlobal.PushInterpolationFix();
 	Direct3D_PerformLighting(2);
 
 	if (co2->mj.mtnmode == 2)
@@ -326,7 +327,7 @@ void __cdecl Klonoa_Display_r(task* obj)
 
 		njRotateZ_(data->ang.z);
 		njRotateX_(data->ang.x);
-		njRotateY_(-0x8000 - LOWORD(data->ang.y));
+		njRotateY_(-0x8000 - data->ang.y);
 
 		SpinDash_RotateModel(curAnim, (taskwk*)data);
 
@@ -362,6 +363,8 @@ void __cdecl Klonoa_Display_r(task* obj)
 
 	if (IsGamePaused())
 		DrawCharacterShadow((EntityData1*)data, (struct_a3*)&co2->shadow);
+
+	HelperFunctionsGlobal.PopInterpolationFix();
 }
 
 void __cdecl Klonoa_runsActions_r(taskwk* data, motionwk2* data2, playerwk* co2)
@@ -845,8 +848,10 @@ void initKlonoa()
 {
 	KlonoaMDL = LoadBasicModelSmartPtr("Klonoa");
 	SuperKlonoaMDL = LoadBasicModelSmartPtr("SuperKlonoa");
+	KlonoaWeightedModels[0] = KlonoaMDL.get();
+	KlonoaWeightedModels[1] = SuperKlonoaMDL.get();
 	Init_KlonoaAnim();
-	Init_BasicWeightedHack();
+	Init_BasicWeightedModels();
 
 	Sonic_Main_t.Hook(Klonoa_Main_r);
 	Sonic_RunsActions_t.Hook(Klonoa_runsActions_r);

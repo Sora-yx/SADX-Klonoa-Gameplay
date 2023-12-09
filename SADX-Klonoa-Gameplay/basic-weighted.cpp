@@ -6,11 +6,9 @@
 #include <map>
 #include <vector>
 
-
 //This whole page adds 'Weights' support to the "Basic Model" type, the format SADX originally use for the models in the game.
 //Originally, this format doesn't support 'Weights', which means you cannot import rigged characters with their animations since they couldn't render properly.
 //This hacks here add weights so they can render fine, this is all possible by MainMemory who worked really hard to add support for that and the tools, big thanks to her!
-
 
 using std::map;
 using std::vector;
@@ -19,12 +17,26 @@ using std::string;
 struct ModelWeightInfo
 {
 	WeightInfo* weights;
+	int rightHandNode = -1;
+	int leftHandNode = -1;
+	int rightFootNode = -1;
+	int leftFootNode = -1;
+	int user0Node = -1;
+	int user1Node = -1;
+	int rightHandDir;
+	int leftHandDir;
+	int rightFootDir;
+	int leftFootDir;
+	int user0Dir;
+	int user1Dir;
 };
 
 struct CharInfo
 {
-	const intptr_t* pointersArray;
-	int pointersLength;
+	ModelInfo** mdlList = nullptr;
+	int lengthMdlList = 0;
+	const intptr_t* pointersArray = nullptr;
+	int pointersLength = 0;
 	map<NJS_OBJECT*, ModelWeightInfo> modelWeights;
 };
 
@@ -43,10 +55,11 @@ map<int, CharInfo> charInfos = {
 	{
 		Characters_Sonic,
 		{
+			nullptr,
+			2,
 			arrayptrandlengthT(sonicWeldPointers, int),
-		}
+		},
 	},
-
 };
 
 const BasicWeightFuncs* weightFuncs;
@@ -70,6 +83,21 @@ void ProcessWeights(playerwk* pwp, NJS_OBJECT*& object, NJS_MOTION* motion, floa
 		if (nodeweights != weightinfo->end())
 		{
 			weightFuncs->Apply(nodeweights->second.weights, &action, frame);
+			{
+				int* nodeidx = &nodeweights->second.rightHandNode;
+				int* dir = &nodeweights->second.rightHandDir;
+				auto co2 = (CharObj2*)pwp;
+				for (int i = 0; i < 6; i++)
+					if (*nodeidx != -1)
+					{
+						NJS_VECTOR pos{};
+						NJS_VECTOR norm{};
+						(&norm.x)[dir[i]] = 1;
+						SetInstancedMatrix(nodeidx[i], matrix);
+						njCalcPoint(matrix, &pos, &co2->SoManyVectors[i]);
+						njCalcVector(matrix, &norm, &co2->SoManyVectors[i + 6]);
+					}
+			}
 		}
 	}
 	break;
@@ -115,33 +143,43 @@ void __cdecl ProcessVertexWelds_Check(taskwk* twp, motionwk2* mwp, playerwk* pwp
 	}
 }
 
-void Init_BasicWeightedHack()
+
+void Init_BasicWeightedModels()
 {
+
 	weightFuncs = HelperFunctionsGlobal.Weights;
 
-	auto mdl = KlonoaMDL.get();
+	if (KlonoaWeightedModels)
+		charInfos.at(Characters_Sonic).mdlList = KlonoaWeightedModels;
 
-	if (!mdl)
-		return;
+	for (auto& charinf : charInfos)
+	{
+		for (uint16_t i = 0; i < charinf.second.lengthMdlList; i++)
+		{
+			if (charinf.second.mdlList == nullptr)
+				continue;
 
-	auto obj = mdl->getmodel();
+			auto mdl = charinf.second.mdlList[i];
 
-	if (!obj)
-		return;
+			if (!mdl)
+				continue;
 
-	charInfos.at(Characters_Sonic).modelWeights.insert_or_assign(obj, ModelWeightInfo{ mdl->getweightinfo() });
+			auto obj = mdl->getmodel();
 
+			if (!obj)
+				continue;
 
-	auto superKlo = SuperKlonoaMDL.get();
+			charinf.second.modelWeights.insert_or_assign(obj, ModelWeightInfo{ mdl->getweightinfo() });
+		}
 
-	charInfos.at(Characters_Sonic).modelWeights.insert_or_assign(superKlo->getmodel(), ModelWeightInfo{superKlo->getweightinfo()});
-
-	for (int i = 0; i < charInfos.at(Characters_Sonic).pointersLength; i++)
-		WriteData((decltype(CharInfo::modelWeights)**)charInfos.at(Characters_Sonic).pointersArray[i], &charInfos.at(Characters_Sonic).modelWeights);
-
+		for (int i = 0; i < charinf.second.pointersLength; i++)
+			WriteData((decltype(CharInfo::modelWeights)**)charinf.second.pointersArray[i], &charinf.second.modelWeights);
+	}
 
 	if (charInfos[Characters_Sonic].modelWeights.size() > 0)
 	{
+		WriteData((char*)0x49BE77, (char)0xEB); // disable crystal ring swap
+		WriteData((char*)0x493500, (char)0xC3); // disable stretchy shoes
 		WriteData<2>((void*)0x49BE22, 0x90u); // enable welds for sonic's spin model
 	}
 

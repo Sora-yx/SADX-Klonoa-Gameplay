@@ -7,6 +7,7 @@ extern std::string modpath;
 
 extern  std::shared_ptr<ModelInfo> KlonoaMDL;
 extern  std::shared_ptr<ModelInfo> SuperKlonoaMDL;
+extern ModelInfo* KlonoaWeightedModels[];
 
 #define TARGET_DYNAMIC(name) ((decltype(name##_r)*)name##_t->Target())
 #define charID counter.b[1]
@@ -96,4 +97,4 @@ void init_Hud();
 void initKlonoaHP();
 void InitSuperKlonoa(HMODULE h);
 void KlonoaManageVictoryMotion(playerwk* co2);
-void Init_BasicWeightedHack();
+void Init_BasicWeightedModels();

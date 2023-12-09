@@ -251,8 +251,8 @@ void FreeKlonoaAnims()
 	{
 		auto &anim = KlonoaAnimList[i].Animation;
 		if (anim && anim->motion && anim->object && anim->object != (NJS_OBJECT*)0xdddddddd) //garbage memory check
-		{		
-			PrintDebug("Free Klonoa Anim: %d\n", i);	
+		{
+			PrintDebug("Free Klonoa Anim: %d\n", i);
 			delete anim;
 			anim = nullptr;
 		}
@@ -283,12 +283,12 @@ void SetKlonoaAnims(AnimData_t animList[], const int size)
 		animList[i].Instance = KlonoaANM[anmID_fall]->getmodelcount();
 		animList[i].Property = 4;
 		animList[i].TransitionSpeed = 0.25f;
-		animList[i].AnimationSpeed = 0.5f;
+		animList[i].AnimationSpeed = 1.0f;
 	}
 
 
 	animList[0].Animation->motion = KlonoaANM[anmID_stand]->getmotion();
-	animList[0].AnimationSpeed = 0.7f;
+	animList[0].AnimationSpeed = 1.0f;
 	animList[0].NextAnim = 0;
 	animList[0].Property = 3;
 	animList[0].TransitionSpeed = 0.0625f;
@@ -296,12 +296,12 @@ void SetKlonoaAnims(AnimData_t animList[], const int size)
 	//surf stance
 	animList[1].Animation->motion = KlonoaANM[anmID_battleStd]->getmotion();
 	animList[1].TransitionSpeed = 0.25f;
-	animList[1].AnimationSpeed = 0.70f;
+	animList[1].AnimationSpeed = 1.0f;
 	animList[1].NextAnim = 2;
 
 	animList[2].Animation->motion = KlonoaANM[anmID_battleStd]->getmotion();
 	animList[2].TransitionSpeed = 0.25f;
-	animList[2].AnimationSpeed = 0.70f;
+	animList[2].AnimationSpeed = 1.0f;
 	animList[2].NextAnim = 2;
 
 	animList[7] = animList[0];
@@ -309,14 +309,14 @@ void SetKlonoaAnims(AnimData_t animList[], const int size)
 
 	//walk
 	animList[9].Animation->motion = KlonoaANM[anmID_walk]->getmotion();
-	animList[9].AnimationSpeed = 1.5f;
+	animList[9].AnimationSpeed = 3.0f;
 	animList[9].NextAnim = 9;
 	animList[9].Property = 10;
 	animList[9].TransitionSpeed = 0.15f;
 
 	//speed walk
 	animList[10].Animation->motion = KlonoaANM[anmID_run]->getmotion();
-	animList[10].AnimationSpeed = 0.3f;
+	animList[10].AnimationSpeed = 0.6f;
 	animList[10].NextAnim = 10;
 	animList[10].Property = 10;
 	animList[10].TransitionSpeed = 0.20f;
@@ -326,20 +326,20 @@ void SetKlonoaAnims(AnimData_t animList[], const int size)
 	animList[11].Property = 10;
 	animList[11].NextAnim = 11;
 	animList[11].TransitionSpeed = 0.25f;
-	animList[11].AnimationSpeed = 0.2f;
+	animList[11].AnimationSpeed = 0.4f;
 
 	//run
 	animList[12].Animation->motion = KlonoaANM[anmID_run]->getmotion();
 	animList[12].Property = 10;
 	animList[12].NextAnim = 12;
 	animList[12].TransitionSpeed = 0.25f;
-	animList[12].AnimationSpeed = 0.2f;
+	animList[12].AnimationSpeed = 0.5f;
 
 	//sprint
 	animList[13].Animation->motion = KlonoaANM[anmID_run]->getmotion();
 	animList[13].Property = 9;
 	animList[13].NextAnim = 13;
-	animList[13].TransitionSpeed = 0.5f;
+	animList[13].TransitionSpeed = 1.0f;
 	animList[13].AnimationSpeed = 0.2f;
 
 	//falling
@@ -347,7 +347,7 @@ void SetKlonoaAnims(AnimData_t animList[], const int size)
 	animList[18].Property = 3;
 	animList[18].NextAnim = 18;
 	animList[18].TransitionSpeed = 0.25f;
-	animList[18].AnimationSpeed = 0.5f;
+	animList[18].AnimationSpeed = 1.0f;
 
 	//idle
 	animList[4].Animation->motion = KlonoaANM[anmID_idle]->getmotion();
@@ -378,39 +378,39 @@ void SetKlonoaAnims(AnimData_t animList[], const int size)
 	animList[16].Property = 3;
 	animList[16].NextAnim = 16;;
 	animList[16].TransitionSpeed = 0.25f;
-	animList[16].AnimationSpeed = 0.5f;
+	animList[16].AnimationSpeed = 1.0f;
 
 	//landing
 	animList[19].Animation->motion = KlonoaANM[animID_Landing]->getmotion();
 	animList[19].NextAnim = 0;
 	animList[19].TransitionSpeed = 0.25f;
-	animList[19].AnimationSpeed = 0.5f;
+	animList[19].AnimationSpeed = 1.0f;
 
 	//brake
 	animList[20].Animation->motion = KlonoaANM[animID_Brake]->getmotion();
 	animList[20].NextAnim = 0;
 	animList[20].TransitionSpeed = 0.25f;
-	animList[20].AnimationSpeed = 0.8f;
+	animList[20].AnimationSpeed = 1.6f;
 
 	//push start
 	animList[21].Animation->motion = KlonoaANM[anmID_push]->getmotion();
 	animList[21].NextAnim = 22;
 	animList[21].TransitionSpeed = 0.25f;
-	animList[21].AnimationSpeed = 0.5f;
+	animList[21].AnimationSpeed = 1.0f;
 
 	//push
 	animList[22].Animation->motion = KlonoaANM[anmID_push]->getmotion();
 	animList[22].NextAnim = 22;
 	animList[22].Property = 3;
 	animList[22].TransitionSpeed = 0.25f;
-	animList[22].AnimationSpeed = 0.5f;
+	animList[22].AnimationSpeed = 1.0f;
 
 	//hurt
 	animList[23].Animation->motion = KlonoaANM[anmID_hurt]->getmotion();
 	animList[23].NextAnim = 23;
 	animList[23].Property = 5;
 	animList[23].TransitionSpeed = 0.25f;
-	animList[23].AnimationSpeed = 0.4f;
+	animList[23].AnimationSpeed = 0.8f;
 
 	//turn around
 	animList[30] = animList[20];
@@ -419,13 +419,13 @@ void SetKlonoaAnims(AnimData_t animList[], const int size)
 	animList[33].Animation->motion = KlonoaANM[anmID_throw]->getmotion();
 	animList[33].NextAnim = 37;
 	animList[33].TransitionSpeed = 0.25f;
-	animList[33].AnimationSpeed = 0.4f;
+	animList[33].AnimationSpeed = 0.8f;
 	animList[33].Property = 6; //reverse
 
 	//obj run
 	animList[34].Animation->motion = KlonoaANM[anmID_holdRun]->getmotion();
 	animList[34].NextAnim = 34;
-	animList[34].AnimationSpeed = 0.5f;
+	animList[34].AnimationSpeed = 1.0f;
 	animList[34].Property = 3;
 
 	//obj stand
@@ -433,12 +433,12 @@ void SetKlonoaAnims(AnimData_t animList[], const int size)
 	animList[37].Property = 3;
 	animList[37].NextAnim = 37;
 	animList[37].TransitionSpeed = 0.25f;
-	animList[37].AnimationSpeed = 0.5f;
+	animList[37].AnimationSpeed = 1.0f;
 
 	//obj walk
 	animList[38].Animation->motion = KlonoaANM[anmID_holdRun]->getmotion();
 	animList[38].NextAnim = 38;
-	animList[38].AnimationSpeed = 0.3f;
+	animList[38].AnimationSpeed = 0.6f;
 	animList[38].Property = 3;
 
 	//trampoline
@@ -446,23 +446,23 @@ void SetKlonoaAnims(AnimData_t animList[], const int size)
 	animList[39].Property = 3;
 	animList[39].NextAnim = 16;
 	animList[39].TransitionSpeed = 0.25f;
-	animList[39].AnimationSpeed = 0.5f;
+	animList[39].AnimationSpeed = 1.0f;
 
 	animList[40].Animation->motion = KlonoaANM[anmID_spinning]->getmotion();
 	animList[40].NextAnim = 18;
 	animList[40].TransitionSpeed = 0.25f;
-	animList[40].AnimationSpeed = 0.5f;
+	animList[40].AnimationSpeed = 1.0f;
 
 	animList[41].Animation->motion = KlonoaANM[anmID_jump]->getmotion();
 	animList[41].Property = 3;
 	animList[41].NextAnim = 16;
 	animList[41].TransitionSpeed = 0.25f;
-	animList[41].AnimationSpeed = 0.5f;
+	animList[41].AnimationSpeed = 1.0f;
 
 	animList[42].Animation->motion = KlonoaANM[anmID_spinning]->getmotion();
 	animList[42].NextAnim = 18;
 	animList[42].TransitionSpeed = 0.25f;
-	animList[42].AnimationSpeed = 0.7f;
+	animList[42].AnimationSpeed = 1.0f;
 
 	animList[43].Animation->motion = KlonoaANM[anmID_spinning]->getmotion();
 	animList[43].Property = 3;
@@ -474,28 +474,28 @@ void SetKlonoaAnims(AnimData_t animList[], const int size)
 	animList[47].Animation->motion = KlonoaANM[anmID_holdOne]->getmotion();
 	animList[47].Property = 3;
 	animList[47].NextAnim = 47;
-	animList[47].TransitionSpeed = 0.5f;
-	animList[47].AnimationSpeed = 0.5f;
+	animList[47].TransitionSpeed = 1.0f;
+	animList[47].AnimationSpeed = 1.0f;
 
 	//shake tree
 	animList[49].Animation->motion = KlonoaANM[anmID_shake]->getmotion();
 	animList[49].NextAnim = 49;
-	animList[49].TransitionSpeed = 0.5f;
+	animList[49].TransitionSpeed = 1.0f;
 	animList[49].Property = 3;
-	animList[49].AnimationSpeed = 0.2f;
+	animList[49].AnimationSpeed = 0.8f;
 
 	//set shake (throw anim for now)
 	animList[50].Animation->motion = KlonoaANM[anmID_throw]->getmotion();
 	animList[50].NextAnim = 51;
 	animList[50].TransitionSpeed = 0.25f;
-	animList[50].AnimationSpeed = 0.3f;
+	animList[50].AnimationSpeed = 0.6f;
 
 	//shaking
 	animList[51].Animation->motion = KlonoaANM[anmID_shake]->getmotion();
 	animList[51].NextAnim = 51;
 	animList[51].Property = 3;
 	animList[51].TransitionSpeed = 0.25f;
-	animList[51].AnimationSpeed = 0.2f;
+	animList[51].AnimationSpeed = 0.4f;
 
 	//stop shaking
 	animList[52].Animation->motion = KlonoaANM[anmID_holdObj]->getmotion();
@@ -506,29 +506,29 @@ void SetKlonoaAnims(AnimData_t animList[], const int size)
 	//idle hold tree
 	animList[53].Animation->motion = KlonoaANM[anmID_holdObj]->getmotion();
 	animList[53].NextAnim = 54;
-	animList[53].TransitionSpeed = 0.5f;
-	animList[53].AnimationSpeed = 0.5f;
+	animList[53].TransitionSpeed = 1.0f;
+	animList[53].AnimationSpeed = 1.0f;
 
 	animList[54].Animation->motion = KlonoaANM[anmID_holdObj]->getmotion();
 	animList[54].Property = 3;
 	animList[54].NextAnim = 54;
-	animList[54].TransitionSpeed = 0.5f;
-	animList[54].AnimationSpeed = 0.5f;
+	animList[54].TransitionSpeed = 1.0f;
+	animList[54].AnimationSpeed = 1.0f;
 
 	//object jump
 	animList[55].Animation->motion = KlonoaANM[anmID_holdJump]->getmotion();
 	animList[55].NextAnim = 55;
-	animList[55].AnimationSpeed = 0.5f;
+	animList[55].AnimationSpeed = 1.0f;
 	animList[55].Property = 3;
 
 	//object fall
 	animList[56].Animation->motion = KlonoaANM[anmID_holdFall]->getmotion();
 	animList[56].NextAnim = 57;
-	animList[56].AnimationSpeed = 0.5f;
+	animList[56].AnimationSpeed = 1.0f;
 
 	animList[57].Animation->motion = KlonoaANM[anmID_holdFall]->getmotion();
 	animList[57].NextAnim = 57;
-	animList[57].AnimationSpeed = 0.5f;
+	animList[57].AnimationSpeed = 1.0f;
 	animList[57].Property = 3;
 
 	//Throw object
@@ -545,8 +545,8 @@ void SetKlonoaAnims(AnimData_t animList[], const int size)
 	animList[62].Animation->motion = KlonoaANM[anmID_holdObj]->getmotion();
 	animList[62].Property = 4;
 	animList[62].NextAnim = 18;
-	animList[62].TransitionSpeed = 0.5;
-	animList[62].AnimationSpeed = 0.5f;
+	animList[62].TransitionSpeed = 1.0f;
+	animList[62].AnimationSpeed = 1.0f;
 
 	animList[63] = animList[59];
 
@@ -582,21 +582,21 @@ void SetKlonoaAnims(AnimData_t animList[], const int size)
 	animList[74].NextAnim = 74;
 	animList[74].Property = 3;
 	animList[74].TransitionSpeed = 0.25f;
-	animList[74].AnimationSpeed = 0.5f;
+	animList[74].AnimationSpeed = 1.0f;
 
 	//victory.
 	animList[75].Animation->motion = KlonoaANM[anmID_victory]->getmotion();
 	animList[75].NextAnim = 75;
-	animList[75].TransitionSpeed = 0.5f;
-	animList[75].AnimationSpeed = 0.5f;
+	animList[75].TransitionSpeed = 1.0f;
+	animList[75].AnimationSpeed = 1.0f;
 	animList[75].Property = 12;
 
 	//victory standing.
 	animList[76].Animation->motion = KlonoaANM[anmID_victoryStd]->getmotion();
 	animList[76].NextAnim = 0;
 	animList[76].Property = 3;
-	animList[76].TransitionSpeed = 0.5f;
-	animList[76].AnimationSpeed = 0.5f;
+	animList[76].TransitionSpeed = 1.0f;
+	animList[76].AnimationSpeed = 1.0f;
 
 	animList[77].Animation->motion = KlonoaANM[anmID_holdObj]->getmotion();
 	animList[77].NextAnim = 78;
@@ -634,56 +634,56 @@ void SetKlonoaAnims(AnimData_t animList[], const int size)
 	animList[94].Animation->motion = KlonoaANM[anmID_holdIcicle]->getmotion();
 	animList[94].NextAnim = 94;
 	animList[94].TransitionSpeed = 0.125;
-	animList[94].AnimationSpeed = 0.5f;
+	animList[94].AnimationSpeed = 1.0f;
 	animList[94].Property = 3;
 
 	//board
 	animList[102].Animation->motion = KlonoaANM[animID_Board]->getmotion();
 	animList[102].NextAnim = 102;
 	animList[102].TransitionSpeed = 0.125;
-	animList[102].AnimationSpeed = 0.5f;
+	animList[102].AnimationSpeed = 1.0f;
 	animList[102].Property = 3;
 
 	//board brake right
 	animList[103].Animation->motion = KlonoaANM[animID_BoardRight]->getmotion();
 	animList[103].NextAnim = 103;
 	animList[103].TransitionSpeed = 0.125;
-	animList[103].AnimationSpeed = 0.5f;
+	animList[103].AnimationSpeed = 1.0f;
 	animList[103].Property = 5;
 
 	//board brake left
 	animList[104].Animation->motion = KlonoaANM[animID_BoardLeft]->getmotion();
 	animList[104].NextAnim = 104;
 	animList[104].TransitionSpeed = 0.125;
-	animList[104].AnimationSpeed = 0.5f;
+	animList[104].AnimationSpeed = 1.0f;
 	animList[104].Property = 5;
 
 	//falling board
 	animList[105].Animation->motion = KlonoaANM[animID_FallBoard]->getmotion();
 	animList[105].NextAnim = 111;
 	animList[105].TransitionSpeed = 0.125;
-	animList[105].AnimationSpeed = 0.4f;
+	animList[105].AnimationSpeed = 0.8f;
 	animList[105].Property = 4;
 
 	//jump board
 	animList[106].Animation->motion = KlonoaANM[animID_BoardJump]->getmotion();
 	animList[106].NextAnim = 105;
 	animList[106].TransitionSpeed = 0.125;
-	animList[106].AnimationSpeed = 0.5f;
+	animList[106].AnimationSpeed = 1.0f;
 	animList[106].Property = 4;
 
 	//board right side
 	animList[107].Animation->motion = KlonoaANM[animID_BoardRight]->getmotion();
 	animList[107].NextAnim = 107;
 	animList[107].TransitionSpeed = 0.125;
-	animList[107].AnimationSpeed = 0.3f;
+	animList[107].AnimationSpeed = 0.6f;
 	animList[107].Property = 12;
 
 	//board left side
 	animList[108].Animation->motion = KlonoaANM[animID_BoardLeft]->getmotion();
 	animList[108].NextAnim = 108;
 	animList[108].TransitionSpeed = 0.125;
-	animList[108].AnimationSpeed = 0.3f;
+	animList[108].AnimationSpeed = 0.6f;
 	animList[108].Property = 12;
 
 	animList[109] = animList[107];
@@ -711,19 +711,19 @@ void SetKlonoaAnims(AnimData_t animList[], const int size)
 	animList[116].Animation->motion = KlonoaANM[animID_trick1]->getmotion();
 	animList[116].NextAnim = 112;
 	animList[116].TransitionSpeed = 0.125;
-	animList[116].AnimationSpeed = 0.5f;
+	animList[116].AnimationSpeed = 1.0f;
 
 	//trick 2
 	animList[117].Animation->motion = KlonoaANM[animID_trick2]->getmotion();
 	animList[117].NextAnim = 112;
 	animList[117].TransitionSpeed = 0.125;
-	animList[117].AnimationSpeed = 0.5f;
+	animList[117].AnimationSpeed = 1.0f;
 
 	//trick 3
 	animList[118].Animation->motion = KlonoaANM[animID_trick3]->getmotion();
 	animList[118].NextAnim = 112;
 	animList[118].TransitionSpeed = 0.125;
-	animList[118].AnimationSpeed = 0.5f;
+	animList[118].AnimationSpeed = 1.0f;
 
 	animList[119] = animList[118];
 	animList[119].Property = 6;
@@ -767,7 +767,7 @@ void SetKlonoaAnims(AnimData_t animList[], const int size)
 	animList[131].Animation->motion = KlonoaANM[anmID_PetLoop]->getmotion();
 	animList[131].NextAnim = 131;
 	animList[131].TransitionSpeed = 1.0f;
-	animList[131].AnimationSpeed = 0.5f;
+	animList[131].AnimationSpeed = 1.0f;
 	animList[131].Property = 3;
 
 	animList[132].Animation->motion = KlonoaANM[anmID_PetEnd]->getmotion();
@@ -857,70 +857,70 @@ void SetKlonoaAnims(AnimData_t animList[], const int size)
 	animList[anm_hover].Property = 3;
 	animList[anm_hover].NextAnim = anm_hover;
 	animList[anm_hover].TransitionSpeed = 0.25f;
-	animList[anm_hover].AnimationSpeed = 0.5f;
+	animList[anm_hover].AnimationSpeed = 1.2f;
 
 	//bullet start
 	animList[anm_windBullet].Animation->motion = KlonoaANM[anmID_bulletStart]->getmotion();
 	animList[anm_windBullet].Property = 4;
 	animList[anm_windBullet].NextAnim = anm_windBulletEnd;
 	animList[anm_windBullet].TransitionSpeed = 0.25f;
-	animList[anm_windBullet].AnimationSpeed = 0.5f;
+	animList[anm_windBullet].AnimationSpeed = 1.0f;
 
 	//bullet mid air
 	animList[anm_windBulletAir].Animation->motion = KlonoaANM[animID_bulletMidAir]->getmotion();
 	animList[anm_windBulletAir].Property = 4;
 	animList[anm_windBulletAir].NextAnim = anm_fall;
 	animList[anm_windBulletAir].TransitionSpeed = 0.25f;
-	animList[anm_windBulletAir].AnimationSpeed = 0.5f;
+	animList[anm_windBulletAir].AnimationSpeed = 1.0f;
 
 	//bullet end
 	animList[anm_windBulletEnd].Animation->motion = KlonoaANM[animID_bulletEnd]->getmotion();
 	animList[anm_windBulletEnd].Property = 4;
 	animList[anm_windBulletEnd].NextAnim = 0;
 	animList[anm_windBulletEnd].TransitionSpeed = 0.25f;
-	animList[anm_windBulletEnd].AnimationSpeed = 0.5f;
+	animList[anm_windBulletEnd].AnimationSpeed = 1.0f;
 
 	//hold enemy std
 	animList[anm_holdStd].Animation->motion = KlonoaANM[animID_holdStd]->getmotion();
 	animList[anm_holdStd].Property = 3;
 	animList[anm_holdStd].NextAnim = anm_holdStd;
 	animList[anm_holdStd].TransitionSpeed = 0.25f;
-	animList[anm_holdStd].AnimationSpeed = 0.5f;
+	animList[anm_holdStd].AnimationSpeed = 1.0f;
 
 	//hold enemy wlk
 	animList[anm_holdWalk].Animation->motion = KlonoaANM[anmID_holdRun]->getmotion();
 	animList[anm_holdWalk].NextAnim = anm_holdWalk;
-	animList[anm_holdWalk].AnimationSpeed = 0.3f;
+	animList[anm_holdWalk].AnimationSpeed = 0.6f;
 	animList[anm_holdWalk].Property = 3;
 
 	//hold enemy run
 	animList[anm_holdRun].Animation->motion = KlonoaANM[anmID_holdRun]->getmotion();
 	animList[anm_holdRun].NextAnim = anm_holdRun;
-	animList[anm_holdRun].AnimationSpeed = 0.5f;
+	animList[anm_holdRun].AnimationSpeed = 1.0f;
 	animList[anm_holdRun].Property = 3;
 
 	//hold enemy jump
 	animList[anm_holdJump].Animation->motion = KlonoaANM[anmID_holdJump]->getmotion();
 	animList[anm_holdJump].NextAnim = anm_holdJump;
-	animList[anm_holdJump].AnimationSpeed = 0.5f;
+	animList[anm_holdJump].AnimationSpeed = 1.0f;
 	animList[anm_holdJump].Property = 3;
 
 	//hold enemy fall
 	animList[anm_holdFall].Animation->motion = KlonoaANM[anmID_holdFall]->getmotion();
 	animList[anm_holdFall].NextAnim = anm_holdFall;
-	animList[anm_holdFall].AnimationSpeed = 0.5f;
+	animList[anm_holdFall].AnimationSpeed = 1.0f;
 	animList[anm_holdFall].Property = 3;
 
 	//throw enemy
 	animList[anm_throwStd].Animation->motion = KlonoaANM[anmID_throw]->getmotion();
 	animList[anm_throwStd].NextAnim = anm_std;
-	animList[anm_throwStd].AnimationSpeed = 0.5f;
+	animList[anm_throwStd].AnimationSpeed = 1.0f;
 	animList[anm_throwStd].Property = 4;
 
 	//throw enemy air
 	animList[anm_throwAir].Animation->motion = KlonoaANM[anmID_throwAir]->getmotion();
 	animList[anm_throwAir].NextAnim = anm_fall;
-	animList[anm_throwAir].AnimationSpeed = 0.5f;
+	animList[anm_throwAir].AnimationSpeed = 1.0f;
 	animList[anm_throwAir].Property = 4;
 
 
@@ -936,21 +936,21 @@ void SetKlonoaAnims(AnimData_t animList[], const int size)
 	//fly Up
 	animList[anm_flyUp].Animation->motion = KlonoaANM[anmID_jump]->getmotion();
 	animList[anm_flyUp].NextAnim = anm_flyUp;
-	animList[anm_flyUp].AnimationSpeed = 0.5f;
+	animList[anm_flyUp].AnimationSpeed = 1.0f;
 	animList[anm_flyUp].Property = 3;
 	animList[anm_flyUp].Animation->object = super;
 
 	//fly down
 	animList[anm_flyDown].Animation->motion = KlonoaANM[anmID_fall]->getmotion();
 	animList[anm_flyDown].NextAnim = anm_flyDown;
-	animList[anm_flyDown].AnimationSpeed = 0.5f;
+	animList[anm_flyDown].AnimationSpeed = 1.0f;
 	animList[anm_flyDown].Property = 3;
 	animList[anm_flyDown].Animation->object = super;
 
 	//fly moving
 	animList[anm_flyMoving].Animation->motion = KlonoaANM[anmID_fly]->getmotion();
 	animList[anm_flyMoving].NextAnim = anm_flyMoving;
-	animList[anm_flyMoving].AnimationSpeed = 0.5f;
+	animList[anm_flyMoving].AnimationSpeed = 1.0f;
 	animList[anm_flyMoving].Property = 3;
 	animList[anm_flyMoving].Animation->object = super;
 
@@ -965,58 +965,58 @@ void SetKlonoaAnims(AnimData_t animList[], const int size)
 
 void LoadKlonoa_AnimFiles()
 {
-	KlonoaANM[0] =  LoadAnimSmartPtr("stand");
-	KlonoaANM[1] =  LoadAnimSmartPtr("death");
-	KlonoaANM[2] =  LoadAnimSmartPtr("fall");
-	KlonoaANM[3] =  LoadAnimSmartPtr("walk");
-	KlonoaANM[4] =  LoadAnimSmartPtr("fly");
-	KlonoaANM[5] =  LoadAnimSmartPtr("hover");
-	KlonoaANM[6] =  LoadAnimSmartPtr("run");
-	KlonoaANM[7] =  LoadAnimSmartPtr("idle");
-	KlonoaANM[8] =  LoadAnimSmartPtr("jump");
-	KlonoaANM[9] =  LoadAnimSmartPtr("holdOneHand");
-	KlonoaANM[10] =  LoadAnimSmartPtr("holdObj");
-	KlonoaANM[11] =  LoadAnimSmartPtr("Victory");
-	KlonoaANM[12] =  LoadAnimSmartPtr("Victory2");
-	KlonoaANM[13] =  LoadAnimSmartPtr("standVictory");
-	KlonoaANM[14] =  LoadAnimSmartPtr("standBattle");
-	KlonoaANM[15] =  LoadAnimSmartPtr("bulletStart");
-	KlonoaANM[16] =  LoadAnimSmartPtr("bulletMidAir");
-	KlonoaANM[17] =  LoadAnimSmartPtr("bulletEnd");
-	KlonoaANM[18] =  LoadAnimSmartPtr("holdStand");
-	KlonoaANM[19] =  LoadAnimSmartPtr("holdWalk");
-	KlonoaANM[20] =  LoadAnimSmartPtr("holdRun");
-	KlonoaANM[21] =  LoadAnimSmartPtr("holdJump");
-	KlonoaANM[22] =  LoadAnimSmartPtr("holdFall");
-	KlonoaANM[23] =  LoadAnimSmartPtr("throw");
-	KlonoaANM[24] =  LoadAnimSmartPtr("airThrow"); 
-	KlonoaANM[25] =  LoadAnimSmartPtr("Brake");
-	KlonoaANM[26] =  LoadAnimSmartPtr("Landing");
-	KlonoaANM[27] =  LoadAnimSmartPtr("Board");
-	KlonoaANM[28] =  LoadAnimSmartPtr("Crouch");
-	KlonoaANM[29] =  LoadAnimSmartPtr("FallBoard");
-	KlonoaANM[30] =  LoadAnimSmartPtr("trick1");
-	KlonoaANM[31] =  LoadAnimSmartPtr("trick2");
-	KlonoaANM[32] =  LoadAnimSmartPtr("trick3");
-	KlonoaANM[33] =  LoadAnimSmartPtr("BoardLeft");
-	KlonoaANM[34] =  LoadAnimSmartPtr("BoardRight");
-	KlonoaANM[35] =  LoadAnimSmartPtr("BoardJump");
-	KlonoaANM[36] =  LoadAnimSmartPtr("flyStd");
+	KlonoaANM[0] = LoadAnimSmartPtr("stand");
+	KlonoaANM[1] = LoadAnimSmartPtr("death");
+	KlonoaANM[2] = LoadAnimSmartPtr("fall");
+	KlonoaANM[3] = LoadAnimSmartPtr("walk");
+	KlonoaANM[4] = LoadAnimSmartPtr("fly");
+	KlonoaANM[5] = LoadAnimSmartPtr("hover");
+	KlonoaANM[6] = LoadAnimSmartPtr("run");
+	KlonoaANM[7] = LoadAnimSmartPtr("idle");
+	KlonoaANM[8] = LoadAnimSmartPtr("jump");
+	KlonoaANM[9] = LoadAnimSmartPtr("holdOneHand");
+	KlonoaANM[10] = LoadAnimSmartPtr("holdObj");
+	KlonoaANM[11] = LoadAnimSmartPtr("Victory");
+	KlonoaANM[12] = LoadAnimSmartPtr("Victory2");
+	KlonoaANM[13] = LoadAnimSmartPtr("standVictory");
+	KlonoaANM[14] = LoadAnimSmartPtr("standBattle");
+	KlonoaANM[15] = LoadAnimSmartPtr("bulletStart");
+	KlonoaANM[16] = LoadAnimSmartPtr("bulletMidAir");
+	KlonoaANM[17] = LoadAnimSmartPtr("bulletEnd");
+	KlonoaANM[18] = LoadAnimSmartPtr("holdStand");
+	KlonoaANM[19] = LoadAnimSmartPtr("holdWalk");
+	KlonoaANM[20] = LoadAnimSmartPtr("holdRun");
+	KlonoaANM[21] = LoadAnimSmartPtr("holdJump");
+	KlonoaANM[22] = LoadAnimSmartPtr("holdFall");
+	KlonoaANM[23] = LoadAnimSmartPtr("throw");
+	KlonoaANM[24] = LoadAnimSmartPtr("airThrow");
+	KlonoaANM[25] = LoadAnimSmartPtr("Brake");
+	KlonoaANM[26] = LoadAnimSmartPtr("Landing");
+	KlonoaANM[27] = LoadAnimSmartPtr("Board");
+	KlonoaANM[28] = LoadAnimSmartPtr("Crouch");
+	KlonoaANM[29] = LoadAnimSmartPtr("FallBoard");
+	KlonoaANM[30] = LoadAnimSmartPtr("trick1");
+	KlonoaANM[31] = LoadAnimSmartPtr("trick2");
+	KlonoaANM[32] = LoadAnimSmartPtr("trick3");
+	KlonoaANM[33] = LoadAnimSmartPtr("BoardLeft");
+	KlonoaANM[34] = LoadAnimSmartPtr("BoardRight");
+	KlonoaANM[35] = LoadAnimSmartPtr("BoardJump");
+	KlonoaANM[36] = LoadAnimSmartPtr("flyStd");
 	//	KlonoaANM[37] = LoadObjectAnim("cart"); //MEH
-	KlonoaANM[38] =  LoadAnimSmartPtr("icicleHold");
-	KlonoaANM[39] =  LoadAnimSmartPtr("climb");
-	KlonoaANM[40] =  LoadAnimSmartPtr("spin");
-	KlonoaANM[41] =  LoadAnimSmartPtr("jmpPanel");
-	KlonoaANM[42] =  LoadAnimSmartPtr("push");
-	KlonoaANM[43] =  LoadAnimSmartPtr("hurt");
-	KlonoaANM[44] =  LoadAnimSmartPtr("holdRocketV");
-	KlonoaANM[45] =  LoadAnimSmartPtr("shower");
-	KlonoaANM[46] =  LoadAnimSmartPtr("shower2");
-	KlonoaANM[47] =  LoadAnimSmartPtr("Whistle");
-	KlonoaANM[48] =  LoadAnimSmartPtr("PetSet");
-	KlonoaANM[49] =  LoadAnimSmartPtr("shake");
-	KlonoaANM[50] =  LoadAnimSmartPtr("PetLoop");
-	KlonoaANM[51] =  LoadAnimSmartPtr("PetEnd");
+	KlonoaANM[38] = LoadAnimSmartPtr("icicleHold");
+	KlonoaANM[39] = LoadAnimSmartPtr("climb");
+	KlonoaANM[40] = LoadAnimSmartPtr("spin");
+	KlonoaANM[41] = LoadAnimSmartPtr("jmpPanel");
+	KlonoaANM[42] = LoadAnimSmartPtr("push");
+	KlonoaANM[43] = LoadAnimSmartPtr("hurt");
+	KlonoaANM[44] = LoadAnimSmartPtr("holdRocketV");
+	KlonoaANM[45] = LoadAnimSmartPtr("shower");
+	KlonoaANM[46] = LoadAnimSmartPtr("shower2");
+	KlonoaANM[47] = LoadAnimSmartPtr("Whistle");
+	KlonoaANM[48] = LoadAnimSmartPtr("PetSet");
+	KlonoaANM[49] = LoadAnimSmartPtr("shake");
+	KlonoaANM[50] = LoadAnimSmartPtr("PetLoop");
+	KlonoaANM[51] = LoadAnimSmartPtr("PetEnd");
 }
 
 void InitKlonoaCharSelAnim()
@@ -1029,18 +1029,17 @@ void InitKlonoaCharSelAnim()
 
 void LoadKlonoaEventAnims()
 {
-	KlonoaEvANM[0] =  LoadEventAnimSmartPtr("Upgrade0");
-	KlonoaEvANM[1] =  LoadEventAnimSmartPtr("battlePos");
-	KlonoaEvANM[2] =  LoadEventAnimSmartPtr("Victory");
-	KlonoaEvANM[3] =  LoadEventAnimSmartPtr("sleep");
-	KlonoaEvANM[4] =  LoadEventAnimSmartPtr("wakeUp");
+	KlonoaEvANM[0] = LoadEventAnimSmartPtr("Upgrade0");
+	KlonoaEvANM[1] = LoadEventAnimSmartPtr("battlePos");
+	KlonoaEvANM[2] = LoadEventAnimSmartPtr("Victory");
+	KlonoaEvANM[3] = LoadEventAnimSmartPtr("sleep");
+	KlonoaEvANM[4] = LoadEventAnimSmartPtr("wakeUp");
 }
 
 void SetKlonoaEventAnims()
 {
 	if (setAnim)
 		return;
-
 
 	action_s_item_r0.motion = KlonoaEvANM[0]->getmotion();
 	action_s_item_r2.motion = KlonoaEvANM[0]->getmotion();
@@ -1130,7 +1129,7 @@ DataPointer(EPATHTAG, epathtag_cube0052_t3, 0x2BE82B0);
 
 void PlayVictoryAnim()
 {
-	EV_SetAction(playertp[0], &action_s_s0071_sonic, &KlonoaTexList, 0.5f, 1, 12);
+	EV_SetAction(playertp[0], &action_s_s0071_sonic, &KlonoaTexList, 1.0f, 1, 12);
 }
 
 void SetEndingAnimationOutro(task* player)
@@ -1143,7 +1142,7 @@ void SetEndingAnimationOutro(task* player)
 	EV_Wait(93);
 	EV_CameraAng(0, 15, 0x66D, 0x200E, 0xFD00);
 	EV_CameraPos(0, 15, 2171.3f, 125.0f, 1630.665f);
-	EV_SetAction(player, &action_s_s0071_sonic, &KlonoaTexList, 0.5f, 1, 12);
+	EV_SetAction(player, &action_s_s0071_sonic, &KlonoaTexList, 1.0f, 1, 12);
 	PlayCustomSoundVolume(kl_SuperJump0, 2.0f);
 	EV_SetMode(player, 0);
 	EV_SetPath(player, &epathtag_cube0052_t3, 0.0f, 2);
